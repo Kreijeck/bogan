@@ -42,6 +42,7 @@ class Spieler(Base):
     benutzer_id: Mapped[int] = mapped_column(ForeignKey('benutzer.id'))
     benutzer: Mapped["Benutzer"] =  relationship(back_populates="spieler")
 
+
 class Benutzer(Base):
     __tablename__ = 'benutzer'
     id: Mapped[int] = mapped_column(primary_key=True)

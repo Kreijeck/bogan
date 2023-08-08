@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 from bogan.database.models import Benutzer, Spieler, Partie, Base
 import json
 import os
@@ -7,6 +7,17 @@ import os
 
 db_path = os.path.join("data", "spiel2.db")
 
+# def add_partie(spieldaten: list, session: Session) -> Session:
+#     for play in spieldaten:
+#         partie = Partie(id=play['@id'], datum=play['@date'], ort=play['@location'], name=play['item']['@name'])
+#         session.add(partie)
+
+#     return session
+
+# def add_player(player: list, session: Session) -> Session:
+
+
+    
 
 engine = create_engine(f'sqlite:///{db_path}')
 #Base = declarative_base()
@@ -17,8 +28,8 @@ Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
 # Öffne Session
-Session = sessionmaker(bind=engine)
-session = Session()
+#Session = sessionmaker(bind=engine)
+session = Session(engine)
 
 # Leses Daten aus der JSON-Datei
 json_path = os.path.join('data', 'plays.json')
@@ -39,13 +50,15 @@ for play in spieldaten['plays']['play']:
             session.add(benutzer)
         
         # Erstelle den Spieler und verknüpfe ihn mit dem Benutzer und der Partie
-        try:
-            spieler = Spieler(name=player['@name'], punktzahl=float(player['@score']), partie=partie, benutzer=benutzer)
-            session.add(spieler)
-        except ValueError:
-            spieler = Spieler(name=player['@name'], punktzahl=None, partie=partie, benutzer=benutzer)
-            session.add(spieler) 
-            print(f"Wrong Input: Score is: {player['@score']}, Game: {play['item']['@name']}, Player: {player['@name']}")
+        # Überprüfe ob Punktzahl vorhanden
+        punktzahl: str = player['@score']
+        if punktzahl.isdigit():
+            punktzahl = float(punktzahl)
+        else:
+            punktzahl = None
+            
+        spieler = Spieler(name=player['@name'], punktzahl=punktzahl, partie=partie, benutzer=benutzer)
+        session.add(spieler)
     
     # Speicher die Änderungen
     session.commit()
