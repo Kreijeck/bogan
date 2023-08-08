@@ -15,10 +15,15 @@ pandas = "^2.0.1"
 plotly = "^5.14.1"
 requests = "^2.31.0"
 SQLAlchemy = "^2.0.15"
+xmltodict = "^0.13.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
 flake8 = "^6.0.0"
+
+[tool.ruff]
+# Line length with big screen
+line-length = 120
 
 [build-system]
 requires = ["poetry-core"]
