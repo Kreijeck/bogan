@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import List
 from sqlalchemy import create_engine, Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import sessionmaker, relationship, declarative_base, Mapped, mapped_column
 import json
@@ -66,8 +66,8 @@ for play in spieldaten['plays']['play']:
         try:
             spieler = Spieler(name=player['@name'], punktzahl=float(player['@score']), spiel=spiel, benutzer=benutzer)
             session.add(spieler)
-        except:
-            print(f"Wrong Input: Score is: {player['@score']}, Game: {play['item']['@name']}, Player: {player['@name']}")
+        except ValueError:
+            print(f"Wrong Input: Score: {player['@score']}, Game: {play['item']['@name']}, Player: {player['@name']}")
 
 # Speichere die Änderungen
 session.commit()

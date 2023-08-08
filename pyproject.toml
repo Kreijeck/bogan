@@ -25,6 +25,9 @@ flake8 = "^6.0.0"
 # Line length with big screen
 line-length = 120
 
+[tool.black]
+line-length = 120
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
