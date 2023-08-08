@@ -28,7 +28,8 @@ class Partie(Base):
     spieler: Mapped[List["Spieler"]] = relationship(back_populates="partie", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
-        return f"ID: {self.id}, brettspiel: {self.brettspiel.name}, datum: {self.datum}, ort: {self.ort.name}"
+        return f"ID: {self.id}, brettspiel: {self.brettspiel.name}, datum: {self.datum}, ort: {self.ort.name}, "\
+        f"Players: {self.spieler}"
 
 
 class Spieler(Base):
@@ -53,7 +54,8 @@ class Spieler(Base):
     benutzer: Mapped["Benutzer"] = relationship(back_populates="spieler")
 
     def __repr__(self) -> str:
-        return f"ID: {self.id}, name: {self.name}, punktzahlt: {self.punktzahl},partie_id: {self.partie_id}, benutzer: {self.benutzer}"
+        return f"ID: {self.id}, name: {self.name}, punktzahl: {self.punktzahl}, "\
+            f"partie_id: {self.partie_id}, benutzer: {self.benutzer}"
 
 
 class Benutzer(Base):
