@@ -37,9 +37,9 @@ def create_ort(play: dict, session: Session) -> Ort:
 
 
 def create_brettspiel(play: dict, session: Session) -> Brettspiel:
-    brettspiel = session.query(Brettspiel).filter_by(name=play["item"]["@name"]).first()
+    brettspiel = session.query(Brettspiel).filter_by(id=play["item"]["@objectid"]).first()
     if brettspiel is None:
-        brettspiel = Brettspiel(name=play["item"]["@name"])
+        brettspiel = Brettspiel(id=play["item"]["@objectid"], name=play["item"]["@name"])
         session.add(brettspiel)
 
     return brettspiel
