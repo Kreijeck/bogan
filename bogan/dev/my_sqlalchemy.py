@@ -5,7 +5,7 @@ from typing import Optional, List
 
 
 
-engine = create_engine("sqlite:///tutorial.db")
+engine = create_engine("sqlite:///data/tutorial.db")
 Base = declarative_base()
 
 

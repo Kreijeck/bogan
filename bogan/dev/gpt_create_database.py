@@ -5,7 +5,7 @@ import json
 import os
 
 # Erstelle die Datenbank
-engine = create_engine('sqlite:///spiel.db')
+engine = create_engine('sqlite:///data/spiel.db')
 Base = declarative_base()
 
 # Erstelle die Tabellenklassen
@@ -42,9 +42,9 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 # Lese die Daten aus der JSON-Datei
-p = os.path.join('plays.json')
-print("Der Pfad ist: ", os.path.abspath(p))
-with open(p, 'r', encoding="utf16") as f:
+json_path = os.path.join('data', 'plays.json')
+print("Der Pfad ist: ", os.path.abspath(json_path))
+with open(json_path, 'r', encoding="utf16") as f:
     spieldaten = json.load(f)
 
 # Füge jedes Spiel zur Datenbank hinzu
