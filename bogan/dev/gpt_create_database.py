@@ -31,7 +31,8 @@ class Benutzer(Base):
     __tablename__ = 'benutzer'
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
-    spieler = relationship("Spieler", back_populates="benutzer")
+    #spieler = relationship("Spieler", back_populates="benutzer")
+    spieler: Mapped[List['Spieler']] = relationship('Spieler', back_populates='benutzer')
 
 # Erstelle die Tabellen
 Base.metadata.drop_all(engine)
@@ -50,7 +51,7 @@ with open(json_path, 'r', encoding="utf16") as f:
 # Füge jedes Spiel zur Datenbank hinzu
 for play in spieldaten['plays']['play']:
     # Erstelle das Spiel
-    spiel = Spiel(datum=play['@date'], ort=play['@location'], name=play['item']['@name'])
+    spiel = Spiel(id=play['@id'] ,datum=play['@date'], ort=play['@location'], name=play['item']['@name'])
     session.add(spiel)
 
     # Füge jeden Spieler zum Spiel hinzu
