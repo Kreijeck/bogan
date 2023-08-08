@@ -4,8 +4,8 @@ from bogan.database.models import Benutzer, Spieler, Partie, Base
 import json
 import os
 
-cwd = os.path.dirname(__file__)
-db_path = os.path.join(cwd, "spiel.db")
+
+db_path = os.path.join("data", "spiel2.db")
 
 
 engine = create_engine(f'sqlite:///{db_path}')
