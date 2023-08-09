@@ -145,6 +145,6 @@ cython_debug/
 
 # local files
 data/*
-dev/*
+bogan/dev/*
 .vscode/
 bogan/dev/scretch.py
