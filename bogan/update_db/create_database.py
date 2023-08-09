@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from bogan.database.models import Benutzer, Spieler, Partie, Ort, Brettspiel, Base
+from bogan.update_db.models import Benutzer, Spieler, Partie, Ort, Brettspiel, Base
 from datetime import datetime
 import json
 import os
@@ -98,6 +98,13 @@ def add_data_to_database():
 def main():
     create_database()
     add_data_to_database()
+
+    from sqlalchemy import select
+
+    session = Session(engine)
+    stmt = select(Partie)
+    for game in session.scalars(stmt):
+        print(game)
 
 
 if __name__ == "__main__":
