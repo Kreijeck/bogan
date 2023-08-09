@@ -22,6 +22,9 @@ pyyaml = "^6.0.1"
 black = "^23.3.0"
 flake8 = "^6.0.0"
 
+[tool.poetry.scripts]
+create_db = "bogan.update_db.create_database:main"
+
 [tool.ruff]
 # Line length with big screen
 line-length = 120

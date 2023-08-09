@@ -2,7 +2,8 @@ import yaml
 import logging
 import os
 from datetime import datetime
-from pathlib import Path
+
+# from pathlib import Path
 
 
 CWD = os.path.dirname(__file__)
@@ -17,12 +18,17 @@ def load_yaml() -> dict:
     return cfg_dict
 
 
+#### DIR Function ####
+def make_dir(dirname):
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
+
+
 #### INIT LOGGER ####
-
-
 class Logger:
     def __init__(self) -> None:
-        self.cfg_log = load_yaml()["logging"]
+        self.cfg = load_yaml()
+        self.cfg_log = self.cfg["logging"]
 
     def get_loglevel(self, level: str) -> int:
         """convert level as string to loglevel
@@ -58,12 +64,9 @@ class Logger:
         format = logging.Formatter(self.cfg_log["format"], datefmt=self.cfg_log["datefmt"])
         # Create File Logging
         if self.cfg_log["log_in_file"]:
-            # Create Folder if it doesn't exist
-            if not os.path.exists(self.cfg_log["dir"]):
-                os.mkdir(self.cfg_log["dir"])
 
             log_path = os.path.join(self.cfg_log["dir"], self.get_logfile_name())
-            fh = logging.FileHandler(log_path)
+            fh = logging.FileHandler(log_path, encoding=self.cfg['encoding'])
             fh.setLevel(self.get_loglevel(self.cfg_log["loglevel_file"]))
 
             # add Formatter

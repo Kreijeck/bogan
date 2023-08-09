@@ -1,8 +1,9 @@
 # All about files and paths
-dir:
-  db_file: "spiel.db"
-  bgg_json: "plays.json"
+# dir:
+#   root: "bla"
 
+
+encoding: "utf-16"
 # All for Logging stuff
 logging:
   # Logfile shall look like prefix_date.log
@@ -14,5 +15,13 @@ logging:
   datefmt: "%d.%m.%y %H:%M:%S"
   log_in_file: True
   log_in_stream: True
-  loglevel_stream: debug
+  loglevel_stream: info
   loglevel_file: debug
+
+# All stuff to database and api request
+database:
+  base_url: 'https://api.geekdo.com/xmlapi2'
+  dir: "data"
+  db_file: "spiel.db"
+  # Filename of json-File. If "None" no json is saved
+  bgg_json: "plays.json"
