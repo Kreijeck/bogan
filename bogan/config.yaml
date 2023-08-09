@@ -1,0 +1,18 @@
+# All about files and paths
+dir:
+  db_file: "spiel.db"
+  bgg_json: "plays.json"
+
+# All for Logging stuff
+logging:
+  # Logfile shall look like prefix_date.log
+  dir: "logs"
+  logfile:
+    date: "%Y%m%d%H%M"
+    prefix: 'log'
+  format: '%(asctime)s - %(filename)s - %(levelname)s - %(message)s'
+  datefmt: "%d.%m.%y %H:%M:%S"
+  log_in_file: True
+  log_in_stream: True
+  loglevel_stream: debug
+  loglevel_file: debug
