@@ -32,6 +32,7 @@ def create_database(clear_all=True):
 
     # Erstelle Datenbank
     Base.metadata.create_all(engine)
+    log.info(f"Succ")
 
 
 def create_ort(play: dict, session: Session) -> Ort:
