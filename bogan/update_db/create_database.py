@@ -28,11 +28,11 @@ def create_database(clear_all=True):
     # clear database
     if clear_all:
         Base.metadata.drop_all(engine)
-        log.info(f"Delete old database: {cfg_db['db_file']}")
+        log.info(f"Delete old database: {db_path}")
 
     # Erstelle Datenbank
     Base.metadata.create_all(engine)
-    log.info(f"Succ")
+    log.info(f"Successfully create db: {db_path}")
 
 
 def create_ort(play: dict, session: Session) -> Ort:

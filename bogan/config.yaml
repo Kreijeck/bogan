@@ -9,7 +9,7 @@ logging:
   # Logfile shall look like prefix_date.log
   dir: "logs"
   logfile:
-    date: "%Y%m%d%H%M"
+    date: "%Y%m%d%Hxx"
     prefix: 'log'
   format: '%(asctime)s - %(filename)s - %(levelname)s - %(message)s'
   datefmt: "%d.%m.%y %H:%M:%S"
