@@ -1,0 +1,22 @@
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/static/skeleton/normalize.css">
+    <link rel="stylesheet" type="text/css" href="/static/skeleton/skeleton.css">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+    <h4> Navigationsleiste (Platzhalter) </h4>
+    <ul class="navigation">
+        <li class="navigation-item"><a href="/">Startseite</a></li>
+        <li class="navigation-item"><a href="/user">User</a></li>
+        <li class="navigation-item"><a href="/krypto">Kryptorechner</a></li>
+    </ul>
+    <div style="clear: both">&nbsp;</div>
+
+    {% block content %} {% endblock %}
+</div>
+</body>
+</html>
