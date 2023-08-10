@@ -9,7 +9,7 @@ log = get_logger(__file__)
 BASE_URL = cfg_db['base_url']
 
 def get_plays_dict() -> dict:
-    para = {'username': 'Kreijeck'}
+    para = {'username': 'Kreijeck', 'page': "1"}
     endpoint = "plays"
     resp = requests.get("/".join((BASE_URL, endpoint)), para)
     #print(xmltodict.parse(resp.text))
@@ -37,16 +37,21 @@ def get_and_write_play_data() -> dict:
         dict: Json File with all plays
     """
     play_file = get_plays_dict()
-    for play in play_file["plays"]["play"]:
-        log.debug(f"Play received: {play}")
     # Create json-File
     if cfg_db['bgg_json']:
         json_path = os.path.join(cfg_db['dir'], cfg_db['bgg_json'])
         with open(json_path, 'w', encoding=cfg_encoding) as f:
             json.dump(play_file, f, indent=2)
             log.info(f"Successfully create json-file: {json_path}")
+    try:
+        for play in play_file["plays"]["play"]:
+            log.debug(f"Play received: {play}")
+    except KeyError as e:
+        log.error("Es konnte keine Daten für Spiele gefunden werden! Bitte Parameter überprüfen!")
+        log.error(f"Key-Error: {e}")
+        exit()
             
-    
+
     return play_file
 
 

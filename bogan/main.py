@@ -11,8 +11,12 @@ def index():
 
 @app.route("/user")
 def user():
-    user = sql.get_user()
-    return render_template("user.html", user = user)
+    users = sql.get_users()
+    return render_template("user.html", users = users)
+
+@app.route("/user/<name>")
+def user_detail(name):
+    return f"Hallo {name}"
 
 if __name__ == '__main__':
     app.run(debug=True)
