@@ -27,6 +27,6 @@ db_path = os.path.join(cfg_db["dir"], cfg_db["db_file"])
 
 
 # DB Engine
-def get_engine() -> create_engine:
+def get_play_engine() -> create_engine:
     return create_engine(f"sqlite:///{db_path}")
 

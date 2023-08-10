@@ -4,12 +4,12 @@ from bogan.db.models import Benutzer, Spieler, Partie, Ort, Brettspiel, Base
 from datetime import datetime
 import json
 import os
-from bogan.config import get_logger, CFG_YAML, get_engine, cfg_db, db_path
+from bogan.config import get_logger, CFG_YAML, get_play_engine, cfg_db, db_path
 from bogan.db.get_data_from_bgg import get_and_write_play_data
 
 log = get_logger(__file__)
 
-engine = get_engine()
+engine = get_play_engine()
 
 
 def check_str2float(str2float: str) -> float:
