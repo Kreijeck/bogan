@@ -1,18 +1,15 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from bogan.update_db.models import Benutzer, Spieler, Partie, Ort, Brettspiel, Base
+from bogan.db.models import Benutzer, Spieler, Partie, Ort, Brettspiel, Base
 from datetime import datetime
 import json
 import os
 from bogan.config import get_logger, CFG_YAML
-from bogan.update_db.get_data_from_bgg import get_and_write_play_data
+from bogan.db.get_data_from_bgg import get_and_write_play_data
 
 cfg_db = CFG_YAML["database"]
 log = get_logger(__file__)
 db_path = os.path.join(cfg_db["dir"], cfg_db["db_file"])
-# create folder
-if not os.path.exists(cfg_db["dir"]):
-    os.mkdir(cfg_db["dir"])
 
 engine = create_engine(f"sqlite:///{db_path}")
 
