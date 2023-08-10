@@ -28,8 +28,8 @@ class Partie(Base):
     spieler: Mapped[List["Spieler"]] = relationship(back_populates="partie", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
-        return f"ID: {self.id}, brettspiel: {self.brettspiel.name}, datum: {self.datum}, ort: {self.ort.name}, "\
-        f"Players: {self.spieler}"
+        return f"Partie(id={self.id}, brettspiel={self.brettspiel.name}, datum={self.datum}, ort={self.ort.name}, "\
+        f"Spieler={self.spieler})"
 
 
 class Spieler(Base):
@@ -54,8 +54,8 @@ class Spieler(Base):
     benutzer: Mapped["Benutzer"] = relationship(back_populates="spieler")
 
     def __repr__(self) -> str:
-        return f"ID: {self.id}, name: {self.name}, punktzahl: {self.punktzahl}, "\
-            f"partie_id: {self.partie_id}, benutzer: {self.benutzer}"
+        return f"Spieler(id={self.id}, name={self.name}, punktzahl={self.punktzahl}, "\
+            f"partie_id={self.partie_id}, benutzer={self.benutzer.name})"
 
 
 class Benutzer(Base):
@@ -72,7 +72,7 @@ class Benutzer(Base):
     spieler: Mapped[List["Spieler"]] = relationship("Spieler", back_populates="benutzer")
 
     def __repr__(self) -> str:
-        return f"ID: {self.id}, name:{self.name}"
+        return f"Benutzer(id={self.id}, name={self.name})"
 
 
 class Brettspiel(Base):
@@ -94,8 +94,8 @@ class Brettspiel(Base):
     partie: Mapped[List["Partie"]] = relationship(back_populates="brettspiel")
 
     def __repr__(self) -> str:
-        return f"ID: {self.id}, name: {self.name}, "\
-            f"complexity: {self.complexity or 'na'}, duration: {self.duration or 'na'}"
+        return f"Brettspiel(id={self.id}, name={self.name}, "\
+            f"complexity={self.complexity or 'na'}, duration={self.duration or 'na'})"
 
 
 class Ort(Base):
@@ -111,7 +111,6 @@ class Ort(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String, unique=True)
     partie: Mapped[List["Partie"]] = relationship("Partie", back_populates="ort")
-    # partie: Mapped["Partie"] = relationship(back_populates="ort")
 
     def __repr__(self) -> str:
-        return f"ID: {self.id}, Name: {self.name}"
+        return f"Ort(id={self.id}, name={self.name})"
