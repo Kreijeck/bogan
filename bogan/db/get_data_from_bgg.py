@@ -2,9 +2,9 @@ import requests
 import xmltodict
 import json
 import os
-from bogan.config import CFG_YAML, get_logger
+from bogan.config import get_logger, cfg_encoding, cfg_db
 
-cfg_db = CFG_YAML['database']
+
 log = get_logger(__file__)
 BASE_URL = cfg_db['base_url']
 
@@ -13,7 +13,7 @@ def get_plays_dict() -> dict:
     endpoint = "plays"
     resp = requests.get("/".join((BASE_URL, endpoint)), para)
     #print(xmltodict.parse(resp.text))
-    return xmltodict.parse(resp.text, encoding=CFG_YAML['encoding'])
+    return xmltodict.parse(resp.text, encoding=cfg_encoding)
 
 
 def get_boardgame_info(id) -> dict:
@@ -22,7 +22,7 @@ def get_boardgame_info(id) -> dict:
         'stats': 1}
     endpoint = "thing"
     resp = requests.get("/".join((BASE_URL, endpoint)), para)
-    return xmltodict.parse(resp.text, encoding=CFG_YAML['encoding'])["items"]["item"]
+    return xmltodict.parse(resp.text, encoding=cfg_encoding)["items"]["item"]
 
 
 def get_plays_list():
@@ -42,7 +42,7 @@ def get_and_write_play_data() -> dict:
     # Create json-File
     if cfg_db['bgg_json']:
         json_path = os.path.join(cfg_db['dir'], cfg_db['bgg_json'])
-        with open(json_path, 'w', encoding=CFG_YAML['encoding']) as f:
+        with open(json_path, 'w', encoding=cfg_encoding) as f:
             json.dump(play_file, f, indent=2)
             log.info(f"Successfully create json-file: {json_path}")
             
@@ -53,7 +53,7 @@ def get_and_write_play_data() -> dict:
 
 if __name__ == "__main__":
     json_path = os.path.join('data', 'plays.json')
-    with open(json_path, "w", encoding=CFG_YAML['encoding']) as file:
+    with open(json_path, "w", encoding=cfg_encoding) as file:
         json.dump(get_plays_dict(), file, indent=2)
         
     for play in get_plays_list():

@@ -1,17 +1,15 @@
-from sqlalchemy import create_engine
+# from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
 from bogan.db.models import Benutzer, Spieler, Partie, Ort, Brettspiel, Base
 from datetime import datetime
 import json
 import os
-from bogan.config import get_logger, CFG_YAML
+from bogan.config import get_logger, CFG_YAML, get_engine, cfg_db, db_path
 from bogan.db.get_data_from_bgg import get_and_write_play_data
 
-cfg_db = CFG_YAML["database"]
 log = get_logger(__file__)
-db_path = os.path.join(cfg_db["dir"], cfg_db["db_file"])
 
-engine = create_engine(f"sqlite:///{db_path}")
+engine = get_engine()
 
 
 def check_str2float(str2float: str) -> float:
