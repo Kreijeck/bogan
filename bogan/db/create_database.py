@@ -1,6 +1,6 @@
 # from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from bogan.db.models import Benutzer, Spieler, Partie, Ort, Brettspiel, Base
+from bogan.db.models import Benutzer, SpielerPos, Partie, Ort, Brettspiel, Base
 from datetime import datetime
 import json
 import os
@@ -93,7 +93,7 @@ def add_data_to_database(json_file):
 
                 # Erstelle den Spieler und verknüpfe ihn mit dem Benutzer und der Partie
                 # Überprüfe ob Punktzahl vorhanden
-                spieler = Spieler(name=player["@name"], punktzahl=punktzahl, partie=partie, benutzer=benutzer)
+                spieler = SpielerPos(punktzahl=punktzahl, partie=partie, benutzer=benutzer)
                 session.add(spieler)
         except Exception as e:
             log.warning(

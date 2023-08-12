@@ -25,28 +25,27 @@ class Partie(Base):
     datum: Mapped[date] = mapped_column(Date)
     ort_id: Mapped[int] = mapped_column(ForeignKey("ort.id"))
     ort: Mapped["Ort"] = relationship(back_populates="partie")
-    spieler: Mapped[List["Spieler"]] = relationship(back_populates="partie", cascade="all, delete-orphan")
+    spieler: Mapped[List["SpielerPos"]] = relationship(back_populates="partie", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         return f"Partie(id={self.id}, brettspiel={self.brettspiel.name}, datum={self.datum}, ort={self.ort.name}, "\
         f"Spieler={self.spieler})"
 
 
-class Spieler(Base):
+class SpielerPos(Base):
     """Spieler inklusive Punkte bei einer absolvierten Partie
 
     Args:
         id (int): ID
-        name (string): Spielername
         punktzahl (float): erreichte Punkte im Spiel
         partie_id (int): id der zugehörigen Partie
         benutzer_id (int): id des benutzers
 
     """
 
-    __tablename__ = "spieler"
+    __tablename__ = "spieler_pos"
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String)
+    #name: Mapped[str] = mapped_column(String)
     punktzahl: Mapped[float] = mapped_column(Float, nullable=True)
     partie_id: Mapped[int] = mapped_column(ForeignKey("partie.id"))
     partie: Mapped["Partie"] = relationship(back_populates="spieler")
@@ -54,7 +53,7 @@ class Spieler(Base):
     benutzer: Mapped["Benutzer"] = relationship(back_populates="spieler")
 
     def __repr__(self) -> str:
-        return f"Spieler(id={self.id}, name={self.name}, punktzahl={self.punktzahl}, "\
+        return f"SpielerPos(id={self.id}, punktzahl={self.punktzahl}, "\
             f"partie_id={self.partie_id}, benutzer={self.benutzer.name})"
 
 
@@ -69,7 +68,7 @@ class Benutzer(Base):
     __tablename__ = "benutzer"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String, unique=True)
-    spieler: Mapped[List["Spieler"]] = relationship("Spieler", back_populates="benutzer")
+    spieler: Mapped[List["SpielerPos"]] = relationship("SpielerPos", back_populates="benutzer")
 
     def __repr__(self) -> str:
         return f"Benutzer(id={self.id}, name={self.name})"
