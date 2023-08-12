@@ -8,8 +8,25 @@ from bogan.config import get_logger, cfg_encoding, cfg_db
 log = get_logger(__file__)
 BASE_URL = cfg_db['base_url']
 
-def get_plays_dict() -> dict:
-    para = {'username': 'Kreijeck', 'page': "1"}
+def validate_json(json_file: dict) -> bool:
+    """Überprüft ob json-File die keys ["plays]["play hat]
+
+    Args:
+        json_file (dict): json-file von bgg
+
+    Returns:
+        bool:   True: Partien können eingelesen werden
+                False: Es fehlt ein notwendiger Key für Partien (["plays]["play])
+
+    """
+    if "plays" in json_file.keys():
+        if "play" in json_file["plays"].keys():
+            return True
+    # Struktur leer, kein passendes Format
+    return False
+
+def get_plays_dict(page:int) -> dict:
+    para = {'username': 'Kreijeck', 'page': page}
     endpoint = "plays"
     resp = requests.get("/".join((BASE_URL, endpoint)), para)
     #print(xmltodict.parse(resp.text))
@@ -36,7 +53,34 @@ def get_and_write_play_data() -> dict:
     Returns:
         dict: Json File with all plays
     """
-    play_file = get_plays_dict()
+    # Read all play_data (1 page max. 100 results)
+    play_exist = True
+    page = 1
+    play_file_list = []
+    while play_exist:
+        tmp_play = get_plays_dict(page=page)
+        play_exist = validate_json(tmp_play)
+        if play_exist:
+            play_file_list.append(tmp_play)
+            page += 1
+
+    # Combine playfiles
+    play_file = {}
+    for play_page in play_file_list:
+        # On first iteration fill playfile with json-format
+        if play_file:
+            # Wenn json-File Partien enthält
+            if validate_json(play_page):
+                play_file["plays"]["@page"] = len(play_file_list)
+                play_file["plays"]["play"] += play_page["plays"]["play"] 
+            else:
+                log.error("Format der .json-Datei von BGG entspricht nicht den Vorgaben")
+                exit()
+        else:
+            play_file = play_page
+
+
+
     # Create json-File
     if cfg_db['bgg_json']:
         json_path = os.path.join(cfg_db['dir'], cfg_db['bgg_json'])
@@ -57,9 +101,4 @@ def get_and_write_play_data() -> dict:
 
 
 if __name__ == "__main__":
-    json_path = os.path.join('data', 'plays.json')
-    with open(json_path, "w", encoding=cfg_encoding) as file:
-        json.dump(get_plays_dict(), file, indent=2)
-        
-    for play in get_plays_list():
-        print(play)
+    pass

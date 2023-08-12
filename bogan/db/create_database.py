@@ -62,6 +62,27 @@ def create_benutzer(player: dict, session: Session) -> Benutzer:
     return benutzer
 
 
+def create_partie(play: dict, session: Session) -> Partie:
+    partie = session.query(Partie).filter_by(id=play["@id"]).first()
+    ort = create_ort(play, session)
+    brettspiel = create_brettspiel(play, session)
+    datum = datetime.strptime(play["@date"], "%Y-%m-%d").date()
+
+    # Wenn keine Partie mit ID vorhanden ist:
+    if partie is None:    
+        partie = Partie(id=play["@id"], datum=datum, ort=ort, brettspiel=brettspiel)
+        session.add(partie)
+    # wenn id bereits vorhanden ist, soll die Partie geupdated werden
+    else:
+        partie.ort = ort
+        partie.brettspiel = brettspiel
+        partie.datum = datum
+        session.commit()
+
+    return partie
+    
+
+
 def read_json() -> dict:
     if cfg_db["bgg_json"]:
         json_path = os.path.join(cfg_db["dir"], cfg_db["bgg_json"])
@@ -80,15 +101,11 @@ def add_data_to_database(json_file):
     # Füge jede Partie zur Datenbank hinzu
     for play in spieldaten["plays"]["play"]:
         try:
-            ort = create_ort(play, session)
-            brettspiel = create_brettspiel(play, session)
-            datum = datetime.strptime(play["@date"], "%Y-%m-%d").date()
-            partie = Partie(id=play["@id"], datum=datum, ort=ort, brettspiel=brettspiel)
-            session.add(partie)
+            partie = create_partie(play=play, session=session)
 
             # Füge jeden Spieler zur Partie hinzu
             for player in play["players"]["player"]:
-                benutzer = create_benutzer(player, session)
+                benutzer = create_benutzer(player=player, session=session)
                 punktzahl = check_str2float(player["@score"])
 
                 # Erstelle den Spieler und verknüpfe ihn mit dem Benutzer und der Partie
@@ -97,9 +114,9 @@ def add_data_to_database(json_file):
                 session.add(spieler)
         except Exception as e:
             log.warning(
-                f"Folgendes Spiel hat einen Fehler: Error: {e},"
-                "Partie_ID: {play['@id']}, Spiel: {play['item']['@name']}"
+                f"Spiel nicht in Datenbank: Partie_ID: {play['@id']}, Spiel: {play['item']['@name']}"
             )
+            log.warning(f"Fehlermeldung: {e}")
 
     # Speicher die Änderungen
     session.commit()
@@ -109,8 +126,11 @@ def add_data_to_database(json_file):
 
 def main():
     create_database()
-    play_date = get_and_write_play_data()
-    add_data_to_database(play_date)
+    play_data = get_and_write_play_data()
+    # json_path = os.path.join("data", "plays.json")
+    # with open(json_path, 'r', encoding="utf-16") as f:
+    #         play_data = json.load(f)
+    add_data_to_database(play_data)
 
 
 if __name__ == "__main__":
