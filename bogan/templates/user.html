@@ -3,7 +3,7 @@
 {% block content %}
     <h1> Hier erscheinen alle Benutzer</h1>
     {% for user in users %}
-        <li> <a href="/user/{{ user }}"> {{ user }}</a> </h1>
+        <ul> <a href="/user/{{ user.name }}"> {{ user.id }} {{ user.name }}</a> </ul>
     {% endfor %}
 
 
