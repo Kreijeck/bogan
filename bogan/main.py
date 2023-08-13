@@ -14,9 +14,15 @@ def user():
     users = sql.get_users()
     return render_template("user.html", users = users)
 
+@app.route("/partien")
+def partien():
+    return render_template("scroll_table.html")
+
 @app.route("/user/<name>")
 def user_detail(name):
-    return f"Hallo {name}"
+    partien = sql.get_partien(name)
+    return render_template("user_detail.html", name=name, partien=partien)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

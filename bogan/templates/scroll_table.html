@@ -1,0 +1,84 @@
+<html>
+<head>
+    <style type="text/css">
+        table {
+            
+            border-collapse: collapse;
+        }
+  
+        .scrollingTable {
+            width: 50em;
+            overflow-y: auto;
+        }
+    </style>
+    <script type="text/javascript">
+        function makeTableScroll() {
+            // Constant retrieved from server-side via JSP
+            var maxRows = 3;
+
+            var table = document.getElementById('myTable');
+            var wrapper = table.parentNode;
+            var rowsInTable = table.rows.length;
+            var height = 0;
+            if (rowsInTable > maxRows) {
+                for (var i = 0; i < maxRows; i++) {
+                    height += table.rows[i].clientHeight;
+                }
+                wrapper.style.height = height + "px";
+            }
+        }
+    </script>
+</head>
+<body onload="makeTableScroll();">
+    <div class="scrollingTable">
+        <table id="myTable">
+            <tr>
+                <td>blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+            </tr>
+            <tr>
+                <td>Here is some long text that should wrap: blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+            </tr>
+            <tr>
+                <td>blah</td>
+                <td>blah</td>
+                <td>blah</td>
+                <td>blah</td>
+                <td>blah blah</td>
+            </tr>
+            <tr>
+                <td>blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+            </tr>
+            <tr>
+                <td>blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+            </tr>
+            <tr>
+                <td>blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+                <td>blah blah</td>
+            </tr>
+            <tr>
+                <td>blah</td>
+                <td>blah</td>
+                <td>blah</td>
+                <td>blah</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

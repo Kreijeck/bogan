@@ -1,10 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1> Hier erscheinen alle Benutzer</h1>
-    {% for user in users %}
-        <li> <a href="/user"> {{ user }}</a> </h1>
+<h1> Spiele für {{ name }}</h1>
+
+
+<table class="table table-striped scrollingTable">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Datum</th>
+            <th scope="col">Brettspiel</th>
+            <th scope="col">Ort</th>
+            <th scope="col">Spieler</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+        {% for partie in partien %}
+        <th scope="row"> {{loop.index }} </th>
+        <td>{{partie.datum}}</td>
+        <td>{{partie.brettspiel.name}}</td>
+        <td>{{partie.ort.name}}</td>
+        <td>{{partie.spieler}}</td>
+    </tr>
     {% endfor %}
+
+    </tbody>
+</table>
+
+
 
 
 {% endblock %}
