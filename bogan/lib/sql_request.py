@@ -8,15 +8,9 @@ engine = get_play_engine()
 session = Session(engine)
 
 def get_users():
-    ignored_users = ["Bot", "Jörn"]
-    benutzer = select(Benutzer).order_by(Benutzer.id)
-    for ignored_user in ignored_users:
-        benutzer = session.query(benutzer).filter_by(Benutzer.name != ignored_user).all()
-        a  =5 
-        b=6
-        
+    stmt = select(Benutzer).order_by(Benutzer.id)
 
-    return benutzer#session.scalars(stmt)
+    return session.scalars(stmt)
 
 def get_partien(user):
     benutzer_id = session.scalars(select(Benutzer.id).where(Benutzer.name==user)).first()
