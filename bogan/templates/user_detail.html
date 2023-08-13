@@ -20,7 +20,11 @@
                 <td>{{partie.datum}}</td>
                 <td>{{partie.brettspiel.name}}</td>
                 <td>{{partie.ort.name}}</td>
-                <td>{{partie.spieler}}</td>
+                
+                <td>{% for spieler in partie.spieler%}
+                    {{ spieler.benutzer.name }} ({{ spieler.punktzahl }})<br>
+                    {% endfor %}
+                </td>
             </tr>
             {% endfor %}
 
