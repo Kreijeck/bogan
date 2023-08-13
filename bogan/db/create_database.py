@@ -13,9 +13,9 @@ engine = get_play_engine()
 
 
 def check_str2float(str2float: str) -> float:
-    if str2float.isdigit():
+    try:
         return float(str2float)
-    else:
+    except ValueError:
         return None
 
 

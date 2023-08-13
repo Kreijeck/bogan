@@ -53,8 +53,8 @@ class SpielerPos(Base):
     benutzer: Mapped["Benutzer"] = relationship(back_populates="spieler")
 
     def __repr__(self) -> str:
-        return f"SpielerPos(id={self.id}, punktzahl={self.punktzahl}, "\
-            f"partie_id={self.partie_id}, benutzer={self.benutzer.name})"
+        return f"SpielerPos(id={self.id}, name={self.benutzer.name}, punktzahl={self.punktzahl}, "\
+            f"partie={self.partie.brettspiel.name})"
 
 
 class Benutzer(Base):
