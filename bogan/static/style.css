@@ -17,3 +17,8 @@
 li {
     padding-left: 30px;
 } */
+
+.scrollingTable {
+    width: 50%;
+    overflow-y: auto;
+}

@@ -2,33 +2,31 @@
 
 {% block content %}
 <h1> Spiele für {{ name }}</h1>
+<div class="scrollingTable">
+    <table class="table table-striped", id="short Table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Datum</th>
+                <th scope="col">Brettspiel</th>
+                <th scope="col">Ort</th>
+                <th scope="col">Spieler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for partie in partien %}
+                <th scope="row"> {{loop.index }} </th>
+                <td>{{partie.datum}}</td>
+                <td>{{partie.brettspiel.name}}</td>
+                <td>{{partie.ort.name}}</td>
+                <td>{{partie.spieler}}</td>
+            </tr>
+            {% endfor %}
 
-
-<table class="table table-striped scrollingTable">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Datum</th>
-            <th scope="col">Brettspiel</th>
-            <th scope="col">Ort</th>
-            <th scope="col">Spieler</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-        {% for partie in partien %}
-        <th scope="row"> {{loop.index }} </th>
-        <td>{{partie.datum}}</td>
-        <td>{{partie.brettspiel.name}}</td>
-        <td>{{partie.ort.name}}</td>
-        <td>{{partie.spieler}}</td>
-    </tr>
-    {% endfor %}
-
-    </tbody>
-</table>
-
-
+        </tbody>
+    </table>
+</div>
 
 
 {% endblock %}
