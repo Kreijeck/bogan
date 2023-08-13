@@ -18,7 +18,6 @@ def check_str2float(str2float: str) -> float:
     except ValueError:
         return None
 
-
 def create_database(clear_all=True):
     # clear database
     if clear_all:
@@ -107,10 +106,11 @@ def add_data_to_database(json_file):
             for player in play["players"]["player"]:
                 benutzer = create_benutzer(player=player, session=session)
                 punktzahl = check_str2float(player["@score"])
+                win = True if (player["@win"] == "1") else False
 
                 # Erstelle den Spieler und verknüpfe ihn mit dem Benutzer und der Partie
                 # Überprüfe ob Punktzahl vorhanden
-                spieler = SpielerPos(punktzahl=punktzahl, partie=partie, benutzer=benutzer)
+                spieler = SpielerPos(punktzahl=punktzahl, win=win, partie=partie, benutzer=benutzer)
                 session.add(spieler)
         except Exception as e:
             log.warning(

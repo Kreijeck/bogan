@@ -1,6 +1,6 @@
 from typing import List
 from datetime import date
-from sqlalchemy import String, Float, Integer, Date, ForeignKey
+from sqlalchemy import String, Float, Integer, Date, ForeignKey, Boolean
 from sqlalchemy.orm import relationship, declarative_base, Mapped, mapped_column
 
 
@@ -47,6 +47,7 @@ class SpielerPos(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     #name: Mapped[str] = mapped_column(String)
     punktzahl: Mapped[float] = mapped_column(Float, nullable=True)
+    win: Mapped[bool] = mapped_column(Boolean)
     partie_id: Mapped[int] = mapped_column(ForeignKey("partie.id"))
     partie: Mapped["Partie"] = relationship(back_populates="spieler")
     benutzer_id: Mapped[int] = mapped_column(ForeignKey("benutzer.id"))

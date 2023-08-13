@@ -21,8 +21,12 @@
                 <td>{{partie.brettspiel.name}}</td>
                 <td>{{partie.ort.name}}</td>
                 
-                <td>{% for spieler in partie.spieler%}
+                <td>{% for spieler in partie.spieler %}
+                    {% if spieler.win %}
+                    <b>{{ spieler.benutzer.name }} ({{ spieler.punktzahl }})<br></b>
+                    {% else %}
                     {{ spieler.benutzer.name }} ({{ spieler.punktzahl }})<br>
+                    {% endif %}
                     {% endfor %}
                 </td>
             </tr>
