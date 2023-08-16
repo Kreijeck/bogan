@@ -1,10 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1> Hier erscheinen alle Benutzer</h1>
-    {% for user in users %}
-        <ul> <a href="/user/{{ user.name }}"> {{ user.id }} {{ user.name }}</a> </ul>
-    {% endfor %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1> Brettspieler</h1>
+            {% for user in users %}
+            <ul> <a href="/user/{{ user.name }}"> {{ user.id }} {{ user.name }}</a> </ul>
+            {% endfor %}
+        </div>
+        <div class="col">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam dolorem minima, alias animi saepe esse
+                aliquid placeat quis natus. Autem reiciendis temporibus accusantium officia doloribus rem, ea
+                exercitationem repudiandae adipisci.</p>
+        </div>
 
+    </div>
+    <div class="row">
+        <div class="col">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi et nulla doloremque odio officiis
+                perspiciatis nemo architecto quam fuga blanditiis? Culpa quidem corrupti eveniet error ipsa vitae quae
+                obcaecati. Officiis?</p>
+        </div>
+        <div class="col">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio, suscipit aperiam quis odit ipsam,
+                est, eius praesentium repudiandae fugiat autem hic. Amet, modi! Deserunt, enim! Velit, nobis quam.
+                Dolor, obcaecati.</p>
+        </div>
+    </div>
+</div>
 
 {% endblock %}

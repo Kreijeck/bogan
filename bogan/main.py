@@ -20,7 +20,7 @@ def partien():
 
 @app.route("/user/<name>")
 def user_detail(name):
-    partien = sql.get_partien(name)
+    partien = sql.get_partien_by_date(name)
     return render_template("user_detail.html", name=name, partien=partien)
 
 

@@ -1,40 +1,62 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1> Spiele für {{ name }}</h1>
-<div class="scrollingTable">
-    <table class="table table-striped", id="short Table">
-        <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Datum</th>
-                <th scope="col">Brettspiel</th>
-                <th scope="col">Ort</th>
-                <th scope="col">Spieler</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                {% for partie in partien %}
-                <th scope="row"> {{loop.index }} </th>
-                <td>{{partie.datum}}</td>
-                <td>{{partie.brettspiel.name}}</td>
-                <td>{{partie.ort.name}}</td>
-                
-                <td>{% for spieler in partie.spieler %}
-                    {% if spieler.win %}
-                    <b>{{ spieler.benutzer.name }} ({{ spieler.punktzahl }})<br></b>
-                    {% else %}
-                    {{ spieler.benutzer.name }} ({{ spieler.punktzahl }})<br>
-                    {% endif %}
-                    {% endfor %}
-                </td>
-            </tr>
-            {% endfor %}
+<div class="container">
+    <div class="row">
+            <!-- Overview about all games played by user -->
+            <h1> gespielte Spiele von {{ name }}</h1>
+            <!-- <div class="scrollingTable"> -->
+                <table class="table table-hover" > <!--id="id_scroll"-->
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Datum</th>
+                            <th scope="col">Brettspiel</th>
+                            <th scope="col">Ort</th>
+                            <th scope="col">Spieler</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for month in partien.keys() %}
+                        <tr class="table-info"><td>{{ month }}</td></tr>
+                        <tr>
+                            {% for partie in partien[month] %}
+                            <th scope="row"> {{loop.index }} </th>
+                            <td>{{partie.datum}}</td>
+                            <td>{{partie.brettspiel.name}}</td>
+                            <td>{{partie.ort.name}}</td>
 
-        </tbody>
-    </table>
+                            <td>{% for spieler in partie.spieler %}
+                                {% if spieler.win %}
+                                <b>{{ spieler.benutzer.name }} ({{ spieler.punktzahl }})<br></b>
+                                {% else %}
+                                {{ spieler.benutzer.name }} ({{ spieler.punktzahl }})<br>
+                                {% endif %}
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            <!-- </div> -->
+        </div>
+
+    <div class="row">
+        <div class="col">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi et nulla doloremque odio officiis
+                perspiciatis nemo architecto quam fuga blanditiis? Culpa quidem corrupti eveniet error ipsa vitae quae
+                obcaecati. Officiis?</p>
+        </div>
+        <div class="col">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio, suscipit aperiam quis odit ipsam,
+                est, eius praesentium repudiandae fugiat autem hic. Amet, modi! Deserunt, enim! Velit, nobis quam.
+                Dolor, obcaecati.</p>
+        </div>
+    </div>
 </div>
+
 
 
 {% endblock %}

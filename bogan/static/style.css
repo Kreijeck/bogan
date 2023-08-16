@@ -23,3 +23,8 @@ ul {
     width: 50%;
     overflow-y: auto;
 }
+
+.headingTable {
+    background-color: rgb(173, 230, 197);
+    color: red;
+}
