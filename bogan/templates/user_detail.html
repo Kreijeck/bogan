@@ -6,10 +6,9 @@
             <!-- Overview about all games played by user -->
             <h1> gespielte Spiele von {{ name }}</h1>
             <!-- <div class="scrollingTable"> -->
-                <table class="table table-hover" > <!--id="id_scroll"-->
+                <table class="table table-hover table-striped table-bordered" > <!--id="id_scroll"-->
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
                             <th scope="col">Datum</th>
                             <th scope="col">Brettspiel</th>
                             <th scope="col">Ort</th>
@@ -18,10 +17,14 @@
                     </thead>
                     <tbody>
                         {% for month in partien.keys() %}
-                        <tr class="table-info"><td>{{ month }}</td></tr>
+                        <tr class="table-info">
+                            <td></td>
+                            <td>{{ month }}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                         <tr>
                             {% for partie in partien[month] %}
-                            <th scope="row"> {{loop.index }} </th>
                             <td>{{partie.datum}}</td>
                             <td>{{partie.brettspiel.name}}</td>
                             <td>{{partie.ort.name}}</td>
