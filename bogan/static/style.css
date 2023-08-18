@@ -1,20 +1,3 @@
-/* .navigation {
-    list-style-type: none;
-}
-
-.navigation-item {
-    float: left;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-size: 40;
-}
-
-.radio {
-    display: inline;
-}
-
-*/
-
 ul {
     padding-left: 30px;
 }
@@ -27,4 +10,13 @@ ul {
 .headingTable {
     background-color: rgb(173, 230, 197);
     color: red;
+}
+
+.infobox {
+    border: 2px solid black;
+    height: 50vh;
+    padding: 10px;
+    background-color: lightgray;
+
+
 }

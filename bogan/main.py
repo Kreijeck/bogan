@@ -31,7 +31,7 @@ def boardgame_overview():
 @app.route("/boardgames/<name>")
 def boardgame_detail(name):
     partien = []
-    return f"<p>Hier erscheint die Statistik für {name}</p>"
+    return render_template("boardgame_detail.html")
 
 
 if __name__ == '__main__':
