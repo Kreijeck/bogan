@@ -4,9 +4,9 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <h1> Brettspieler</h1>
-            {% for user in users %}
-            <ul> <a href="/user/{{ user.name }}"> {{ user.id }} {{ user.name }}</a> </ul>
+            <h1> {{ component.upper() }}</h1>
+            {% for item in overview %}
+            <ul> <a href="/{{component}}/{{item.name }}">{{ item.name }} (id:{{ item.id }})</a> </ul>
             {% endfor %}
         </div>
         <div class="col">

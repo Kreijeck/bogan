@@ -23,6 +23,7 @@ cfg_encoding = CFG_YAML['encoding']
 
 # Path
 cfg_db = CFG_YAML["database"]
+cfg_www = CFG_YAML["www"]
 db_path = os.path.join(cfg_db["dir"], cfg_db["db_file"])
 
 

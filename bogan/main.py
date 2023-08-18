@@ -12,16 +12,26 @@ def index():
 @app.route("/user")
 def user():
     users = sql.get_users()
-    return render_template("user.html", users = users)
+    return render_template("overview.html", component="user", overview=users)
 
 @app.route("/partien")
 def partien():
-    return render_template("scroll_table.html")
+    return "Hier erscheint eine Liste aller Partien"
 
 @app.route("/user/<name>")
 def user_detail(name):
     partien = sql.get_partien_by_date(name)
     return render_template("user_detail.html", name=name, partien=partien)
+
+@app.route("/boardgames")
+def boardgame_overview():
+    boardgames = sql.get_boardgames()
+    return render_template("overview.html", component="boardgames", overview=boardgames)
+
+@app.route("/boardgames/<name>")
+def boardgame_detail(name):
+    partien = []
+    return f"<p>Hier erscheint die Statistik für {name}</p>"
 
 
 if __name__ == '__main__':

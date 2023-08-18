@@ -1,25 +1,37 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from bogan.config import get_logger, get_play_engine
+from bogan.config import get_logger, get_play_engine, cfg_www
 from bogan.db.models import Benutzer, Partie, SpielerPos, Brettspiel, Ort
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 log = get_logger(__file__)
 engine = get_play_engine()
-session = Session(engine)
+#session = Session(engine)
 
 
 def get_users():
-    stmt = select(Benutzer).order_by(Benutzer.id)
+    with Session(engine) as session:
+        users = session.query(Benutzer).order_by(Benutzer.name)
+        # Entferne alle user, die ignoriert werden
+        for ignored in cfg_www['ignored_users_name']:
+            users = users.where(Benutzer.name != ignored)
+    return users
 
-    return session.scalars(stmt)
+def get_boardgames():
+    with Session(engine) as session:
+        boardgames = session.query(Brettspiel).order_by(Brettspiel.name)
+        # Entferne alle Brettspiele (id) die nicht angezeigt werden sollen
+        for ignored in cfg_www['ignored_boardgames_id']:
+            boardgames = boardgames.where(Brettspiel.id != ignored)
+    return boardgames
 
 
 def get_partien_by_date(user):
-    user_play_query = (
-        session.query(Partie).join(SpielerPos).join(Benutzer).join(Brettspiel).where(Benutzer.name == user)
-    )
+    with Session(engine) as session:
+        user_play_query = (
+            session.query(Partie).join(SpielerPos).join(Benutzer).join(Brettspiel).where(Benutzer.name == user)
+        )
     # Startdatum: 01.01.2022
     datum_old = datetime.strptime("2022-01-01", "%Y-%m-%d").date()
     datum_new = datum_old + relativedelta(months=1)
@@ -52,5 +64,8 @@ def get_partien_by_date(user):
     return player_dict
 
 
+
+
 if __name__ == "__main__":
-    get_partien_by_date("Michi")
+    for i in get_boardgames():
+        print(i.id)

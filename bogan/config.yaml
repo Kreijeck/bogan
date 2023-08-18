@@ -25,3 +25,8 @@ database:
   db_file: "spiel.db"
   # Filename of json-File. If "None" no json is saved
   bgg_json: "plays.json"
+
+# Specific Stuff on Homepage
+www:
+  ignored_users_name: [Bot, Jörn, Quinn]
+  ignored_boardgames_id: []
