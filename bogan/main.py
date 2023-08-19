@@ -8,7 +8,7 @@ import pandas as pd
 app = Flask(__name__)
 
 # Dash App erstellen
-dash_app = Dash(__name__, server=app) #NOT IN USE , url_base_pathname='/dashboard/')
+dash_app = Dash(__name__, server=app, url_base_pathname='/dashboard_init/')
 
 
 
@@ -49,36 +49,39 @@ def update_graph(pathname):
     fig = px.bar(data, x='date', y='value')
     return fig
 
-@app.route("/dashboard/")
-def render_dash_template():
-    return render_template('dash_template.html', dash_content=dash_app.index())
 
 @app.route("/")
 def index():
     return render_template("index.html",
                            name="BoardStats")
 
-@app.route("/user")
+# Dashboard links need / at the end
+@app.route("/dashboard/")
+def dashboards():
+    return render_template('dash_template.html', dash_content=dash_app.index())
+
+
+@app.route("/user/")
 def user():
     users = sql.get_users()
     return render_template("overview.html", component="user", overview=users)
 
-@app.route("/partien")
+@app.route("/partien/")
 def partien():
     return "Hier erscheint eine Liste aller Partien"
 
-@app.route("/user/<name>")
+@app.route("/user/<name>/")
 def user_detail(name):
     return dash_app.index()
     # partien = sql.get_partien_by_date(name)
     # return render_template("user_detail.html", name=name, partien=partien)
 
-@app.route("/boardgames")
-def boardgame_overview():
+@app.route("/boardgames/")
+def boardgames():
     boardgames = sql.get_boardgames()
     return render_template("overview.html", component="boardgames", overview=boardgames)
 
-@app.route("/boardgames/<name>")
+@app.route("/boardgames/<name>/")
 def boardgame_detail(name):
     partien = []
     return render_template("boardgame_detail.html", partien=partien)
