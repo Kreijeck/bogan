@@ -12,7 +12,8 @@ CONFIG = os.path.join(CWD, "config.yaml")
 
 ##### LOAD YAML ####
 def load_yaml() -> dict:
-    with open(CONFIG, "r") as file:
+    # CAUTION! encoding has to set here hardcoded
+    with open(CONFIG, "r", encoding="utf-8") as file:
         cfg_dict = yaml.safe_load(file)
 
     return cfg_dict

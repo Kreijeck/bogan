@@ -2,7 +2,7 @@
 # dir:
 #   root: "bla"
 
-
+# while loading yaml -> utf-8 is used in default
 encoding: "utf-16"
 # All for Logging stuff
 logging:
@@ -28,5 +28,5 @@ database:
 
 # Specific Stuff on Homepage
 www:
-  ignored_users_name: [Bot, Jörn, Quinn]
+  ignored_users_name: ['Bot', 'Jörn', 'Quinn']
   ignored_boardgames_id: []
