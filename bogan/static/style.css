@@ -20,3 +20,8 @@ ul {
 
 
 }
+
+.dark-dash {
+    background-color: #282c36; /* Dunkle Hintergrundfarbe */
+    color: #ffffff; /* Textfarbe */
+}

@@ -20,7 +20,7 @@ dash_app.layout = html.Div([
         dcc.RadioItems(options=[benutzer.name for benutzer in sql.get_users()], value='lifeExp', id='controls-and-radio-item'),
         dcc.Graph(figure={}, id='dash-graph'),
         html.P(children="Hier ist Schluss")
-        ])#html.Div([dcc.Graph(figure={}, id='dash-graph')])
+        ])
 
 # Dash Callbacks
 @dash_app.callback(

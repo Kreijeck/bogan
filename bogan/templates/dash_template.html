@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div class="dark-dash">
 <h1>Mein Dash-Dashboard in Flask</h1>
 
 <!-- Hier wird das Dash-Layout gerendert -->
 {{ dash_content | safe }}
+
+</div>
 
 
 <!-- Hier können Sie weitere HTML-Inhalte einfügen -->
