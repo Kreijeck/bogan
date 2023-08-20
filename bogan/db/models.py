@@ -5,7 +5,14 @@ from sqlalchemy.orm import relationship, declarative_base, Mapped, mapped_column
 
 
 class Base(DeclarativeBase):
-    pass
+    def set(self, attribute, value):
+        """Setzt den Wert des angegebenen Attributs.
+
+        Args:
+            attribute (str): Name des Attributs.
+            value: Wert, der zugewiesen werden soll.
+        """
+        setattr(self, attribute, value)
 
 # Base = declarative_base()
 
@@ -102,6 +109,7 @@ class Brettspiel(Base):
     def __repr__(self) -> str:
         return f"Brettspiel(id={self.id}, name={self.name}, "\
             f"complexity={self.complexity or 'na'}, duration={self.duration or 'na'})"
+
     
 # class BggCategory(Base):
 #     __tablename__ = "_bgg_category"

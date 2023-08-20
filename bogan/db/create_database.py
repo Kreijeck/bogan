@@ -53,6 +53,8 @@ def get_brettspiel_details(id) -> dict:
     details:dict = get_boardgame_info(id)
     details_dict = {}
     # Try to add complexity and duration
+
+    ## TODO Refactor this part
     try:
         details_dict["complexity"] = float(details["statistics"]["ratings"]["averageweight"]["@value"])
     except KeyError:
@@ -63,30 +65,31 @@ def get_brettspiel_details(id) -> dict:
     except KeyError:
         pass
 
+    try:
+        details_dict["image"] = details["image"]
+    except KeyError:
+        pass
+
+    try:
+        details_dict["image_small"] = details["thumbnail"]
+    except KeyError:
+        pass
+
     return details_dict
 
 
 def create_brettspiel(play: dict, session: Session) -> Brettspiel:
-    brettspiel = session.query(Brettspiel).filter_by(id=play["item"]["@objectid"]).first()
+    brettspiel_id = play["item"]["@objectid"]
+    brettspiel = session.query(Brettspiel).filter_by(id=brettspiel_id).first()
     if brettspiel is None:
-        bs_details = get_brettspiel_details(id=play["item"]["@objectid"])
+        bs_details = get_brettspiel_details(id=brettspiel_id)
         brettspiel = Brettspiel(
             id=play["item"]["@objectid"],
             name=play["item"]["@name"],
         )
-        # Add detail information to boardgame if it exists
-        if "complexity" in bs_details.keys():
-            brettspiel.complexity = bs_details["complexity"]
-        else:
-            log.warning(
-                f"No complexity add for: ID={brettspiel.id}(Brettspiel={brettspiel.name}) -> detail_dict:{bs_details}"
-            )
-        if "duration" in bs_details.keys():
-            brettspiel.duration = bs_details["duration"]
-        else:
-            log.warning(
-                f"No duration add for: ID={brettspiel.id}(Brettspiel={brettspiel.name}) -> detail_dict:{bs_details}"
-            )
+        # Add addition detailed information to boardgame from get_brettspiel details
+        for key, value in bs_details.items():
+            brettspiel.set(key, value)
 
         log.debug(f"Add new Brettspiel to db: {brettspiel}")
         session.add(brettspiel)
