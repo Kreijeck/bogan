@@ -1,10 +1,13 @@
 from typing import List
 from datetime import date
 from sqlalchemy import String, Float, Integer, Date, ForeignKey, Boolean
-from sqlalchemy.orm import relationship, declarative_base, Mapped, mapped_column
+from sqlalchemy.orm import relationship, declarative_base, Mapped, mapped_column, DeclarativeBase
 
 
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
+
+# Base = declarative_base()
 
 
 class Partie(Base):
@@ -91,11 +94,25 @@ class Brettspiel(Base):
     name: Mapped[str] = mapped_column(String)
     complexity: Mapped[float] = mapped_column(Float, nullable=True)
     duration: Mapped[int] = mapped_column(Integer, nullable=True)
+    image: Mapped[str] = mapped_column(String, nullable=True)
+    image_small: Mapped[str] = mapped_column(String, nullable=True)
     partie: Mapped[List["Partie"]] = relationship(back_populates="brettspiel")
+    #categories: Mapped[List["BggCategory"]] = relationship(back_populates="bgg_category")
 
     def __repr__(self) -> str:
         return f"Brettspiel(id={self.id}, name={self.name}, "\
             f"complexity={self.complexity or 'na'}, duration={self.duration or 'na'})"
+    
+# class BggCategory(Base):
+#     __tablename__ = "_bgg_category"
+
+#     id: Mapped[int] = mapped_column(primary_key=True)
+#     name: Mapped[str] = mapped_column(String)
+#     boardgame: Mapped["Brettspiel"] = relationship(back_populates='categories')
+
+    def __repr__(self) -> str:
+        return f"BggCategory(id={self.id}, name={self.name})"
+
 
 
 class Ort(Base):
