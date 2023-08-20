@@ -7,6 +7,7 @@ app = Flask(__name__)
 
 # Available Dashboards
 dash_example = dabo.dashboard_example(flask_app=app)
+d2 = dabo.dashboard_example2(flask_app=app)
 
 
 @app.route("/")
@@ -19,6 +20,9 @@ def index():
 def dashboards():
     return render_template('dash_template.html', dash_content=dash_example.index())
 
+@app.route("/dashboard2/")
+def dashboards2():
+    return render_template('dash_template.html', dash_content=d2.index())
 
 @app.route("/user/")
 def user():
