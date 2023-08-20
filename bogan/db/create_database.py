@@ -5,7 +5,7 @@ from datetime import datetime
 import json
 import os
 from bogan.config import get_logger, CFG_YAML, get_play_engine, cfg_db, db_path
-from bogan.db.get_data_from_bgg import get_and_write_play_data
+from bogan.db.get_data_from_bgg import get_and_write_play_data, get_boardgame_info
 
 log = get_logger(__file__)
 
@@ -17,6 +17,7 @@ def check_str2float(str2float: str) -> float:
         return float(str2float)
     except ValueError:
         return None
+
 
 def create_database(clear_all=True):
     # clear database
@@ -39,10 +40,54 @@ def create_ort(play: dict, session: Session) -> Ort:
     return ort
 
 
+def get_brettspiel_details(id) -> dict:
+    """Holt detaillierte Informationen zu einem Brettspiel aus dem Modell 'Brettspiel'
+
+    Args:
+        id (int): ID des Brettspiels
+
+    Returns:
+        dict: Informationen zu Brettspiel
+    """
+
+    details:dict = get_boardgame_info(id)
+    details_dict = {}
+    # Try to add complexity and duration
+    try:
+        details_dict["complexity"] = float(details["statistics"]["ratings"]["averageweight"]["@value"])
+    except KeyError:
+        pass
+
+    try:
+        details_dict["duration"] = int(details["playingtime"]["@value"])
+    except KeyError:
+        pass
+
+    return details_dict
+
+
 def create_brettspiel(play: dict, session: Session) -> Brettspiel:
     brettspiel = session.query(Brettspiel).filter_by(id=play["item"]["@objectid"]).first()
     if brettspiel is None:
-        brettspiel = Brettspiel(id=play["item"]["@objectid"], name=play["item"]["@name"])
+        bs_details = get_brettspiel_details(id=play["item"]["@objectid"])
+        brettspiel = Brettspiel(
+            id=play["item"]["@objectid"],
+            name=play["item"]["@name"],
+        )
+        # Add detail information to boardgame if it exists
+        if "complexity" in bs_details.keys():
+            brettspiel.complexity = bs_details["complexity"]
+        else:
+            log.warning(
+                f"No complexity add for: ID={brettspiel.id}(Brettspiel={brettspiel.name}) -> detail_dict:{bs_details}"
+            )
+        if "duration" in bs_details.keys():
+            brettspiel.duration = bs_details["duration"]
+        else:
+            log.warning(
+                f"No duration add for: ID={brettspiel.id}(Brettspiel={brettspiel.name}) -> detail_dict:{bs_details}"
+            )
+
         log.debug(f"Add new Brettspiel to db: {brettspiel}")
         session.add(brettspiel)
 
@@ -68,7 +113,7 @@ def create_partie(play: dict, session: Session) -> Partie:
     datum = datetime.strptime(play["@date"], "%Y-%m-%d").date()
 
     # Wenn keine Partie mit ID vorhanden ist:
-    if partie is None:    
+    if partie is None:
         partie = Partie(id=play["@id"], datum=datum, ort=ort, brettspiel=brettspiel)
         session.add(partie)
     # wenn id bereits vorhanden ist, soll die Partie geupdated werden
@@ -79,7 +124,6 @@ def create_partie(play: dict, session: Session) -> Partie:
         session.commit()
 
     return partie
-    
 
 
 def read_json() -> dict:
@@ -113,9 +157,7 @@ def add_data_to_database(json_file):
                 spieler = SpielerPos(punktzahl=punktzahl, win=win, partie=partie, benutzer=benutzer)
                 session.add(spieler)
         except Exception as e:
-            log.warning(
-                f"Spiel nicht in Datenbank: Partie_ID: {play['@id']}, Spiel: {play['item']['@name']}"
-            )
+            log.warning(f"Spiel nicht in Datenbank: Partie_ID: {play['@id']}, Spiel: {play['item']['@name']}")
             log.warning(f"Fehlermeldung: {e}")
 
     # Speicher die Änderungen
@@ -127,9 +169,6 @@ def add_data_to_database(json_file):
 def main():
     create_database()
     play_data = get_and_write_play_data()
-    # json_path = os.path.join("data", "plays.json")
-    # with open(json_path, 'r', encoding="utf-16") as f:
-    #         play_data = json.load(f)
     add_data_to_database(play_data)
 
 
