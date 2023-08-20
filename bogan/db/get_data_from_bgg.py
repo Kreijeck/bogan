@@ -79,8 +79,6 @@ def get_and_write_play_data() -> dict:
         else:
             play_file = play_page
 
-
-
     # Create json-File
     if cfg_db['bgg_json']:
         json_path = os.path.join(cfg_db['dir'], cfg_db['bgg_json'])
