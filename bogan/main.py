@@ -46,8 +46,9 @@ def boardgames():
 
 @app.route("/boardgames/<name>/")
 def boardgame_detail(name):
+    detail_info = sql.get_boardgames_detail(name=name)
     partien = []
-    return render_template("boardgame_detail.html", partien=partien)
+    return render_template("boardgame_detail.html", detail= detail_info, partien=partien)
 
 
 if __name__ == '__main__':

@@ -26,6 +26,12 @@ def get_boardgames():
             boardgames = boardgames.where(Brettspiel.id != ignored)
     return boardgames
 
+def get_boardgames_detail(name):
+    with Session(engine) as session:
+        query = session.query(Brettspiel).where(Brettspiel.name == name).first()
+
+    return query
+
 
 def get_partien_by_date(user):
     with Session(engine) as session:
