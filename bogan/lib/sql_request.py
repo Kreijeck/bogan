@@ -9,6 +9,8 @@ log = get_logger(__file__)
 engine = get_play_engine()
 #session = Session(engine)
 
+def get_session() -> Session:
+    return Session(engine)
 
 def get_users():
     with Session(engine) as session:
@@ -29,6 +31,12 @@ def get_boardgames():
 def get_boardgames_detail(name):
     with Session(engine) as session:
         query = session.query(Brettspiel).where(Brettspiel.name == name).first()
+
+    return query
+
+def get_partien_from_game(session, name):
+    query = session.query(Partie).join(Brettspiel).join(SpielerPos).where(Brettspiel.name == name).all()
+    log.debug(f"SQL query found for {name} this partien: {query}")
 
     return query
 
@@ -73,5 +81,5 @@ def get_partien_by_date(user):
 
 
 if __name__ == "__main__":
-    for i in get_boardgames():
+    for i in get_partien_from_game("Anachrony"):
         print(i.id)

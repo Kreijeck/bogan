@@ -2,31 +2,47 @@
 
 {% block content %}
 <div class="container">
-    <div class="row"><img src="{{ detail.image_small }}" alt="Bild des Brettspiels"></div>
-    <div class="row">
-        <div class="col infobox">
+    <!--  Header -->
+    <div class="game-header">
+        <div class="game-header-image"><img src="{{ detail.image }}" style="height: 30vh; width:auto" alt="Bild des Brettspiels"></div>
+        <div class="game-header-body">
             <li> Name: {{detail.name }}</li>
             <li> Complexity: {{ detail.complexity }}.</li>
             <li> Image: {{ detail.image }}</li>
         </div>
-
-        <div class="col infobox">
-            Kasten mit Statistik
-        </div>
-
     </div>
 
+    <!-- Partien -->
     <div class="row">
-        <div class="col">
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi et nulla doloremque odio officiis
-                perspiciatis nemo architecto quam fuga blanditiis? Culpa quidem corrupti eveniet error ipsa vitae quae
-                obcaecati. Officiis?</p>
-        </div>
-        <div class="col">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio, suscipit aperiam quis odit ipsam,
-                est, eius praesentium repudiandae fugiat autem hic. Amet, modi! Deserunt, enim! Velit, nobis quam.
-                Dolor, obcaecati.</p>
-        </div>
+        <!-- Tabelle mit Partien die durchgeführt wurden -->
+        <table class="table table-hover table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Brettspiel</th>
+                    <th scope="col">Ort</th>
+                    <th scope="col">Spieler</th>
+                </tr>
+            </thead>
+            <tbody>
+                    {% for partie in partien %}
+                    <td>{{partie.datum}}</td>
+                    <td>{{partie.brettspiel.name}}</td>
+                    <td>{{partie.ort.name}}</td>
+                    <td>nothing</td>
+                    <td>{% for spieler in partie.spieler %}
+                        {% if spieler.win %}
+                        <b>{{ spieler.benutzer.name }} ({{ spieler.punktzahl }})<br></b>
+                        {% else %}
+                        {{ spieler.benutzer.name }} ({{ spieler.punktzahl }})<br>
+                        {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
     </div>
 </div>
 

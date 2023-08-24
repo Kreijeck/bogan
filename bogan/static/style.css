@@ -25,3 +25,29 @@ ul {
     background-color: #659bce; /* Dunkle Hintergrundfarbe */
     color: #ffffff; /* Textfarbe */
 }
+
+.game-header {
+    display: table;
+    table-layout: fixed;
+    width:  100%;
+    padding: 15px;
+    background-color: rgba(103, 189, 204, 0.4);
+    ;
+}
+
+    /* background-image: url("https://cf.geekdo-images.com/yd6LuatytHRhcFCxCf-EEg__original/img/OS13C6W4i1XW__wWVVVaqF7BV0c=/0x0/filters:format(jpeg)/pic4459753.jpg"); */
+    /* background-color: red; */
+
+
+.game-header-image {
+    display: table-cell;
+    height: 200px;
+    width: auto;
+    padding: 5px;
+
+}
+
+.game-header-body {
+    display: table-cell;
+    padding: 10px;
+}
