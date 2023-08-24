@@ -1,35 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-    <div class="row"><img src="{{ detail.image_small }}" alt="Bild des Brettspiels"></div>
+
+<div class="container-fluid">
     <div class="row">
-        <div class="col infobox">
+        <div class="col-3 title-image">
+            <img src="{{ detail.image }}" alt="Bild des Brettspiels", height="300px", width=auto>
+        </div>
+        <div class="col-6 infobox">
             <li> Name: {{detail.name }}</li>
             <li> Complexity: {{ detail.complexity }}.</li>
-            <li> Image: {{ detail.image }}</li>
+            <li> duration: {{ detail.duration }}</li>
         </div>
-
-        <div class="col infobox">
-            Kasten mit Statistik
-        </div>
-
     </div>
+    
 
     <div class="row">
-        <div class="col">
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi et nulla doloremque odio officiis
-                perspiciatis nemo architecto quam fuga blanditiis? Culpa quidem corrupti eveniet error ipsa vitae quae
-                obcaecati. Officiis?</p>
-        </div>
-        <div class="col">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio, suscipit aperiam quis odit ipsam,
-                est, eius praesentium repudiandae fugiat autem hic. Amet, modi! Deserunt, enim! Velit, nobis quam.
-                Dolor, obcaecati.</p>
-        </div>
     </div>
-</div>
-
-
 
 {% endblock %}

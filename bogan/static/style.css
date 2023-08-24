@@ -14,12 +14,27 @@ ul {
 
 .infobox {
     border: 2px solid black;
-    height: 50vh;
+    /*width: 70%;
+    height: auto;*/
     padding: 10px;
-    background-color: lightgray;
+    background-color: rgb(112, 202, 91);
 
 
 }
+
+body {
+    background-color: lightgrey;
+}
+
+.title-image {
+    background-color: black;
+    text-align: center;
+}
+
+/* .board-icon {
+    width: 30%;
+    height: auto;
+} */
 
 .dark-dash {
     background-color: #659bce; /* Dunkle Hintergrundfarbe */
