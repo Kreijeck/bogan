@@ -58,14 +58,15 @@ class SpielerPos(Base):
     #name: Mapped[str] = mapped_column(String)
     punktzahl: Mapped[float] = mapped_column(Float, nullable=True)
     win: Mapped[bool] = mapped_column(Boolean)
+    position: Mapped[int] = mapped_column(Integer, nullable=True)
     partie_id: Mapped[int] = mapped_column(ForeignKey("partie.id"))
     partie: Mapped["Partie"] = relationship(back_populates="spieler")
     benutzer_id: Mapped[int] = mapped_column(ForeignKey("benutzer.id"))
     benutzer: Mapped["Benutzer"] = relationship(back_populates="spieler")
-
+    
     def __repr__(self) -> str:
         return f"SpielerPos(id={self.id}, name={self.benutzer.name}, punktzahl={self.punktzahl}, "\
-            f"partie={self.partie.brettspiel.name})"
+    f"ranking={self.position}, partie={self.partie.brettspiel.name})"
 
 
 class Benutzer(Base):
