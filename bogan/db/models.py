@@ -1,6 +1,7 @@
 from typing import List
 from datetime import date
 from sqlalchemy import String, Float, Integer, Date, ForeignKey, Boolean
+from sqlalchemy import inspect
 from sqlalchemy.orm import relationship, declarative_base, Mapped, mapped_column, DeclarativeBase
 
 
@@ -13,6 +14,20 @@ class Base(DeclarativeBase):
             value: Wert, der zugewiesen werden soll.
         """
         setattr(self, attribute, value)
+
+    def to_dict(self) -> dict:
+        """Erstellt dictionary einer query, über alle attribute (KEINE relations)
+        Bsp: query =session.query(MODEL).all()
+        for q in query:
+            q.to_dict()
+        
+
+        Returns:
+            dict: dictionary eines Eintrags
+        """
+        
+        return {column.key: getattr(self, column.key) for column in inspect(self).mapper.column_attrs}
+
 
 # Base = declarative_base()
 
@@ -38,8 +53,19 @@ class Partie(Base):
     spieler: Mapped[List["SpielerPos"]] = relationship(back_populates="partie", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
-        return f"Partie(id={self.id}, brettspiel={self.brettspiel.name}, datum={self.datum}, ort={self.ort.name}, "\
-        f"Spieler={self.spieler})"
+        return (
+            f"Partie(id={self.id}, brettspiel={self.brettspiel.name}, datum={self.datum}, ort={self.ort.name}, "
+            f"Spieler={self.spieler})"
+        )
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "brettspiel": self.brettspiel.name,
+            "datum": self.datum,
+            "ort": self.ort.name,
+            "Spieler": [spieler_pos.to_dict() for spieler_pos in self.spieler],
+        }
 
 
 class SpielerPos(Base):
@@ -55,18 +81,28 @@ class SpielerPos(Base):
 
     __tablename__ = "spieler_pos"
     id: Mapped[int] = mapped_column(primary_key=True)
-    #name: Mapped[str] = mapped_column(String)
-    punktzahl: Mapped[float] = mapped_column(Float, nullable=True)
+    # name: Mapped[str] = mapped_column(String)
+    punktzahl: Mapped[float] = mapped_column(Float, nullable=True, default=None)
     win: Mapped[bool] = mapped_column(Boolean)
-    position: Mapped[int] = mapped_column(Integer, nullable=True)
+    position: Mapped[int] = mapped_column(Integer, nullable=True, default=None)
     partie_id: Mapped[int] = mapped_column(ForeignKey("partie.id"))
     partie: Mapped["Partie"] = relationship(back_populates="spieler")
     benutzer_id: Mapped[int] = mapped_column(ForeignKey("benutzer.id"))
     benutzer: Mapped["Benutzer"] = relationship(back_populates="spieler")
-    
+
     def __repr__(self) -> str:
-        return f"SpielerPos(id={self.id}, name={self.benutzer.name}, punktzahl={self.punktzahl}, "\
-    f"ranking={self.position}, partie={self.partie.brettspiel.name})"
+        return (
+            f"SpielerPos(id={self.id}, name={self.benutzer.name}, punktzahl={self.punktzahl}, "
+            f"ranking={self.position}, partie={self.partie.brettspiel.name})"
+        )
+    
+    def to_dict(self) -> dict:
+        return {
+                    "name": self.benutzer.name,
+                    "punktzahl": self.punktzahl,
+                    "position": self.position,
+                    "win": self.win
+                }
 
 
 class Benutzer(Base):
@@ -100,18 +136,20 @@ class Brettspiel(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String)
-    complexity: Mapped[float] = mapped_column(Float, nullable=True)
-    duration: Mapped[int] = mapped_column(Integer, nullable=True)
-    image: Mapped[str] = mapped_column(String, nullable=True)
-    image_small: Mapped[str] = mapped_column(String, nullable=True)
+    complexity: Mapped[float] = mapped_column(Float, nullable=True, default=None)
+    duration: Mapped[int] = mapped_column(Integer, nullable=True, default=None)
+    image: Mapped[str] = mapped_column(String, nullable=True, default=None)
+    image_small: Mapped[str] = mapped_column(String, nullable=True, default=None)
     partie: Mapped[List["Partie"]] = relationship(back_populates="brettspiel")
-    #categories: Mapped[List["BggCategory"]] = relationship(back_populates="bgg_category")
+    # categories: Mapped[List["BggCategory"]] = relationship(back_populates="bgg_category")
 
     def __repr__(self) -> str:
-        return f"Brettspiel(id={self.id}, name={self.name}, "\
+        return (
+            f"Brettspiel(id={self.id}, name={self.name}, "
             f"complexity={self.complexity or 'na'}, duration={self.duration or 'na'})"
+        )
 
-    
+
 # class BggCategory(Base):
 #     __tablename__ = "_bgg_category"
 
@@ -119,9 +157,8 @@ class Brettspiel(Base):
 #     name: Mapped[str] = mapped_column(String)
 #     boardgame: Mapped["Brettspiel"] = relationship(back_populates='categories')
 
-    def __repr__(self) -> str:
-        return f"BggCategory(id={self.id}, name={self.name})"
-
+#     def __repr__(self) -> str:
+#         return f"BggCategory(id={self.id}, name={self.name})"
 
 
 class Ort(Base):
