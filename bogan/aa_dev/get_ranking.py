@@ -155,7 +155,7 @@ if __name__ == "__main__":
 
     result = df_ranking(ort=ort)
     create_plots(result)
-    result.groupby("spieler")["Jochen"]
+    
 
     # with Session(engine) as session:
     #     my_query: List[SpielerPos] = (
