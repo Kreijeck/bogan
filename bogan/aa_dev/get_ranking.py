@@ -72,7 +72,7 @@ def df_ranking(ort: str) -> pd.DataFrame:
             .join(Partie)
             .join(Ort)
             .where(Ort.name == ort)
-            .where(SpielerPos.punktzahl)
+            .where(SpielerPos.punktzahl is not None)
             .order_by(Partie.id)
         )
 
@@ -167,11 +167,11 @@ if __name__ == "__main__":
     datum_start = datetime.strptime("01.01.2023", "%d.%m.%Y")
 
     result = df_ranking(ort=ort)
-    print(result.head(12))
+    #print(result.head(12))
     create_plots(result)
 
     df_jochen =  get_player_games(result, "Jochen")
-    print(df_jochen.head(50))
+    #print(df_jochen.head(50))
 
     
 

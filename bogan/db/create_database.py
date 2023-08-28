@@ -169,15 +169,17 @@ def add_data_to_database(json_file):
         # Add ranking to games
         players_in_game = session.query(SpielerPos).filter_by(partie_id=play["@id"]).all()
         try:
-            if players_in_game[0].punktzahl:
+            if players_in_game[0].punktzahl is not None:
                 sorted_player = sorted(players_in_game, key=lambda player: player.punktzahl, reverse=True)
                 for i, player in enumerate(sorted_player):
-                    if player.punktzahl:
+                    if player.punktzahl is not None:
                         player.position = i + 1
                         session.add(player)
         except IndexError as e:
             log.warning(f"Don't find players for this partie: {partie}")
             log.warning(f"Index Error {e}")
+
+
 
     # Speicher die Änderungen
     session.commit()
