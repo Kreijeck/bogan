@@ -48,7 +48,7 @@ def points_max_player(position: int, num_players: int, complexity=1) -> float:
             log.warn("Only 1 Player in game, please check!")
             return 0
         else:
-            return round(num_players - ((position - 1) * 2 * num_players / (num_players - 1)), 2)
+            return round((num_players - ((position - 1) * 2 * num_players / (num_players - 1)))*complexity, 2)
 
     else:
         # TODO Check to get information about the data
@@ -73,7 +73,7 @@ def df_ranking(ort: str) -> pd.DataFrame:
             .join(Ort)
             .where(Ort.name == ort)
             .where(SpielerPos.punktzahl)
-            .order_by(Partie.datum)
+            .order_by(Partie.id)
         )
 
     # Create df
@@ -92,6 +92,9 @@ def df_ranking(ort: str) -> pd.DataFrame:
         tmp_dict["spieler"] = row.benutzer.name
         tmp_dict["position"] = row.position
         tmp_dict["punktzahl"] = row.punktzahl
+        # tmp_dict["rank_points"] = points_max_player(
+        #     position=row.position, num_players=num_players, complexity=tmp_dict["complex"]
+        # )
         tmp_dict["rank_points"] = points_max_player(
             position=row.position, num_players=num_players
         )
@@ -100,6 +103,12 @@ def df_ranking(ort: str) -> pd.DataFrame:
 
     df = pd.DataFrame(pd_list)
     df["sum_rank_points"] = df.groupby("spieler")["rank_points"].cumsum()
+    # df["partie_index"] = (df["partie_id"] != df["partie_id"].shift()).cumsum()
+    df["partie_index"] = df.groupby("partie_id").ngroup() + 1
+
+    print(df.loc[df["brettspiel"] == "Framework"])
+
+
 
     # calculate Summe der Ranking points
     # names = list(df['spieler'].unique())
@@ -108,15 +117,19 @@ def df_ranking(ort: str) -> pd.DataFrame:
 
     return df
 
+def get_player_games(df, player_name):
+    player_games = df[df["spieler"] == player_name]
+    return player_games
+
 
 def get_line_plot(df: pd.DataFrame):
-    fig_line = px.line(df, x=df.index, y="sum_rank_points", color="spieler", line_shape="linear", markers=True)
+    fig_line = px.line(df, x=df["partie_index"], y="sum_rank_points", color="spieler", line_shape="linear", markers=True)
 
     # Füge vertikale Hilfslinien hinzu
-    for i in df.index:
-        if i % 20 == 0:
+    for i in df["partie_index"]:
+        if i % 20 == 0 and i != 0:
             fig_line.add_vline(x=i, line_dash="dash", line_color="gray")
-    fig_line.show()
+    #fig_line.show()
 
 
 def get_table_plot(df: pd.DataFrame):
@@ -149,12 +162,17 @@ def create_plots(df: pd.DataFrame):
 
 
 if __name__ == "__main__":
-    ort = "Mittwochsrunde"
+    ort = "Spielewochenende"
     name = "Lasse"
     datum_start = datetime.strptime("01.01.2023", "%d.%m.%Y")
 
     result = df_ranking(ort=ort)
+    print(result.head(12))
     create_plots(result)
+
+    df_jochen =  get_player_games(result, "Jochen")
+    print(df_jochen.head(50))
+
     
 
     # with Session(engine) as session:
