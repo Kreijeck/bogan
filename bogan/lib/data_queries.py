@@ -36,4 +36,3 @@ class Query:
             query = query.join(Benutzer).where(Benutzer.name == benutzer)
 
         return query
-    
