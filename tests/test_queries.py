@@ -1,4 +1,5 @@
 import unittest
+import pytest
 from sqlalchemy import create_engine
 import random
 
@@ -78,7 +79,7 @@ class TestQuery(unittest.TestCase):
                 self.log.debug(f"Test: {row} is in {game}")
                 self.assertEqual(row.partie.brettspiel.name, game)
 
-    def test_spieler_pos_multi_filter(self):
+    def test_spieler_pos_filter_multi(self):
         Spiel = ["Spiel1", "Spiel2", None]
         Benutzer = ["Spieler1", "Spieler3", None]
         Ort = ["Ort2", "Ort3", None]
@@ -100,6 +101,70 @@ class TestQuery(unittest.TestCase):
                 if user is not None:
                     self.assertEqual(row.benutzer.name, user)
 
+    def test_partien(self):
+        result = self.query.partien()
+        num_entries = 100
+
+        # Check correct number of results
+        self.assertEqual(result.count(), num_entries)
+
+        # Check first entry if format is correct
+        self.assertTrue(str(result[0]).__contains__("Partie"))
+        self.log.info(f"First entry in Partien: {result[0]}")
+
+    def test_partien_filter_ort(self):
+        Orte = ["Ort1", "Ort2", "Ort3"]
+
+        for ort in Orte:
+            result = self.query.partien_by(ort=ort)
+            self.log.info(f"Anzahl Datensätze für {ort}: {result.count()}")
+            if result.count() > 0:
+                self.log.info(f"First entry: {result[0]}")
+            else:
+                self.log.warning(f"Für {ort} wurden keine Einträge in der DB gefunden")
+            
+            # Überprüfe Liste
+            for row in result:
+                self.assertEqual(row.ort.name, ort)
+
+    def test_partien_filter_brettspiel(self):
+        Spiele = ["Spiel1", "Spiel2", "Spiel3"]
+
+        for brettspiel in Spiele:
+            result = self.query.partien_by(brettspiel=brettspiel)
+            self.log.info(f"Anzahl Datensätze für {brettspiel}: {result.count()}")
+            if result.count() > 0:
+                self.log.info(f"First entry: {result[0]}")
+            else:
+                self.log.warning(f"Für {brettspiel} wurden keine Einträge in der DB gefunden")
+            
+            # Überprüfe Liste
+            for row in result:
+                self.assertEqual(row.brettspiel.name, brettspiel)
+
+    def test_partien_filter_benutzer(self):
+        Benutzer = ["Spieler1", "Spieler3"]
+
+        for user in Benutzer:
+            result = self.query.partien_by(benutzer=user)
+            self.log.info(f"Anzahl Datensätze für {user}: {result.count()}")
+            if result.count() > 0:
+                self.log.info(f"First entry: {result[0]}")
+            else:
+                self.log.warning(f"Für {user} wurden keine Einträge in der DB gefunden")
+            
+            # Überprüfe ob Spieler bei der Partie dabei war
+            for row in result:
+                spieler_liste = []
+                for spieler_pos in row.spieler:
+                    spieler_liste.append(spieler_pos.benutzer.name)
+                self.assertIn(user, spieler_liste)
+
+    
+                
+            
+
+
 
     def tearDown(self) -> None:
         self.log.debug("Test Ende")
@@ -112,3 +177,4 @@ class TestQuery(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+

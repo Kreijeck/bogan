@@ -36,3 +36,32 @@ class Query:
             query = query.join(Benutzer).where(Benutzer.name == benutzer)
 
         return query
+    
+    def partien(self) -> List[Partie]:
+        with Session(self.engine) as session:
+            query: List[Partie] = session.query(Partie)
+
+        return query
+    
+    def partien_by(self,
+                   ort=None,
+                   brettspiel=None,
+                   benutzer=None) -> List[Partie]:
+        log.debug("Create Query Partien ...")
+        query = self.partien()
+        # Filter Query wenn Parameter gesetzt sind
+        if ort:
+            log.debug(f"Filter Query for ort={ort}")
+            query = query.join(Ort).where(Ort.name == ort)
+        if brettspiel:
+            log.debug(f"Filter Query for brettspiel={brettspiel}")
+            query = query.join(Brettspiel).where(Brettspiel.name == brettspiel)
+        if benutzer:
+            log.debug(f"Filter Query for benutzer={benutzer}")
+            query = query.join(SpielerPos).join(Benutzer).where(Benutzer.name == benutzer)
+
+        return query
+
+
+
+
