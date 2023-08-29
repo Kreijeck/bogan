@@ -7,6 +7,7 @@ from bogan.config import get_logger
 
 
 class TestQuery(unittest.TestCase):
+    # TODO Logsnachrichten überprüfen
     @classmethod
     def setUpClass(cls) -> None:
         cls.engine = create_engine("sqlite:///tests/data/test_spiel.db")
@@ -153,6 +154,33 @@ class TestQuery(unittest.TestCase):
                 for spieler_pos in row.spieler:
                     spieler_liste.append(spieler_pos.benutzer.name)
                 self.assertIn(user, spieler_liste)
+
+    def test_partien_filter_mult(self):
+        Spiel = ["Spiel1", "Spiel2", None]
+        Benutzer = ["Spieler1", "Spieler3", None]
+        Ort = ["Ort2", "Ort3", None]
+
+        # Überprüfe für 5 zufällig Konfigurationen ob der Filter stimmt
+        for i in range(5):
+            brettspiel = random.choice(Spiel)
+            user = random.choice(Benutzer)
+            ort = random.choice(Ort)
+
+            filter_query = self.query.partien_by(ort=ort, benutzer=user, brettspiel=brettspiel)
+
+            for row in filter_query:
+                self.log.debug(f"Check the filter: {row}")
+                if ort is not None:
+                    self.assertEqual(row.ort.name, ort)
+                if brettspiel is not None:
+                    self.assertEqual(row.brettspiel.name, brettspiel)
+                if user is not None:
+                    # Überprüfe ob Spieler in Partie
+                    spieler_liste = []
+                    for spieler_pos in row.spieler:
+                        spieler_liste.append(spieler_pos.benutzer.name)
+                    self.assertIn(user, spieler_liste)
+
 
     def tearDown(self) -> None:
         self.log.debug("Test Ende")
