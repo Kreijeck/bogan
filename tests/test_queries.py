@@ -1,5 +1,4 @@
 import unittest
-import pytest
 from sqlalchemy import create_engine
 import random
 
@@ -7,16 +6,14 @@ from bogan.lib.data_queries import Query
 from bogan.config import get_logger
 
 
-
 class TestQuery(unittest.TestCase):
-    
     @classmethod
     def setUpClass(cls) -> None:
-        cls.engine = create_engine('sqlite:///tests/data/test_spiel.db')
+        cls.engine = create_engine("sqlite:///tests/data/test_spiel.db")
         cls.log = get_logger(__name__)
         cls.log.debug("======================================================")
         cls.log.debug("Test query start")
-    
+
     def setUp(self):
         self.query = Query(engine=self.engine)
         self.log.debug(f"SETUP: Create query from {self.engine}")
@@ -32,13 +29,12 @@ class TestQuery(unittest.TestCase):
             self.log.debug(f"Spieler_pos found: {row}")
 
     def test_spieler_pos_filter_ort(self):
-
         # Input
         Orte = ["Ort1", "Ort2"]
         num_entries = [168, 99]
         for i, ort in enumerate(Orte):
             filter_ort = self.query.benutzer_partien_by(ort=ort)
-            
+
             # Test correct length in Ort:
             self.log.debug(f"Check correct length({num_entries[i]} for {ort})")
             self.assertEqual(filter_ort.count(), num_entries[i])
@@ -48,13 +44,12 @@ class TestQuery(unittest.TestCase):
                 self.assertEqual(row.partie.ort.name, ort)
 
     def test_spieler_pos_filter_benutzer(self):
-
         # Input
         Spieler = ["Spieler1", "Spieler2"]
         num_entries = [65, 68]
         for i, user in enumerate(Spieler):
             filter_benutzer = self.query.benutzer_partien_by(benutzer=user)
-            
+
             # Test correct length in Ort:
             self.log.debug(f"Check correct length({num_entries[i]} for {user})")
             self.assertEqual(filter_benutzer.count(), num_entries[i])
@@ -64,13 +59,12 @@ class TestQuery(unittest.TestCase):
                 self.assertEqual(row.benutzer.name, user)
 
     def test_spieler_pos_filter_brettspiel(self):
-
         # Input
         Spiel = ["Spiel1", "Spiel2"]
         num_entries = [117, 100]
         for i, game in enumerate(Spiel):
             filter_brettspiel = self.query.benutzer_partien_by(brettspiel=game)
-            
+
             # Test correct length in Ort:
             self.log.debug(f"Check correct length({num_entries[i]} for {game})")
             self.assertEqual(filter_brettspiel.count(), num_entries[i])
@@ -83,7 +77,7 @@ class TestQuery(unittest.TestCase):
         Spiel = ["Spiel1", "Spiel2", None]
         Benutzer = ["Spieler1", "Spieler3", None]
         Ort = ["Ort2", "Ort3", None]
-        
+
         # Überprüfe für 5 zufällig Konfigurationen ob der Filter stimmt
         for i in range(5):
             brettspiel = random.choice(Spiel)
@@ -122,7 +116,7 @@ class TestQuery(unittest.TestCase):
                 self.log.info(f"First entry: {result[0]}")
             else:
                 self.log.warning(f"Für {ort} wurden keine Einträge in der DB gefunden")
-            
+
             # Überprüfe Liste
             for row in result:
                 self.assertEqual(row.ort.name, ort)
@@ -137,7 +131,7 @@ class TestQuery(unittest.TestCase):
                 self.log.info(f"First entry: {result[0]}")
             else:
                 self.log.warning(f"Für {brettspiel} wurden keine Einträge in der DB gefunden")
-            
+
             # Überprüfe Liste
             for row in result:
                 self.assertEqual(row.brettspiel.name, brettspiel)
@@ -152,7 +146,7 @@ class TestQuery(unittest.TestCase):
                 self.log.info(f"First entry: {result[0]}")
             else:
                 self.log.warning(f"Für {user} wurden keine Einträge in der DB gefunden")
-            
+
             # Überprüfe ob Spieler bei der Partie dabei war
             for row in result:
                 spieler_liste = []
@@ -160,21 +154,15 @@ class TestQuery(unittest.TestCase):
                     spieler_liste.append(spieler_pos.benutzer.name)
                 self.assertIn(user, spieler_liste)
 
-    
-                
-            
-
-
-
     def tearDown(self) -> None:
         self.log.debug("Test Ende")
         return super().tearDown()
-    
+
     @classmethod
     def tearDownClass(cls) -> None:
         cls.log.debug(" Test query end")
         cls.log.debug("======================================================")
 
-if __name__ == '__main__':
-    unittest.main()
 
+if __name__ == "__main__":
+    unittest.main()
