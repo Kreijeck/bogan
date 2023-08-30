@@ -2,7 +2,7 @@ from typing import List
 from datetime import date
 from sqlalchemy import String, Float, Integer, Date, ForeignKey, Boolean
 from sqlalchemy import inspect
-from sqlalchemy.orm import relationship, declarative_base, Mapped, mapped_column, DeclarativeBase
+from sqlalchemy.orm import relationship, Mapped, mapped_column, DeclarativeBase
 
 
 class Base(DeclarativeBase):
