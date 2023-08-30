@@ -1,7 +1,7 @@
 import pandas as pd
-from typing import List
+from typing import List, Union
 from bogan.config import get_logger
-from bogan.db.models import Benutzer, Partie, SpielerPos, Brettspiel, Ort, Base
+from bogan.db.models import Partie, SpielerPos
 from bogan.lib.data_queries import Query
 
 log = get_logger(__file__)
@@ -19,14 +19,7 @@ class Dataframe:
 
     @property
     def nested_dict(self) -> list:
-        pd_list = []
-        for row in query:
-            if self.type == SpielerPos:
-                pd_list.append(self.__row_dict_spieler_pos(row=row))
-            elif self.type == Partie:
-                pd_list.append(self.__row_dict_partie(row=row))
-            else:
-                log.warning(f"Query enthält kein gültiges Model: {self.type}")
+        pd_list = [self.__row_dict(row) for row in query]
 
         return pd_list
 
@@ -36,32 +29,36 @@ class Dataframe:
         self.__validate_cols(data)
         return pd.DataFrame(data, columns=self.cols)
 
-    def __row_dict_spieler_pos(self, row: SpielerPos) -> dict:
-        full_dict = {
-            "partie_id": row.partie.id,
-            "datum": row.partie.datum,
-            "ort": row.partie.ort.name,
-            "brettspiel": row.partie.brettspiel.name,
-            "complexity": row.partie.brettspiel.complexity,
-            "spieler": row.benutzer.name,
-            "position": row.position,
-            "punktzahl": row.punktzahl,
-            "win": row.win,
-        }
+    def __row_dict(self, row: Union[SpielerPos, Partie]) -> dict:
+        full_dict = {}
+        if self.type == SpielerPos:
+            full_dict = {
+                "partie_id": row.partie.id,
+                "datum": row.partie.datum,
+                "ort": row.partie.ort.name,
+                "brettspiel": row.partie.brettspiel.name,
+                "complexity": row.partie.brettspiel.complexity,
+                "spieler": row.benutzer.name,
+                "position": row.position,
+                "punktzahl": row.punktzahl,
+                "win": row.win,
+            }
+        elif self.type == Partie:
+            full_dict = {
+                    "id": row.id,
+                    "datum": row.datum,
+                    "brettspiel": row.brettspiel.name,
+                    "ort": row.ort.name,
+                    "brettspiel_complexity": row.brettspiel.complexity,
+                    # TODO duration has to been added in models.partie
+                    # "duration": row.duration,
+                    "spieler": row.spieler,
+                }
+        else:
+            raise TypeError(f"Query enthält kein gültiges Model: {self.type}")
+
         return full_dict
 
-    def __row_dict_partie(self, row: Partie) -> dict:
-        full_dict = {
-            "id": row.id,
-            "datum": row.datum,
-            "brettspiel": row.brettspiel.name,
-            "ort": row.ort.name,
-            "brettspiel_complexity": row.brettspiel.complexity,
-            # TODO duration has to been added in models.partie
-            # "duration": row.duration,
-            "spieler": row.spieler,
-        }
-        return full_dict
 
     def __validate_cols(self, data: List[dict]) -> None:
         # Warning if dictionary is not valid
@@ -82,7 +79,7 @@ class Dataframe:
 if __name__ == "__main__":
     query = Query().spieler_pos_by(ort="Spielewochenende")
 
-    s = Dataframe(query, cols=["sPieler", "datum", "ort"])
+    s = Dataframe(query, cols=["spieler", "datum", "ort"])
     print(s.query)
     print(s.type)
     print(s.df)
