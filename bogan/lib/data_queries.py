@@ -12,18 +12,18 @@ class Query:
         self.query = query
         self.engine = engine
         
-    def benutzer_partien(self) -> List[SpielerPos]:
+    def _spieler_pos(self) -> List[SpielerPos]:
         with Session(self.engine) as session:
             query: List[SpielerPos] = session.query(SpielerPos).join(Partie).order_by(Partie.datum)
             
         return query
     
-    def benutzer_partien_by(self, ort:str=None,
+    def spieler_pos_by(self, ort:str=None,
                            brettspiel:str=None,
                            benutzer:str=None,
                            ) -> List[SpielerPos]:
         log.debug("Create Query benutzer_partien")
-        query = self.benutzer_partien()
+        query = self._spieler_pos()
         # Filter Query wenn Parameter gesetzt sind
         if ort:
             log.debug(f"Filter Query for ort={ort}")
@@ -37,7 +37,7 @@ class Query:
 
         return query
     
-    def partien(self) -> List[Partie]:
+    def _partien(self) -> List[Partie]:
         with Session(self.engine) as session:
             query: List[Partie] = session.query(Partie)
 
@@ -48,7 +48,7 @@ class Query:
                    brettspiel=None,
                    benutzer=None) -> List[Partie]:
         log.debug("Create Query Partien ...")
-        query = self.partien()
+        query = self._partien()
         # Filter Query wenn Parameter gesetzt sind
         if ort:
             log.debug(f"Filter Query for ort={ort}")

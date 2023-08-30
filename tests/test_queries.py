@@ -21,7 +21,7 @@ class TestQuery(unittest.TestCase):
 
     def test_spieler_pos(self):
         # Testdaten
-        result = self.query.benutzer_partien()
+        result = self.query._spieler_pos()
         num_of_entries = 414
 
         self.log.debug(f"Found Database entries: {result.count()}")
@@ -34,7 +34,7 @@ class TestQuery(unittest.TestCase):
         Orte = ["Ort1", "Ort2"]
         num_entries = [168, 99]
         for i, ort in enumerate(Orte):
-            filter_ort = self.query.benutzer_partien_by(ort=ort)
+            filter_ort = self.query.spieler_pos_by(ort=ort)
 
             # Test correct length in Ort:
             self.log.debug(f"Check correct length({num_entries[i]} for {ort})")
@@ -49,7 +49,7 @@ class TestQuery(unittest.TestCase):
         Spieler = ["Spieler1", "Spieler2"]
         num_entries = [65, 68]
         for i, user in enumerate(Spieler):
-            filter_benutzer = self.query.benutzer_partien_by(benutzer=user)
+            filter_benutzer = self.query.spieler_pos_by(benutzer=user)
 
             # Test correct length in Ort:
             self.log.debug(f"Check correct length({num_entries[i]} for {user})")
@@ -64,7 +64,7 @@ class TestQuery(unittest.TestCase):
         Spiel = ["Spiel1", "Spiel2"]
         num_entries = [117, 100]
         for i, game in enumerate(Spiel):
-            filter_brettspiel = self.query.benutzer_partien_by(brettspiel=game)
+            filter_brettspiel = self.query.spieler_pos_by(brettspiel=game)
 
             # Test correct length in Ort:
             self.log.debug(f"Check correct length({num_entries[i]} for {game})")
@@ -85,7 +85,7 @@ class TestQuery(unittest.TestCase):
             user = random.choice(Benutzer)
             ort = random.choice(Ort)
 
-            filter_query = self.query.benutzer_partien_by(ort=ort, benutzer=user, brettspiel=brettspiel)
+            filter_query = self.query.spieler_pos_by(ort=ort, benutzer=user, brettspiel=brettspiel)
 
             for row in filter_query:
                 self.log.debug(f"Check the filter: {row}")
@@ -97,7 +97,7 @@ class TestQuery(unittest.TestCase):
                     self.assertEqual(row.benutzer.name, user)
 
     def test_partien(self):
-        result = self.query.partien()
+        result = self.query._partien()
         num_entries = 100
 
         # Check correct number of results
