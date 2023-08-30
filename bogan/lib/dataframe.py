@@ -1,4 +1,5 @@
 import pandas as pd
+from typing import List
 from bogan.config import get_logger
 from bogan.db.models import Benutzer, Partie, SpielerPos, Brettspiel, Ort, Base
 from bogan.lib.data_queries import Query
@@ -17,7 +18,7 @@ class Dataframe:
             self.type = None
 
     @property
-    def nested_dict(self):
+    def nested_dict(self) -> list:
         pd_list = []
         for row in query:
             if self.type == SpielerPos:
@@ -30,11 +31,12 @@ class Dataframe:
         return pd_list
 
     @property
-    def df(self):
-        return pd.DataFrame(self.nested_dict)
+    def df(self) -> pd.DataFrame:
+        data = self.nested_dict
+        self.__validate_cols(data)
+        return pd.DataFrame(data, columns=self.cols)
 
-
-    def __row_dict_spieler_pos(self, row: SpielerPos):
+    def __row_dict_spieler_pos(self, row: SpielerPos) -> dict:
         full_dict = {
             "partie_id": row.partie.id,
             "datum": row.partie.datum,
@@ -46,9 +48,9 @@ class Dataframe:
             "punktzahl": row.punktzahl,
             "win": row.win,
         }
-        return self.__filter_cols(full_dict)
+        return full_dict
 
-    def __row_dict_partie(self, row: Partie):
+    def __row_dict_partie(self, row: Partie) -> dict:
         full_dict = {
             "id": row.id,
             "datum": row.datum,
@@ -59,24 +61,28 @@ class Dataframe:
             # "duration": row.duration,
             "spieler": row.spieler,
         }
-        return self.__filter_cols(full_dict)
+        return full_dict
 
-    def __filter_cols(self, full_dict: dict):
-        cols = self.cols
-        if cols:
-            partial_dict = {}
-            for col in cols:
-                if col in full_dict.keys():
-                    partial_dict[col] = full_dict[col]
-            return partial_dict
+    def __validate_cols(self, data: List[dict]) -> None:
+        # Warning if dictionary is not valid
+        # leeres dictionary
+        if data:
+            first = data[0]
         else:
-            return full_dict
+            log.warning("Das zu validierende dictionary ist leer!")
+            first = {}
+            return
+
+        # falsche cols
+        missing_cols = [col for col in self.cols if col not in first.keys()]
+        if missing_cols:
+            log.warning(f"Columns {missing_cols} are missing in the nested_dict. Set all to 'NAN' in column")
 
 
 if __name__ == "__main__":
     query = Query().spieler_pos_by(ort="Spielewochenende")
 
-    s = Dataframe(query, cols=["partie_id", 'datum', 'spieler'])
+    s = Dataframe(query, cols=["sPieler", "datum", "ort"])
     print(s.query)
     print(s.type)
     print(s.df)
