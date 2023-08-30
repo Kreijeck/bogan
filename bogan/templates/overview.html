@@ -6,7 +6,7 @@
         <div class="col">
             <h1> {{ component.upper() }}</h1>
             {% for item in overview %}
-            <ul> <a href="/{{component}}/{{item.name }}">{{ item.name }} (id:{{ item.id }})</a> </ul>
+            <ul> <img src="{{ item.image_small }}" style="height: 5vh; width:auto" alt="Bild"> <a href="/{{component}}/{{item.name }}">{{ item.name }} (id:{{ item.id }})</a> </ul>
             {% endfor %}
         </div>
         <div class="col">

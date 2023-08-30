@@ -46,8 +46,9 @@ def boardgames():
 
 @app.route("/boardgames/<name>/")
 def boardgame_detail(name):
-    detail_info = sql.get_boardgames_detail(name=name)
-    partien = []
+    with sql.get_session() as session:
+        detail_info = sql.get_boardgames_detail(name=name)
+        partien = sql.get_partien_from_game(session=session, name=name)
     return render_template("boardgame_detail.html", detail= detail_info, partien=partien)
 
 
