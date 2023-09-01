@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for key, value in df_html.items() %}
+<h2> {{ key }}</h2>
+{{ value | safe }}
+{% endfor %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur dolor nisi nobis aspernatur! Labore corrupti atque asperiores eaque magnam saepe vitae quis totam expedita sint esse nobis sapiente, nulla facilis!
+        </div>
+        <div class="col">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam dolorem minima, alias animi saepe esse
+                aliquid placeat quis natus. Autem reiciendis temporibus accusantium officia doloribus rem, ea
+                exercitationem repudiandae adipisci.</p>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col">
+            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi et nulla doloremque odio officiis
+                perspiciatis nemo architecto quam fuga blanditiis? Culpa quidem corrupti eveniet error ipsa vitae quae
+                obcaecati. Officiis?</p>
+        </div>
+        <div class="col">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Distinctio, suscipit aperiam quis odit ipsam,
+                est, eius praesentium repudiandae fugiat autem hic. Amet, modi! Deserunt, enim! Velit, nobis quam.
+                Dolor, obcaecati.</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
