@@ -57,7 +57,7 @@ def points_max_player(position: int, num_players: int, complexity=1) -> float:
 
 
 def df_ranking(ort: str) -> pd.DataFrame:
-    """Jede Spieler hat eigenwird als ein Namen geführt, alle Spieler sind columns
+    """Jede Spieler wird als ein Namen geführt, alle Spieler sind columns
 
     Args:
         ort (str): gespielter Ort

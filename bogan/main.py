@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 import bogan.lib.sql_request as sql
 import bogan.lib.dashboard as dabo
+from bogan.aa_dev.pandas_analysis import create_table_by_game
 
 
 app = Flask(__name__)
@@ -50,6 +51,13 @@ def boardgame_detail(name):
         detail_info = sql.get_boardgames_detail(name=name)
         partien = sql.get_partien_from_game(session=session, name=name)
     return render_template("boardgame_detail.html", detail= detail_info, partien=partien)
+
+@app.route("/df")
+def dataframe():
+    
+    df_html = create_table_by_game()
+    print(df_html)
+    return render_template("df.html", df_html=df_html)
 
 
 if __name__ == '__main__':
