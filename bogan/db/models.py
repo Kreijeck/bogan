@@ -92,7 +92,7 @@ class SpielerPos(Base):
     def __repr__(self) -> str:
         return (
             f"SpielerPos(id={self.id}, name={self.benutzer.name}, punktzahl={self.punktzahl}, "
-            f"position={self.position}, partie={self.partie.brettspiel.name})"
+            f"partie={self.partie.brettspiel.name})"
         )
     
     def to_dict(self) -> dict:
