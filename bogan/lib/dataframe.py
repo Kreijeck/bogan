@@ -137,6 +137,8 @@ class Dataframe:
 
         # Add num_players if not there
         if "num_players" not in df.columns:
+            log.warning("'num_players':Anzahl der maximalen Spieler wird benötigt umd das Ranking zu berechnen."\
+                        "Funktion add_num_players() wird automatisch ausgeführt")
             df = self.add_num_players()
 
         # TODO: Refactor matching complexity
@@ -166,23 +168,24 @@ class Dataframe:
         if inplace:
             self.df = df
         return df
-    
-    def add_rankppoints_sum(self, df:pd.DataFrame = None, inplace=True) -> pd.DataFrame:
+
+    def add_rankppoints_sum(self, df: pd.DataFrame = None, inplace=True) -> pd.DataFrame:
         # Add column 'sum_rankpoints' and 'sum_rankpoints_complex': Aufsummierte Summe der Punkte über datum der Partien
         df = self.__default_none(df, self.df)
         self.__needed_cols(df, ["datum", "spieler"])
 
         # Sortiere Dataframe nach Datum
-        df = df.sort_values(by=['datum']).reset_index()
+        df = df.sort_values(by=["datum"]).reset_index()
 
         # Add rankpoints wenn diese noch nicht vorhanden
         if "rankpoints" not in df.columns or "rankpoints_complex" not in df.columns:
+            log.warning("Rankpoints wurden noch nicht berechnet, aber benötigt um Summe zu berechnen!"\
+                        "Funktion self.add_rankpoints wird daher ausgeführt.")
+                        
             df = self.add_rankpoints()
 
         df["sum_rankpoints"] = df.groupby("spieler")["rankpoints"].cumsum()
         df["sum_rankpoints_complex"] = df.groupby("spieler")["rankpoints_complex"].cumsum()
-
-        
 
         if inplace:
             self.df = df
