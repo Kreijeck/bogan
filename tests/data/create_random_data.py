@@ -40,19 +40,23 @@ session.commit()
 
 # Erstelle einige Partien mit Spielern
 partien = []
-data_string = "[\n"
+# Erstelle Data list für json
+data_list = []
 for counter in range(100):
-    data_string +=f"# Partie {counter + 1}\n"
-    data_string+= "{\n"
+    # Erstelle data_dict für json
+    # TODO matche diese beiden Spalten
+    data_dict = {}
+    data_dict["brettspiel"] = random.choice(brettspiele).name
+    data_dict["ort"] = random.choice(orte_namen)
+    data_dict["datum"] = (date.today() - timedelta(days=random.randint(1, 600))).strftime("%Y-%m-%d")
+    
+    
     brettspiel = random.choice(brettspiele)
     ort = random.choice(orte_liste)
     datum = date.today() - timedelta(days=random.randint(1, 600))
+    spieler_list = []
     spieler = random.sample(benutzer_liste, random.randint(2, len(benutzer_liste)))
-    
-    data_string+=f'"brettspiel": brettspiel["{brettspiel.name}"],\n'
-    data_string+=f'"ort": orte_namen["{ort.name}"],\n'
-    data_string+=f'"datum": datetime.strptime("{str(datum)}", "%Y-%m-%d"),\n'
-    data_string+= '"spieler": [\n'
+
 
     # Erstelle Partie ohne Spieler
     partie = Partie(brettspiel=brettspiel, datum=datum, ort=ort)
@@ -66,17 +70,22 @@ for counter in range(100):
         punktzahl = punktzahl_liste[i]
         win = True if punktzahl == max(punktzahl_liste) else False
         
-        data_string+= f'SpielerPos(punktzahl={punktzahl}, benutzer=benutzer_namen["{benutzer.name}"], win={win}),\n'
         spieler_pos = SpielerPos(punktzahl=punktzahl, win=win, benutzer=benutzer)
         partie.spieler.append(spieler_pos)
+
+        spieler_dict = {
+            "punktzahl": punktzahl,
+            "benutzer": benutzer.name,
+            "win": win }
+        spieler_list.append(spieler_dict)
     
-    data_string+= '],\n'
-    data_string+= '},\n'
+    data_dict["spieler"] = spieler_list
+    data_list.append(data_dict)
     
     session.commit()
     partien.append(partie)
 
-data_string+=']'
+
 session.commit()
 
 # Schließe die Session
@@ -84,6 +93,6 @@ session.close()
 
 # Schreibe List-dictionary in a file:
 cwd = os.path.dirname(__file__)
-filename = os.path.join(cwd, "data_random.txt")
-with open(filename, 'w') as file:
-    file.write(data_string)
+filename = os.path.join(cwd, "data_random.json")
+with open(filename, 'w') as json_file:
+    json.dump(data_list, json_file, indent=2)
