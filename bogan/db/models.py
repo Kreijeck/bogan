@@ -84,7 +84,6 @@ class SpielerPos(Base):
     # name: Mapped[str] = mapped_column(String)
     punktzahl: Mapped[float] = mapped_column(Float, nullable=True, default=None)
     win: Mapped[bool] = mapped_column(Boolean)
-    position: Mapped[int] = mapped_column(Integer, nullable=True, default=None)
     partie_id: Mapped[int] = mapped_column(ForeignKey("partie.id"))
     partie: Mapped["Partie"] = relationship(back_populates="spieler")
     benutzer_id: Mapped[int] = mapped_column(ForeignKey("benutzer.id"))

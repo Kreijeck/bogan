@@ -160,26 +160,13 @@ def add_data_to_database(json_file):
                 spieler_pos = SpielerPos(punktzahl=punktzahl, win=win, partie=partie, benutzer=benutzer)
                 session.add(spieler_pos)
 
-        except Exception as e:
+        except KeyError as e:
             log.warning(
-                f"Fehler: {e}. Partie_ID: {play['@id']}, Spiel: {play['item']['@name']} "\
-                     f"wurde nicht in die Datenbank geschrieben."
+                f"Key {e} wurde nicht gefunden, bitte überprüfen!"\
+                f"Partie_ID: {play['@id']}, Spiel: {play['item']['@name']} "\
+                f"wurde nicht in die Datenbank geschrieben."
             )
-
-        # Add ranking to games
-        players_in_game = session.query(SpielerPos).filter_by(partie_id=play["@id"]).all()
-        try:
-            if players_in_game[0].punktzahl is not None:
-                sorted_player = sorted(players_in_game, key=lambda player: player.punktzahl, reverse=True)
-                for i, player in enumerate(sorted_player):
-                    if player.punktzahl is not None:
-                        player.position = i + 1
-                        session.add(player)
-        except IndexError as e:
-            log.warning(f"Don't find players for this partie: {partie}")
-            log.warning(f"Index Error {e}")
-
-
+            log.warning
 
     # Speicher die Änderungen
     session.commit()
