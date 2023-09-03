@@ -6,8 +6,8 @@ from sqlalchemy.orm import Session
 from bogan.db.models import Partie, SpielerPos, Benutzer, Brettspiel, Ort, Base
 
 # Erstelle eine SQLite-Testdatenbank im Speicher
-#engine = create_engine('sqlite:///:memory:')
-engine = create_engine("sqlite:///tests/data/test_spiel2.db")
+engine = create_engine('sqlite:///:memory:')
+# engine = create_engine("sqlite:///tests/data/test_spiel2.db")
 
 # Erstelle neue Datenbank
 Base.metadata.drop_all(engine)

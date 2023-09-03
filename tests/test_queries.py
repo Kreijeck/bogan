@@ -4,13 +4,15 @@ import random
 
 from bogan.lib.data_queries import Query
 from bogan.config import get_logger
+import tests.data.create_100_test_data as test_data
 
 
 class TestQuery(unittest.TestCase):
     # TODO Logsnachrichten überprüfen
     @classmethod
     def setUpClass(cls) -> None:
-        cls.engine = create_engine("sqlite:///tests/data/test_spiel.db")
+        cls.engine = test_data.engine
+        # cls.engine = create_engine("sqlite:///tests/data/test_spiel.db")
         cls.log = get_logger(__name__)
         cls.log.debug("======================================================")
         cls.log.debug("Test query start")
@@ -22,7 +24,7 @@ class TestQuery(unittest.TestCase):
     def test_spieler_pos(self):
         # Testdaten
         result = self.query._spieler_pos()
-        num_of_entries = 414
+        num_of_entries = 394
 
         self.log.debug(f"Found Database entries: {result.count()}")
         self.assertEqual(num_of_entries, result.count())
@@ -32,7 +34,7 @@ class TestQuery(unittest.TestCase):
     def test_spieler_pos_filter_ort(self):
         # Input
         Orte = ["Ort1", "Ort2"]
-        num_entries = [168, 99]
+        num_entries = [122, 132]
         for i, ort in enumerate(Orte):
             filter_ort = self.query.spieler_pos_by(ort=ort)
 
@@ -47,7 +49,7 @@ class TestQuery(unittest.TestCase):
     def test_spieler_pos_filter_benutzer(self):
         # Input
         Spieler = ["Spieler1", "Spieler2"]
-        num_entries = [65, 68]
+        num_entries = [63, 63]
         for i, user in enumerate(Spieler):
             filter_benutzer = self.query.spieler_pos_by(benutzer=user)
 
@@ -62,7 +64,7 @@ class TestQuery(unittest.TestCase):
     def test_spieler_pos_filter_brettspiel(self):
         # Input
         Spiel = ["Spiel1", "Spiel2"]
-        num_entries = [117, 100]
+        num_entries = [105, 77]
         for i, game in enumerate(Spiel):
             filter_brettspiel = self.query.spieler_pos_by(brettspiel=game)
 
