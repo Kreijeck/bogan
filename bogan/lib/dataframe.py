@@ -44,7 +44,6 @@ class Dataframe:
                 "brettspiel": row.partie.brettspiel.name,
                 "complexity": row.partie.brettspiel.complexity,
                 "spieler": row.benutzer.name,
-                "position": row.position,
                 "punktzahl": row.punktzahl,
                 "win": row.win,
             }
