@@ -8,11 +8,12 @@ log = get_logger(__file__)
 
 
 class Dataframe:
-    def __init__(self, query, cols=None) -> None:
+    def __init__(self, query, cols=None, rank_method="default") -> None:
         self._query = query
         self._cols = cols
         self._type = self.__get_type()
         self.df = self.__create_df()
+        self.rank_method = rank_method
 
     @property
     def nested_dict(self) -> list:
@@ -30,9 +31,8 @@ class Dataframe:
     def __create_df(self) -> pd.DataFrame:
         data = self.nested_dict
         self.__validate_cols_in_dictionary(data)
-        
+
         return pd.DataFrame(data, columns=self._cols)
-        
 
     def __row_dict(self, row: Union[SpielerPos, Partie]) -> dict:
         full_dict = {}
@@ -80,7 +80,7 @@ class Dataframe:
             if missing_cols:
                 log.warning(f"Columns {missing_cols} are missing in the nested_dict. Set all to 'NAN' in column")
 
-    def __default_none(self, value, self_value) -> None:
+    def __default_none(self, value, self_value) -> any:
         """Set value to specific self_value if value is None
 
         Args:
@@ -93,10 +93,12 @@ class Dataframe:
         # Default: value = self.value
         if value is None:
             return self_value
+        else:
+            return value
 
-    def __needed_cols(self, columns: list) -> None:
+    def __needed_cols(self, df: pd.DataFrame, columns: list) -> None:
         for col in columns:
-            if col not in columns:
+            if col not in df.columns:
                 raise KeyError(f"Not all columns are available, need: {columns}")
 
     def add_position(self, df: pd.DataFrame = None, inplace=True) -> pd.DataFrame:
@@ -104,7 +106,7 @@ class Dataframe:
         df = self.__default_none(df, self.df)
 
         # only works if col "punktzahl" is used
-        self.__needed_cols(["punktzahl", "partie_id"])
+        self.__needed_cols(df, ["punktzahl", "partie_id"])
 
         group_df = df.groupby("partie_id")
         df["position"] = group_df["punktzahl"].rank(ascending=False)
@@ -117,7 +119,7 @@ class Dataframe:
     def add_num_players(self, df: pd.DataFrame = None, inplace=True) -> pd.DataFrame:
         # add 'num_players' column: Anzahl der Spieler pro Partie (partie_id)
         df = self.__default_none(df, self.df)
-        self.__needed_cols(["partie_id", "spieler"])
+        self.__needed_cols(df, ["partie_id", "spieler"])
 
         df["num_players"] = df.groupby("partie_id")["spieler"].transform("count")
 
@@ -126,45 +128,68 @@ class Dataframe:
 
         return df
 
-    def add_rankpoints(
-        self, df: pd.DataFrame = None, complexity=False, method: str = None, inplace=True
-    ) -> pd.DataFrame:
+    def add_rankpoints(self, df: pd.DataFrame = None, method: str = None, inplace=True) -> pd.DataFrame:
         # Add 'rankpoints' column: rankpoints of a game, depends on the position achieved
 
         df = self.__default_none(df, self.df)
-        self.__needed_cols(["complexity", "partie_id"])
+        method = self.__default_none(method, self.rank_method)
+        self.__needed_cols(df, ["complexity", "partie_id"])
 
         # Add num_players if not there
         if "num_players" not in df.columns:
-            self.add_num_players()
+            df = self.add_num_players()
 
         # TODO: Refactor matching complexity
         match method:
+            # default case: Aktuell max_points_per_player
+            case "default":
+                rank_func = CalcRank.max_points_per_player
+
             case "max_point_per_player":
-                if not complexity:
-                    df["rankpoints"] = df.apply(
-                        lambda row: CalcRank.max_points_per_player(
-                            position=row["position"], num_players=row["num_players"]
-                        ),
-                        axis=1,
-                    )
-                else:
-                    df["rankpoints_with_complex"] = df.apply(
-                        lambda row: CalcRank.max_points_per_player(
-                            position=row["position"], num_players=row["num_players"], complexity=row["complexity"]
-                        ),
-                        axis=1,
-                    )
+                rank_func = CalcRank.max_points_per_player
+
             case _:
-                raise ValueError("please choose valid method")
+                raise ValueError(f"{method} is not valid to caluclate ranking points")
+
+        # Calculate rank points
+        df["rankpoints"] = df.apply(
+            lambda row: rank_func(position=row["position"], num_players=row["num_players"]),
+            axis=1,
+        )
+        df["rankpoints_complex"] = df.apply(
+            lambda row: rank_func(
+                position=row["position"], num_players=row["num_players"], complexity=row["complexity"]
+            ),
+            axis=1,
+        )
 
         if inplace:
             self.df = df
         return df
     
-    def strip_cols_to(self, columns: List[str], df:pd.DataFrame=None, inplace=True) -> pd.DataFrame:
-        # Reduziere DF auf columns
+    def add_rankppoints_sum(self, df:pd.DataFrame = None, inplace=True) -> pd.DataFrame:
+        # Add column 'sum_rankpoints' and 'sum_rankpoints_complex': Aufsummierte Summe der Punkte über datum der Partien
+        df = self.__default_none(df, self.df)
+        self.__needed_cols(df, ["datum", "spieler"])
+
+        # Sortiere Dataframe nach Datum
+        df = df.sort_values(by=['datum']).reset_index()
+
+        # Add rankpoints wenn diese noch nicht vorhanden
+        if "rankpoints" not in df.columns or "rankpoints_complex" not in df.columns:
+            df = self.add_rankpoints()
+
+        df["sum_rankpoints"] = df.groupby("spieler")["rankpoints"].cumsum()
+        df["sum_rankpoints_complex"] = df.groupby("spieler")["rankpoints_complex"].cumsum()
+
         
+
+        if inplace:
+            self.df = df
+        return df
+
+    def strip_cols_to(self, columns: List[str], df: pd.DataFrame = None, inplace=True) -> pd.DataFrame:
+        # Reduziere DF auf columns
         df = self.__default_none(df, self.df)
 
         df = df[columns]
@@ -172,8 +197,6 @@ class Dataframe:
         if inplace:
             self.df = df
         return df
-
-
 
 
 class CalcRank:
@@ -225,10 +248,15 @@ if __name__ == "__main__":
     # print(s._query)
     # print(s._type)
     s.add_position()
-    #s.add_num_players()
-    s.add_rankpoints(method="max_point_per_player",complexity=False)
+    # s.add_num_players()
+    # s.add_rankpoints(method="max_point_per_player")
+    s.add_rankppoints_sum()
     print(s.df.head(20))
     print(s.df.columns)
 
-    s.strip_cols_to(["partie_id", "ort", "spieler"])
-    print(s.df.head(2))
+    # s.strip_cols_to(["partie_id", "ort", "spieler"])
+    # print(s.df.head(2))
+
+    for spieler, spieler_df in s.df.groupby("spieler"):
+        print(spieler)
+        print(spieler_df)
