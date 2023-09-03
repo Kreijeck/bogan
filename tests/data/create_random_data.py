@@ -43,17 +43,18 @@ partien = []
 # Erstelle Data list für json
 data_list = []
 for counter in range(100):
-    # Erstelle data_dict für json
-    # TODO matche diese beiden Spalten
-    data_dict = {}
-    data_dict["brettspiel"] = random.choice(brettspiele).name
-    data_dict["ort"] = random.choice(orte_namen)
-    data_dict["datum"] = (date.today() - timedelta(days=random.randint(1, 600))).strftime("%Y-%m-%d")
     
-    
+    # Erstelle zufällige Werte für Ort, Brettspiel, Datum
     brettspiel = random.choice(brettspiele)
     ort = random.choice(orte_liste)
     datum = date.today() - timedelta(days=random.randint(1, 600))
+    
+    # Erstelle dict für json
+    data_dict = {}
+    data_dict["brettspiel"] = brettspiel.name
+    data_dict["ort"] = ort.name
+    data_dict["datum"] = datum.strftime("%Y-%m-%d")
+        
     spieler_list = []
     spieler = random.sample(benutzer_liste, random.randint(2, len(benutzer_liste)))
 
