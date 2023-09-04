@@ -134,7 +134,7 @@ class Dataframe:
         method = self.__default_none(method, self.rank_method)
         self.__needed_cols(df, ["complexity", "partie_id"])
 
-        # Add num_players if not there
+        # Execute functions for necessary cols
         if "num_players" not in df.columns:
             log.info('"num_players" is needed to calculate "rank_points", func num_player added')
             df = self.add_num_players()
