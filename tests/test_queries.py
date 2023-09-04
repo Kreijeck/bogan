@@ -1,14 +1,15 @@
 import unittest
-from sqlalchemy import create_engine
+# from sqlalchemy import create_engine
 import random
+import pandas as pd
 
 from bogan.lib.data_queries import Query
+from bogan.lib.dataframe import Dataframe
 from bogan.config import get_logger
 import tests.data.create_100_test_data as test_data
 
 
 class TestQuery(unittest.TestCase):
-    # TODO Logsnachrichten überprüfen
     @classmethod
     def setUpClass(cls) -> None:
         cls.engine = test_data.engine
@@ -19,17 +20,21 @@ class TestQuery(unittest.TestCase):
 
     def setUp(self):
         self.query = Query(engine=self.engine)
-        self.log.debug(f"SETUP: Create query from {self.engine}")
 
     def test_spieler_pos(self):
         # Testdaten
         result = self.query._spieler_pos()
+        self.log.debug(f"Get Spieler_Pos query with {result.count()} entries")
         num_of_entries = 394
 
-        self.log.debug(f"Found Database entries: {result.count()}")
         self.assertEqual(num_of_entries, result.count())
         for row in result:
-            self.log.debug(f"Spieler_pos found: {row}")
+            # Alle Einträge haben Werte
+            self.assertTrue(row.benutzer)
+            self.assertTrue(row.partie_id)
+            self.assertIsInstance(row.win, bool)
+        
+
 
     def test_spieler_pos_filter_ort(self):
         # Input
@@ -37,13 +42,11 @@ class TestQuery(unittest.TestCase):
         num_entries = [122, 132]
         for i, ort in enumerate(Orte):
             filter_ort = self.query.spieler_pos_by(ort=ort)
-
             # Test correct length in Ort:
-            self.log.debug(f"Check correct length({num_entries[i]} for {ort})")
+            self.log.debug(f"Get Spieler_Pos query with {filter_ort.count()} entries for {ort})")
             self.assertEqual(filter_ort.count(), num_entries[i])
             # Check entries
             for row in filter_ort:
-                self.log.debug(f"Test: {row} is in {ort}")
                 self.assertEqual(row.partie.ort.name, ort)
 
     def test_spieler_pos_filter_benutzer(self):
@@ -52,13 +55,12 @@ class TestQuery(unittest.TestCase):
         num_entries = [63, 63]
         for i, user in enumerate(Spieler):
             filter_benutzer = self.query.spieler_pos_by(benutzer=user)
-
+            self.log.debug(f"Get Spieler_Pos query with {filter_benutzer.count()} entries for {user})")
+            
             # Test correct length in Ort:
-            self.log.debug(f"Check correct length({num_entries[i]} for {user})")
             self.assertEqual(filter_benutzer.count(), num_entries[i])
             # Check entries
             for row in filter_benutzer:
-                self.log.debug(f"Test: {row} is in {user}")
                 self.assertEqual(row.benutzer.name, user)
 
     def test_spieler_pos_filter_brettspiel(self):
@@ -67,13 +69,11 @@ class TestQuery(unittest.TestCase):
         num_entries = [105, 77]
         for i, game in enumerate(Spiel):
             filter_brettspiel = self.query.spieler_pos_by(brettspiel=game)
-
+            self.log.debug(f"Get Spieler_Pos query with {filter_brettspiel.count()} entries for {game})")
             # Test correct length in Ort:
-            self.log.debug(f"Check correct length({num_entries[i]} for {game})")
             self.assertEqual(filter_brettspiel.count(), num_entries[i])
             # Check entries
             for row in filter_brettspiel:
-                self.log.debug(f"Test: {row} is in {game}")
                 self.assertEqual(row.partie.brettspiel.name, game)
 
     def test_spieler_pos_filter_multi(self):
@@ -88,9 +88,10 @@ class TestQuery(unittest.TestCase):
             ort = random.choice(Ort)
 
             filter_query = self.query.spieler_pos_by(ort=ort, benutzer=user, brettspiel=brettspiel)
+            self.log.debug(f"Get Spieler_Pos query with {filter_query.count()} entries for "\
+                           f"brettspiel={brettspiel}, user={user}, ort={ort})")
 
             for row in filter_query:
-                self.log.debug(f"Check the filter: {row}")
                 if ort is not None:
                     self.assertEqual(row.partie.ort.name, ort)
                 if brettspiel is not None:
@@ -169,9 +170,10 @@ class TestQuery(unittest.TestCase):
             ort = random.choice(Ort)
 
             filter_query = self.query.partien_by(ort=ort, benutzer=user, brettspiel=brettspiel)
+            self.log.debug(f"Get Spieler_Pos query with {filter_query.count()} entries for "\
+                           f"brettspiel={brettspiel}, user={user}, ort={ort})")
 
             for row in filter_query:
-                self.log.debug(f"Check the filter: {row}")
                 if ort is not None:
                     self.assertEqual(row.ort.name, ort)
                 if brettspiel is not None:
@@ -185,13 +187,56 @@ class TestQuery(unittest.TestCase):
 
 
     def tearDown(self) -> None:
-        self.log.debug("Test Ende")
         return super().tearDown()
 
     @classmethod
     def tearDownClass(cls) -> None:
         cls.log.debug(" Test query end")
         cls.log.debug("======================================================")
+
+class TestDataframe(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.engine = test_data.engine
+        cls.log = get_logger(__name__)
+    
+    def setUp(self):
+        # Erstellen eines Dummy-Dataframes für Tests
+        query_spieler_pos = Query(engine=self.engine).spieler_pos_by()
+        self.test_query = Dataframe(query_spieler_pos)
+    
+    def test_add_position(self):
+        df = self.test_query
+        df.add_position()
+        # Überprüfen, ob die Spalte "position" im DataFrame vorhanden ist
+        self.assertIn("position", df.df.columns)
+    
+    def test_add_num_players(self):
+        df = self.test_query
+        df.add_num_players()
+        # Überprüfen, ob die Spalte "num_players" im DataFrame vorhanden ist
+        self.assertIn("num_players", df.df.columns)
+    
+    def test_add_rankpoints(self):
+        df = self.test_query
+        df.add_rankpoints()
+        # Überprüfen, ob die Spalten "rankpoints" und "rankpoints_complex" im DataFrame vorhanden sind
+        self.assertIn("rankpoints", df.df.columns)
+        self.assertIn("rankpoints_complex", df.df.columns)
+    
+    def test_add_rankppoints_sum(self):
+        df = self.test_query
+        df.add_rankppoints_sum()
+        # Überprüfen, ob die Spalten "sum_rankpoints" und "sum_rankpoints_complex" im DataFrame vorhanden sind
+        self.assertIn("sum_rankpoints", df.df.columns)
+        self.assertIn("sum_rankpoints_complex", df.df.columns)
+    
+    def test_strip_cols_to(self):
+        df = self.test_query
+        columns = ["partie_id", "spieler"]
+        df.strip_cols_to(columns)
+        # Überprüfen, ob nur die angegebenen Spalten im DataFrame vorhanden sind
+        self.assertEqual(list(df.df.columns), columns)
 
 
 if __name__ == "__main__":

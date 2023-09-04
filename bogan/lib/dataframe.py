@@ -17,14 +17,14 @@ class Dataframe:
 
     @property
     def nested_dict(self) -> list:
-        pd_list = [self.__row_dict(row) for row in query]
+        pd_list = [self.__row_dict(row) for row in self._query]
 
         return pd_list
 
     def __get_type(self):
         # bei leerer Query -> self.type = None
         if self._query.count() > 0:
-            return type(query[0])
+            return type(self._query[0])
         else:
             return None
 
@@ -136,9 +136,11 @@ class Dataframe:
 
         # Add num_players if not there
         if "num_players" not in df.columns:
-            log.warning("'num_players':Anzahl der maximalen Spieler wird benötigt umd das Ranking zu berechnen."\
-                        "Funktion add_num_players() wird automatisch ausgeführt")
+            log.info('"num_players" is needed to calculate "rank_points", func num_player added')
             df = self.add_num_players()
+        if "position" not in df.columns:
+            log.info('"position" is needed to calculate "rank_points", func add_position added')
+            df = self.add_position()
 
         # TODO: Refactor matching complexity
         match method:
