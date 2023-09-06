@@ -245,7 +245,7 @@ class CalcRank:
             log.warning("Only 1 Player in game, please check! 0 points returned")
             return 0.0
 
-class DashDataFrame:
+class DashDf:
     @staticmethod
     def rank_df(ort_name: str=None, start_datum: datetime=None, end_datum=None) -> pd.DataFrame:
         """Erstellt Dataframe für ein Ranking Plot
@@ -262,7 +262,7 @@ class DashDataFrame:
         rank_df = Dataframe(spieler_query)
         rank_df.add_rankpoints()
         rank_df.add_rankppoints_sum()
-        
+
         rank_df.df.reset_index()
         
         #TODO reduziere Spalten
@@ -294,5 +294,5 @@ if __name__ == "__main__":
     # for key, value in create_table("Lasse", s.df).items():
     #     print(key, value)
 
-    print(DashDataFrame.rank_df().head(10))
+    print(DashDf.rank_df().head(10))
     

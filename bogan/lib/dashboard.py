@@ -4,7 +4,7 @@ import plotly.express as px
 import pandas as pd
 
 import bogan.lib.sql_request as sql
-from bogan.lib.dataframe import DashDataFrame
+from bogan.lib.dataframe import DashDf
 
 def dashboard_rank(flask_app: Flask) -> Dash:
     dash_app = (Dash(__name__, server=flask_app, url_base_pathname="/dashboard/rank/"))
@@ -29,7 +29,7 @@ def dashboard_rank(flask_app: Flask) -> Dash:
     )
     def update_graph(ort):
         print(ort)
-        data = DashDataFrame.rank_df(ort_name=ort)
+        data = DashDf.rank_df(ort_name=ort)
 
         fig = px.line(data, x="index", y="sum_rankpoints", color="spieler")
 
