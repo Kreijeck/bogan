@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- <iframe src="/dashboard/rank/" width="100%" height="700px"></iframe> -->
+    <div class="dark-dash">
+        <h1>Ranking Table für verschiedene Events</h1>
+        
+        <!-- Hier wird das Dash-Layout gerendert -->
+        {{ dash_content | safe }}
+        
+        </div>
+
+{% endblock %}

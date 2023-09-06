@@ -4,6 +4,38 @@ import plotly.express as px
 import pandas as pd
 
 import bogan.lib.sql_request as sql
+from bogan.lib.dataframe import DashDataFrame
+
+def dashboard_rank(flask_app: Flask) -> Dash:
+    dash_app = (Dash(__name__, server=flask_app, url_base_pathname="/dashboard/rank/"))
+
+    # TODO Definition der Orte in Configfile
+    orte = ["Mittwochsrunde", "Spielewochenende"]
+    # Dash Layout
+    dash_app.layout = html.Div(
+        [
+            dcc.RadioItems(
+                options=[{'label': ort, 'value': ort} for ort in orte], value="Mittwochsrunde", id="radio-button-orte"
+            ),
+            html.Title("Ranking table für verschieden Locations"),
+            dcc.Graph(figure={}, id="rank-graph")
+        ]
+    )
+
+    # Dash Callbacks
+    @dash_app.callback(
+        Output(component_id="rank-graph", component_property="figure"),
+        Input(component_id="radio-button-orte", component_property="value")
+    )
+    def update_graph(ort):
+        print(ort)
+        data = DashDataFrame.rank_df(ort_name=ort)
+
+        fig = px.line(data, x="index", y="sum_rankpoints", color="spieler")
+
+        return fig
+    
+    return dash_app
 
 
 def dashboard_example(flask_app: Flask) -> Dash:

@@ -3,6 +3,7 @@ from typing import List, Union
 from bogan.config import get_logger
 from bogan.db.models import Partie, SpielerPos
 from bogan.lib.data_queries import Query
+from datetime import datetime
 
 log = get_logger(__file__)
 
@@ -244,6 +245,32 @@ class CalcRank:
             log.warning("Only 1 Player in game, please check! 0 points returned")
             return 0.0
 
+class DashDataFrame:
+    @staticmethod
+    def rank_df(ort_name: str=None, start_datum: datetime=None, end_datum=None) -> pd.DataFrame:
+        """Erstellt Dataframe für ein Ranking Plot
+
+        Args:
+            ort (str, optional): Ort.name. Defaults to None.
+            start_datum (datetime, optional): Datum Start. Defaults to None.
+            end_datum (datetime, optional): Datum Ende. Defaults to None.
+
+        Returns:
+            pd.DataFrame: df für plotly
+        """
+        spieler_query = Query().spieler_pos_by(ort=ort_name)
+        rank_df = Dataframe(spieler_query)
+        rank_df.add_rankpoints()
+        rank_df.add_rankppoints_sum()
+        
+        rank_df.df.reset_index()
+        
+        #TODO reduziere Spalten
+        # rank_df.strip_cols_to([])
+
+        return rank_df.df
+
+
 
 if __name__ == "__main__":
     query = Query().spieler_pos_by(ort="Spielewochenende")
@@ -255,12 +282,17 @@ if __name__ == "__main__":
     # s.add_num_players()
     # s.add_rankpoints(method="max_point_per_player")
     s.add_rankppoints_sum()
-    print(s.df.head(20))
-    print(s.df.columns)
+    # print(s.df.head(20))
+    # print(s.df.columns)
 
     # s.strip_cols_to(["partie_id", "ort", "spieler"])
     # print(s.df.head(2))
 
-    for spieler, spieler_df in s.df.groupby("spieler"):
-        print(spieler)
-        print(spieler_df)
+    # for spieler, spieler_df in s.df.groupby("spieler"):
+    #     print(spieler)
+    #     print(spieler_df)
+    # for key, value in create_table("Lasse", s.df).items():
+    #     print(key, value)
+
+    print(DashDataFrame.rank_df().head(10))
+    

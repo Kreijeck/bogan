@@ -8,6 +8,7 @@ app = Flask(__name__)
 # Available Dashboards
 dash_example = dabo.dashboard_example(flask_app=app)
 d2 = dabo.dashboard_example2(flask_app=app)
+dash_ranking = dabo.dashboard_rank(flask_app=app)
 
 
 @app.route("/")
@@ -43,6 +44,10 @@ def user_detail(name):
 def boardgames():
     boardgames = sql.get_boardgames()
     return render_template("overview.html", component="boardgames", overview=boardgames)
+
+@app.route("/ranking")
+def ranking():
+    return render_template("ranking.html", dash_content=dash_ranking.index())
 
 @app.route("/boardgames/<name>/")
 def boardgame_detail(name):
