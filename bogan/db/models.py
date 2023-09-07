@@ -137,6 +137,7 @@ class Brettspiel(Base):
     name: Mapped[str] = mapped_column(String)
     complexity: Mapped[float] = mapped_column(Float, nullable=True, default=None)
     duration: Mapped[int] = mapped_column(Integer, nullable=True, default=None)
+    koop: Mapped[bool] = mapped_column(Boolean, nullable=True, default=False)
     image: Mapped[str] = mapped_column(String, nullable=True, default=None)
     image_small: Mapped[str] = mapped_column(String, nullable=True, default=None)
     partie: Mapped[List["Partie"]] = relationship(back_populates="brettspiel")
@@ -144,7 +145,7 @@ class Brettspiel(Base):
 
     def __repr__(self) -> str:
         return (
-            f"Brettspiel(id={self.id}, name={self.name}, "
+            f"Brettspiel(id={self.id}, name={self.name}, Koop:{self.koop}"
             f"complexity={self.complexity or 'na'}, duration={self.duration or 'na'})"
         )
 

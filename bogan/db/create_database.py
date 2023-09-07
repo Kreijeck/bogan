@@ -74,6 +74,15 @@ def get_brettspiel_details(id) -> dict:
         details_dict["image_small"] = details["thumbnail"]
     except KeyError:
         pass
+    try:
+        # Koop Flag wird gesetzt, wenn "Cooperative Game" nicht in link gefunden wird
+        coop = False
+        for link in details["link"]:
+            if link["@value"] == "Cooperative Game":
+                coop = True
+        details_dict["koop"] = coop
+    except KeyError:
+        pass
 
     return details_dict
 
