@@ -263,7 +263,14 @@ class DashDf:
         rank_df.add_rankpoints()
         rank_df.add_rankppoints_sum()
 
-        rank_df.df.reset_index()
+        # rank_df.df["partie_index"] = rank_df.df.sort_values(by=["datum", "partie_id"]).groupby("partie_id").ngroup() + 1
+        
+        #TODO move function to general
+        # Erst alle Werte nach Datum sortieren
+        rank_df.df = rank_df.df.sort_values(by=["datum", "partie_id"])
+
+        # Dann fügen Sie die Spalte "partie_index" hinzu durch Gruppierung
+        rank_df.df["partie_index"] = rank_df.df.groupby("partie_id").ngroup() + 1
         
         #TODO reduziere Spalten
         # rank_df.strip_cols_to([])
@@ -294,5 +301,5 @@ if __name__ == "__main__":
     # for key, value in create_table("Lasse", s.df).items():
     #     print(key, value)
 
-    print(DashDf.rank_df().head(10))
+    print(DashDf.rank_df(ort_name="Mittwochsrunde").iloc[150:180])
     

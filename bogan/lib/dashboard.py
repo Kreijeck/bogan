@@ -31,7 +31,7 @@ def dashboard_rank(flask_app: Flask) -> Dash:
         print(ort)
         data = DashDf.rank_df(ort_name=ort)
 
-        fig = px.line(data, x="index", y="sum_rankpoints", color="spieler")
+        fig = px.line(data, x="partie_index", y="sum_rankpoints", color="spieler")
 
         return fig
     
