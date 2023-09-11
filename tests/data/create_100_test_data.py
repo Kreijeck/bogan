@@ -31,10 +31,10 @@ session.commit()
 
 # Erstelle einige Brettspiele
 brettspiel_obj = {
-    "Spiel1": Brettspiel(name="Spiel1", complexity=2.0, duration=60),
-    "Spiel2": Brettspiel(name="Spiel2", complexity=3.5, duration=90),
-    "Spiel3": Brettspiel(name="Spiel3", complexity=1.5, duration=45),
-    "Spiel4": Brettspiel(name="Spiel4", complexity=4.5, duration=30),
+    "Spiel1": Brettspiel(name="Spiel1", complexity=2.0, duration=60, koop=False),
+    "Spiel2": Brettspiel(name="Spiel2", complexity=3.5, duration=90, koop=False),
+    "Spiel3": Brettspiel(name="Spiel3", complexity=1.5, duration=45, koop=False),
+    "Spiel4": Brettspiel(name="Spiel4", complexity=4.5, duration=30, koop=False),
 }
 session.add_all(brettspiel_obj.values())
 session.commit()

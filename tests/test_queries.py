@@ -150,7 +150,9 @@ class TestQuery(unittest.TestCase):
                 self.log.info(f"First entry: {result[0]}")
             else:
                 self.log.warning(f"Für {user} wurden keine Einträge in der DB gefunden")
-
+            
+            self.log.info(f"Anzahl gefundener Datensätze: {result.count()}")
+            print(f"Anzahl gefundener Datensätze: {result.count()}")
             # Überprüfe ob Spieler bei der Partie dabei war
             for row in result:
                 spieler_liste = []
