@@ -126,7 +126,7 @@ def create_partie(play: dict, session: Session) -> Partie:
 
     # Wenn keine Partie mit ID vorhanden ist:
     if partie is None:
-        partie = Partie(id=play["@id"], datum=datum, ort=ort, brettspiel=brettspiel)
+        partie = Partie(partie_bgg_id=play["@id"], datum=datum, ort=ort, brettspiel=brettspiel)
         session.add(partie)
     # wenn id bereits vorhanden ist, soll die Partie geupdated werden
     else:
@@ -169,13 +169,16 @@ def add_data_to_database(json_file):
                 spieler_pos = SpielerPos(punktzahl=punktzahl, win=win, partie=partie, benutzer=benutzer)
                 session.add(spieler_pos)
 
+            log.debug(
+                f"Partie_ID: {play['@id']}, Spiel: {play['item']['@name']} "
+                f"wurde erfolgreich in die Datenbank geschrieben."
+            )
         except KeyError as e:
             log.warning(
-                f"Key {e} wurde nicht gefunden, bitte überprüfen!"\
-                f"Partie_ID: {play['@id']}, Spiel: {play['item']['@name']} "\
+                f"Key {e} wurde nicht gefunden, bitte überprüfen!"
+                f"Partie_ID: {play['@id']}, Spiel: {play['item']['@name']} "
                 f"wurde nicht in die Datenbank geschrieben."
             )
-            log.warning
 
     # Speicher die Änderungen
     session.commit()

@@ -20,12 +20,12 @@ class Base(DeclarativeBase):
         Bsp: query =session.query(MODEL).all()
         for q in query:
             q.to_dict()
-        
+
 
         Returns:
             dict: dictionary eines Eintrags
         """
-        
+
         return {column.key: getattr(self, column.key) for column in inspect(self).mapper.column_attrs}
 
 
@@ -45,6 +45,7 @@ class Partie(Base):
 
     __tablename__ = "partie"
     id: Mapped[int] = mapped_column(primary_key=True)
+    partie_bgg_id: Mapped[int] = mapped_column(Integer, nullable=True)
     brettspiel_id: Mapped[int] = mapped_column(ForeignKey("brettspiel.id"))
     brettspiel: Mapped["Brettspiel"] = relationship(back_populates="partie")
     datum: Mapped[date] = mapped_column(Date)
@@ -54,13 +55,14 @@ class Partie(Base):
 
     def __repr__(self) -> str:
         return (
-            f"Partie(id={self.id}, brettspiel={self.brettspiel.name}, datum={self.datum}, ort={self.ort.name}, "
-            f"Spieler={self.spieler})"
+            f"Partie(id={self.id}, partie_bgg_id={self.partie_bgg_id}, brettspiel={self.brettspiel.name}, "
+            f"datum={self.datum}, ort={self.ort.name}, Spieler={self.spieler})"
         )
 
     def to_dict(self) -> dict:
         return {
             "id": self.id,
+            "partie_bgg_id": self.partie_bgg_id,
             "brettspiel": self.brettspiel.name,
             "datum": self.datum,
             "ort": self.ort.name,
@@ -94,14 +96,9 @@ class SpielerPos(Base):
             f"SpielerPos(id={self.id}, name={self.benutzer.name}, punktzahl={self.punktzahl}, "
             f"partie={self.partie.brettspiel.name})"
         )
-    
+
     def to_dict(self) -> dict:
-        return {
-                    "name": self.benutzer.name,
-                    "punktzahl": self.punktzahl,
-                    "position": self.position,
-                    "win": self.win
-                }
+        return {"name": self.benutzer.name, "punktzahl": self.punktzahl, "position": self.position, "win": self.win}
 
 
 class Benutzer(Base):
@@ -145,7 +142,7 @@ class Brettspiel(Base):
 
     def __repr__(self) -> str:
         return (
-            f"Brettspiel(id={self.id}, name={self.name}, Koop:{self.koop}"
+            f"Brettspiel(id={self.id}, name={self.name}, Koop:{self.koop}, "
             f"complexity={self.complexity or 'na'}, duration={self.duration or 'na'})"
         )
 
