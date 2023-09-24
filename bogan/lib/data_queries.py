@@ -9,18 +9,23 @@ log = get_logger(__file__)
 
 
 class Query:
-    def __init__(self, query=None, engine=get_play_engine(), ignore_koop=True) -> None:
+    def __init__(self, query=None, engine=get_play_engine(), ignore_koop=True, ignore_solo=True) -> None:
         self.query = query
         self.engine = engine
         self.ignore_koop = ignore_koop
+        self.ignore_solo = ignore_solo
 
     def _spieler_pos(self) -> List[SpielerPos]:
         with Session(self.engine) as session:
             query: List[SpielerPos] = (
                 session.query(SpielerPos).join(Partie).join(Brettspiel).join(Ort).join(Benutzer).order_by(Partie.datum)
             )
+            # Koop Spiele werden ignoriert
             if self.ignore_koop:
                 query = query.where(Brettspiel.koop == False)  # noqa: E712 -> sqlAlchemy need it
+             # Solo Spiele werden ignoriert
+            if self.ignore_solo:
+                query = query.where(Ort!="Solospiel")
 
         return query
 
@@ -49,11 +54,14 @@ class Query:
         with Session(self.engine) as session:
             # Join von models, die nicht die Anzahl der Einträge ändern -> Ein Ort möglich
             query: List[Partie] = session.query(Partie).join(Ort).join(Brettspiel)
+
             # Koop Spiele werden ignoriert
             if self.ignore_koop:
                 query = query.where(Brettspiel.koop == False)  # noqa: E712 -> sqlAlchemy need it
-            else:
-                query: List[Partie] = session.query(Partie)
+            
+            # Solo Spiele werden ignoriert
+            if self.ignore_solo:
+                query = query.where(Ort!="Solospiel")
 
         return query
 
