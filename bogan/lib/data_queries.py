@@ -25,7 +25,7 @@ class Query:
                 query = query.where(Brettspiel.koop == False)  # noqa: E712 -> sqlAlchemy need it
              # Solo Spiele werden ignoriert
             if self.ignore_solo:
-                query = query.where(Ort!="Solospiel")
+                query = query.where(Ort.name!="Solospiel")
 
         return query
 
@@ -61,7 +61,7 @@ class Query:
             
             # Solo Spiele werden ignoriert
             if self.ignore_solo:
-                query = query.where(Ort!="Solospiel")
+                query = query.where(Ort.name!="Solospiel")
 
         return query
 
@@ -89,13 +89,15 @@ class Query:
 
 
 if __name__ == "__main__":
-    q = Query().spieler_pos_by(brettspiel="Aeon's End")
+    q = Query().spieler_pos_by(brettspiel="The Search for Planet X")
 
     for row in q:
-        print(row.partie.brettspiel)
+        print(row.partie)
+    
+    print(f"Count: {q.count()}")
 
-    q = Query().spieler_pos_by(brettspiel="Gaia Project")
-    # q = Query().spieler_pos_by()
+    # q = Query().spieler_pos_by(brettspiel="Gaia Project")
+    # # q = Query().spieler_pos_by()
 
-    for row in q:
-        print(row.partie.brettspiel)
+    # for row in q:
+    #     print(row.partie.brettspiel)
