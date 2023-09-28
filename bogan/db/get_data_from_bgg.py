@@ -38,8 +38,19 @@ def get_boardgame_info(id) -> dict:
         'id': id,
         'stats': 1}
     endpoint = "thing"
-    resp = requests.get("/".join((BASE_URL, endpoint)), para)
-    return xmltodict.parse(resp.text, encoding=cfg_encoding)["items"]["item"]
+    
+    # If key is missing: try again -> 5 times
+    repeat = 0
+    while repeat < 5:
+        resp = requests.get("/".join((BASE_URL, endpoint)), para)
+        if resp.ok:
+            return xmltodict.parse(resp.text, encoding=cfg_encoding)["items"]["item"]
+        else:
+            repeat += 1
+            log.debug(f"Try {repeat}: Repeat API-call bordgamestats: Received: {resp}")
+
+    log.warning("received no correct format from BGG-API -> Return None")
+    return None
 
 
 def get_plays_list():

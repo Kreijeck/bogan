@@ -75,7 +75,7 @@ def get_brettspiel_details(id) -> dict:
     except KeyError:
         pass
     try:
-        # Koop Flag wird gesetzt, wenn "Cooperative Game" nicht in link gefunden wird
+        # Koop Flag wird gesetzt, wenn "Cooperative Game" in link gefunden wird
         coop = False
         for link in details["link"]:
             if link["@value"] == "Cooperative Game":
@@ -158,8 +158,13 @@ def add_data_to_database(json_file):
         try:
             partie = create_partie(play=play, session=session)
 
+            # Konvertiere Einträge zu einer Liste. Bei nur 1 Spieler wird für player nur ein dictionary verwendet
+            if not isinstance(play["players"]["player"],list):
+                play["players"]["player"] = [play["players"]["player"]]
+                
             # Füge jeden Spieler zur Partie hinzu
             for player in play["players"]["player"]:
+                
                 benutzer = create_benutzer(player=player, session=session)
                 punktzahl = check_str2float(player["@score"])
                 win = True if (player["@win"] == "1") else False
@@ -169,11 +174,11 @@ def add_data_to_database(json_file):
                 spieler_pos = SpielerPos(punktzahl=punktzahl, win=win, partie=partie, benutzer=benutzer)
                 session.add(spieler_pos)
 
-            log.debug(
-                f"Partie_ID: {play['@id']}, Spiel: {play['item']['@name']} "
-                f"wurde erfolgreich in die Datenbank geschrieben."
-            )
-        except KeyError as e:
+                log.debug(
+                    f"Partie_ID: {play['@id']}, Spiel: {play['item']['@name']} "
+                    f"wurde erfolgreich in die Datenbank geschrieben."
+                )
+        except Exception as e:
             log.warning(
                 f"Key {e} wurde nicht gefunden, bitte überprüfen!"
                 f"Partie_ID: {play['@id']}, Spiel: {play['item']['@name']} "
