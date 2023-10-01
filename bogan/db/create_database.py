@@ -166,8 +166,12 @@ def add_data_to_database(json_file):
             for player in play["players"]["player"]:
                 
                 benutzer = create_benutzer(player=player, session=session)
-                punktzahl = check_str2float(player["@score"])
                 win = True if (player["@win"] == "1") else False
+                punktzahl = check_str2float(player["@score"])
+                # Wenn keine Punktzahl vorhanden ist, setze 1 wenn Spiel gewonnen, sonst 0
+                if punktzahl is None:
+                    punktzahl = 1 if win else 0
+
 
                 # Erstelle den Spieler und verknüpfe ihn mit dem Benutzer und der Partie
                 # Überprüfe ob Punktzahl vorhanden
