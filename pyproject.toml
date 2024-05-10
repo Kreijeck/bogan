@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "gamechanger"
+version = "0.1.0"
+description = "Website to create a vote for the next game to play"
+authors = ["thomas <thomas-strehler@gmx.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+Flask-Migrate = "^4.0.7"
+Flask = "^3.0.3"
+Flask-Login = "^0.6.3"
+Flask-SQLAlchemy = "^3.1.1"
+PyYAML = "^6.0.1"
+SQLAlchemy = "^2.0.30"
+requests = "^2.31.0"
+python-dotenv = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+uvicorn = "^0.29.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
