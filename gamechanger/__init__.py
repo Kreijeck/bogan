@@ -3,7 +3,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from dotenv import load_dotenv
-from .main import main_bp as main_blueprint
+
 
 # init dotenv
 load_dotenv(override=True)
@@ -14,14 +14,17 @@ def create_app():
     app = Flask(__name__, static_folder='static')
 
     app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY", default=None)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("FLASK_DATABASE_URI")
 
     # app.template_folder = 
 
     db.init_app(app)
 
-    # blueprint for main routes
-    # from .main import main_bp as main_blueprint
-    app.register_blueprint(main_blueprint)
+    # add all blueprints
+    from .main import main as main_bp
+    app.register_blueprint(main_bp)
+    
+    from .auth import auth as auth_bp
+    app.register_blueprint(auth_bp)
 
     return app
