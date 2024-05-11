@@ -1,33 +1,4 @@
-/* Globale Stile */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
 
-header, footer {
-    background-color: #264653; /* Dunkles Blau */
-    color: #fff; /* Weiß */
-    padding: 20px;
-}
-
-main {
-    padding: 20px;
-}
-
-section {
-    margin-bottom: 20px;
-}
-
-/* Akzentfarben und Hervorhebung */
-h1, h2 {
-    color: #2A9D8F; /* Hellblau */
-}
-
-footer {
-    text-align: center;
-}
-
-a {
-    color: #E76F51; /* Orange*/
+.inherit-color {
+    color: inherit;
 }
