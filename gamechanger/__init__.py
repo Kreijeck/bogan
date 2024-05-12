@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 # init dotenv
 load_dotenv(override=True)
 # init SQLALchemy
-db: SQLAlchemy = SQLAlchemy()
+db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__, static_folder='static')

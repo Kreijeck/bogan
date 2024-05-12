@@ -55,4 +55,5 @@ tmp/*
 # Logging
 *.log
 
-
+# Database
+db.sqlite
