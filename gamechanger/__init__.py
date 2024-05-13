@@ -2,7 +2,7 @@ import os
 from flask import Flask
 
 from flask_login import LoginManager
-from gamechanger.db.models import db
+from gamechanger.db.models import db, User
 from dotenv import load_dotenv
 
 
@@ -20,16 +20,30 @@ def create_app():
     # init Database
     db.init_app(app)
 
+    # Add Login Manager
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
+
+    # Load User wird benötigt um ...
+    @login_manager.user_loader
+    def load_user(user_id):
+        # since the user_id is primary key, use it in the query
+        return User.query.get(int(user_id))
+
     # add all blueprints
+    # Alle /templates Ordner aus Blueprints sind verfügbar. Bei gleichem Namen, wird der erste Import genommen
     from .main import main as main_bp
     app.register_blueprint(main_bp)
-    
+
     from .auth import auth as auth_bp
     app.register_blueprint(auth_bp)
 
-    # # Create Database and delte old
+
     with app.app_context():
-        db.drop_all()
+        ## Delete Database
+        # db.drop_all()
+        ## Create Database
         db.create_all()
 
     return app
