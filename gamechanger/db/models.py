@@ -1,11 +1,14 @@
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_login import UserMixin
+from flask_sqlalchemy import SQLAlchemy
 
 class Base(DeclarativeBase):
     pass
 
-class User(UserMixin, Base):
+db = SQLAlchemy(model_class=Base)
+
+class User(UserMixin, db.Model):
     __tablename__ = "user"
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(String(100), unique=True)
