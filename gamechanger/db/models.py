@@ -1,5 +1,5 @@
 from typing import List
-from sqlalchemy import String, ForeignKey
+from sqlalchemy import String, ForeignKey, Float, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
@@ -28,7 +28,33 @@ class Vote(db.Model):
 
 class Brettspiel(db.Model):
     __tablename__ = "brettspiel"
+    # default Information
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255))
     img: Mapped[str] = mapped_column(String(255))
+    img_small: Mapped[str] = mapped_column(String(255))
+    yearpublished: Mapped[int] = mapped_column(Integer)
+    minplayers: Mapped[int] = mapped_column(Integer)
+    maxplayers: Mapped[int] = mapped_column(Integer)
+    playingtime: Mapped[int] = mapped_column(Integer)
+
+    # Rating
+    rating: Mapped[float] = mapped_column(Float)
+    weight: Mapped[float] = mapped_column(Float)
+    
+    # Relationship
     in_votes: Mapped[List["Vote"]] = relationship(back_populates="brettspiel", cascade="all, delete-orphan")
+
+    def convert_from_bgg_full(self, json_file: dict):
+        return {
+            'bgg_id': int(json_file["@id"]),
+            'name': str(json_file["name"][0]["@value"]),
+            'img': str(json_file["image"]),
+            'img_small': str(json_file["thumbnail"]),
+            'yearpublished': int(json_file["yearpublished"]['@value']),
+            'minplayers': int(json_file["minplayers"]['@value']),
+            'maxplayers': int(json_file["maxplayers"]['@value']),
+            'playingtime': int(json_file["playingtime"]['@value']),
+            'weight': float(json_file["statistics"]["ratings"]["averageweight"]["@value"]),
+            'rating': float(json_file["statistics"]["ratings"]["average"]["@value"])
+        }
