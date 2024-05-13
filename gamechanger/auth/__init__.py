@@ -28,3 +28,36 @@ def login_post():
     login_user(user, remember=remember)
 
     return redirect(url_for("main.index"))
+
+@auth.route("/signup")
+def signup():
+    return render_template("signup.html")
+
+@auth.route("/signup", methods=["POST"])
+def signup_post():
+    email = request.form.get("email")
+    name = request.form.get("name")
+    password = request.form.get("password")
+
+    # Überprüft ob email bereits vergeben ist
+    user = User.query.filter_by(email=email).first()
+
+    # Wenn email schon vorhanden, reset to basic
+    if user:
+        #TODO remove print!
+        print("Email address already exist!")
+        return redirect(url_for("auth.signup"))
+    
+    # Erstelle neuen Benutzer
+    new_user = User(email=email, name=name, password=generate_password_hash(password))
+    db.session.add(new_user)
+    db.session.commit()
+
+    return redirect(url_for("auth.login"))
+
+@auth.route("/logout")
+@login_required
+def logout():
+    
+    logout_user()
+    return redirect(url_for("main.index"))
