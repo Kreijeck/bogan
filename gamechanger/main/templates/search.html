@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form method="POST" action="/search">
+    <div class="field">
+        <div class="control">
+            <input class="input is-normal" type="text" name="search" placeholder="Suche nach einem Spiel">
+        </div>
+    </div>
+    <button class="button is-block is-info is-large is-fullwidth">Suche</button>
+</form>
+
+<!-- Schreibe Antworten -->
+{% if response %}
+{% for item in response %}
+<p> {{ item }} </p>
+{% endfor %}
+{% endif %}
+
+{% endblock %}

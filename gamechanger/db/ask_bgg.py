@@ -1,4 +1,4 @@
-from config import BGG_BASE_URL, ENCODING
+from gamechanger.db.config import BGG_BASE_URL, ENCODING
 import xmltodict
 import requests
 
@@ -11,7 +11,7 @@ def search_boardgame(search: str):
 
     response = requests.get("/".join((BGG_BASE_URL, endpoint)), params=para)
 
-    return xmltodict.parse(response.text, encoding=ENCODING)["items"]
+    return xmltodict.parse(response.text, encoding=ENCODING)["items"]["item"]
 
 def get_boardgame_all_stats(id: int) -> dict:
     """Get stats from specific boardgame
