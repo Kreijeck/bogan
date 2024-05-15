@@ -29,30 +29,46 @@
 
         <div class="navbar-menu" id="nav-links">
             <div class="navbar-start">
-                <a href="#" class="navbar-item">Umfragen</a>
+                <!-- Tools -->
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">Tools</a>
+
+                    <div class="navbar-dropdown">
+                        <a href="{{ url_for('main.search')}}" class="navbar-item">GameChanger</a>
+                    </div>
+                </div>
+                <!-- Zusätzliche Reiter -->
                 <a href="{{ url_for('main.profile') }}" class="navbar-item">Profil</a>
-                <a href="#" class="navbar-item">Ergebnisse</a>
             </div>
+            <!-- LOGIN und Co -->
             <div class="navbar-end">
                 {% if current_user.is_authenticated %}
-                <a href="{{ url_for('auth.logout') }}" class="navbar-item">Logout</a>                    
+                <a href="{{ url_for('auth.logout') }}" class="navbar-item">Logout</a>
                 {% endif %}
 
                 {% if not current_user.is_authenticated %}
                 <a href="{{ url_for('auth.signup') }}" class="navbar-item">Sign Up</a>
-                <a href="{{ url_for('auth.login') }}" class="navbar-item">Login</a>    
+                <a href="{{ url_for('auth.login') }}" class="navbar-item">Login</a>
                 {% endif %}
             </div>
         </div>
     </nav>
 
     <!--  Main Section -->
-    <section class="section has-background-info-30 has-text-info-30-invert"> 
+    <section class="section has-background-info-30 has-text-info-30-invert">
         {% block content %}
         {% endblock %}
     </section>
 
-    <script src="{{url_for('static', filename='js/index.js') }}" ></script>
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="content has-text-right">
+            <p> <strong>Bogan </strong> powered by Kreijeck. </p>
+            <p>Version: <span class="has-text-link-80"> {{ config['VERSION']  }} </span></p>
+        </div>
+    </footer>
+    <!-- Scripte -->
+    <script src="{{url_for('static', filename='js/index.js') }}"></script>
 </body>
 
 </html>

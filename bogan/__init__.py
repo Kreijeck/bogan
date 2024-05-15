@@ -15,6 +15,7 @@ def create_app():
 
     app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY", default=None)
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("FLASK_DATABASE_URI")
+    app.config['VERSION'] = os.getenv("BOGAN_VERSION")
 
     
     # init Database

@@ -12,19 +12,21 @@ db = SQLAlchemy(model_class=Base)
 class User(UserMixin, db.Model):
     __tablename__ = "user"
     id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(String(100), unique=True)
+    email: Mapped[str] = mapped_column(String(128), unique=True)
     password: Mapped[str] = mapped_column(String(100))
-    name: Mapped[str] = mapped_column(String(200))
+    name: Mapped[str] = mapped_column(String(128))
+    bgg_name: Mapped[str] = mapped_column(String(128), nullable=True)
 
     def __repr__(self) -> str:
         return f"ID: {self.id}, EMAIL: {self.email}, NAME: {self.name}"
-    
-class Vote(db.Model):
-    __tablename__ = "vote"
-    id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(String(200), unique=True)
-    brettspiel_id : Mapped[int] = mapped_column(ForeignKey("brettspiel.id"))
-    brettspiel: Mapped["Brettspiel"] = relationship(back_populates="in_votes")
+
+# TODO Think about Usage of this table 
+# class Vote(db.Model):
+#     __tablename__ = "vote"
+#     id: Mapped[int] = mapped_column(primary_key=True)
+#     name: Mapped[str] = mapped_column(String(200), unique=True)
+#     brettspiel_id : Mapped[int] = mapped_column(ForeignKey("brettspiel.id"))
+#     brettspiel: Mapped["Brettspiel"] = relationship(back_populates="in_votes")
 
 class Brettspiel(db.Model):
     __tablename__ = "brettspiel"
@@ -42,8 +44,8 @@ class Brettspiel(db.Model):
     rating: Mapped[float] = mapped_column(Float)
     weight: Mapped[float] = mapped_column(Float)
     
-    # Relationship
-    in_votes: Mapped[List["Vote"]] = relationship(back_populates="brettspiel", cascade="all, delete-orphan")
+    # Relationship TODO: only needed, when we want to have vote in Database
+    # in_votes: Mapped[List["Vote"]] = relationship(back_populates="brettspiel", cascade="all, delete-orphan")
 
     def convert_from_bgg_full(self, json_file: dict):
         return {
