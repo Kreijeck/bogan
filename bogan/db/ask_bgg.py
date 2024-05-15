@@ -1,4 +1,4 @@
-from gamechanger.db.config import BGG_BASE_URL, ENCODING
+from bogan.db.config import BGG_BASE_URL, ENCODING
 import xmltodict
 import requests
 

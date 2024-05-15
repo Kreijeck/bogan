@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request
 from flask_login import login_required, current_user
-from gamechanger.db.ask_bgg import search_boardgame
+from bogan.db.ask_bgg import search_boardgame
 
 main = Blueprint('main',__name__, template_folder='templates')
 

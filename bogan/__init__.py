@@ -2,7 +2,7 @@ import os
 from flask import Flask
 
 from flask_login import LoginManager
-from gamechanger.db.models import db, User
+from bogan.db.models import db, User
 from dotenv import load_dotenv
 
 

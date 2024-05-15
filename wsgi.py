@@ -1,4 +1,4 @@
-from gamechanger import create_app
+from bogan import create_app
 
 app = create_app()
 

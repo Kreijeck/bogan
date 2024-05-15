@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from gamechanger.db.models import db, User
+from bogan.db.models import db, User
 
 
 auth = Blueprint("auth", __name__, template_folder="templates")
