@@ -1,21 +1,48 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-<form method="POST" action="/search">
-    <div class="field">
-        <div class="control">
-            <input class="input is-normal" type="text" name="search" placeholder="Suche nach einem Spiel">
-        </div>
+<section class="section">
+    <div class="container">
+        <form method="POST" action="/search">
+            <div class="field">
+                <div class="control">
+                    <input class="input is-normal" type="text" name="search" placeholder="Suche nach einem Spiel">
+                </div>
+            </div>
+            <button class="button is-block is-info is-large">Suche</button>
+        </form>
     </div>
-    <button class="button is-block is-info is-large is-fullwidth">Suche</button>
-</form>
+</section>
 
-<!-- Schreibe Antworten -->
 {% if response %}
-{% for item in response %}
-<p> {{ item }} </p>
-{% endfor %}
+<!-- Suchergebnisse werden in einer Tabelle gespeichert -->
+<section class="section">
+    <div class="container">
+        <form method="POST" action="/add_item">
+            <table class="table is-round">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Erscheinungsdatum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in response %}
+                    <tr>
+                        <th>{{ item.id }}</th>
+                        <th>{{ item.name }}</th>
+                        <th>{{ item.publish }}</th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+            <button class="button is-block is-info">Hinzufügen</button>
+        </form>
+    </div>
+</section>
 {% endif %}
+
 
 {% endblock %}
