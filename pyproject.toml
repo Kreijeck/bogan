@@ -6,7 +6,7 @@ authors = ["thomas <thomas-strehler@gmx.de>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "3.10.*"
 Flask-Migrate = "^4.0.7"
 Flask = "^3.0.3"
 Flask-Login = "^0.6.3"
