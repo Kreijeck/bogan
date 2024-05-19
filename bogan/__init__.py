@@ -1,6 +1,7 @@
 from flask import Flask
 
 from flask_login import LoginManager
+from flask_migrate import Migrate
 from bogan.db.models import db, User
 from bogan.utils import env
 from dotenv import load_dotenv
@@ -11,6 +12,9 @@ load_dotenv(override=True)
 
 def create_app():
     app = Flask(__name__, static_folder="static")
+
+    # add migrate
+    migrate = Migrate(app, db, directory=env("DB_MIGRATE_DIR"))
 
     app.config["SECRET_KEY"] = env("FLASK_SECRET_KEY")
     app.config["SQLALCHEMY_DATABASE_URI"] = (
