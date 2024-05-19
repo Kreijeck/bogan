@@ -13,8 +13,9 @@ class User(UserMixin, db.Model):
     __tablename__ = "user"
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(String(128), unique=True)
-    password: Mapped[str] = mapped_column(String(100))
+    password: Mapped[str] = mapped_column(String(256))
     name: Mapped[str] = mapped_column(String(128))
+    role: Mapped[str] = mapped_column(String(128), default="user")
     bgg_name: Mapped[str] = mapped_column(String(128), nullable=True)
 
     def __repr__(self) -> str:
