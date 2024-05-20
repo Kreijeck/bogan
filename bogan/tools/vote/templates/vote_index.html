@@ -4,49 +4,66 @@
 <div class="columns is-centered">
     <div class="column is-one-half">
 
-<!--  Header -->
+<!-- Header -->
 <section class="container">
     <h1 class="title">Abstimmungstool</h1>
 </section>
 
 <!-- Erstelle Abstimmung -->
-<section class="container my-3">
+<section class="container my-5 py-4">
     <h1 class="title">Erstelle neue Abstimmung</h1>
     
-            <div class="box has-background-info-50">
-                <form method="POST" action="{{ url_for('tools.vote.add_vote_list')}}">
-                    <div class="field">
-                        <input class="input is-large" type="text" name="name" placeholder="Name der Abstimmung">
-                        <input class="input is-medium" type="text" name="number_of_games" placeholder="Anzahl der Spiele">
+    <div class="box has-background-info-50">
+        <form method="POST" action="{{ url_for('tools.vote.add_vote_list') }}">
+            <div class="field is-grouped">
+                <div class="control is-expanded">
+                    <input class="input is-medium" type="text" name="name" placeholder="Name der Abstimmung">
+                </div>
+                <div class="control">
+                    <div class="select is-medium">
+                        <select name="number_of_games">
+                            {% for i in range(1, 21) %}
+                                <option value="{{ i }}">{{ i }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
-                    <div class="field">
-                        <button class="button is-info is-fullwidth">Erstelle Abstimmung</button>
-                    </div>
-                </form>
+                </div>
             </div>
-        
-    
+            <div class="field">
+                <div class="control">
+                    <button class="button is-info is-fullwidth">Erstelle Abstimmung</button>
+                </div>
+            </div>
+        </form>
+    </div>
 
 </section>
 
 <!-- Füge Spiel hinzu -->
-<section class="container my-3">
+<section class="container my-5 py-4">
     <h1 class="title">Füge ein Spiel hinzu</h1>
     <div class="box has-background-info-50">
-        <form method="POST" action="{{ url_for('tools.vote.add_game')}}">
+        <form method="POST" action="{{ url_for('tools.vote.add_game') }}">
             <div class="field">
-                <input class="input is-large" type="text" placeholder="Suche nach einem Brettspiel">
+                <div class="control">
+                    <input class="input is-medium" type="text" placeholder="Suche nach einem Brettspiel">
+                </div>
             </div>
             <div class="field">
-                <button class="button is-info is-fullwidth">Suche Brettspiel in BGG</button>
+                <div class="control">
+                    <button class="button is-info is-fullwidth">Suche Brettspiel in BGG</button>
+                </div>
             </div>
         </form>
     </div>
 </section>
 
 <!-- Schau dir deine Abstimmungen an -->
-<section class="container my-3">
+<section class="container my-5 py-4">
     <h1 class="title">Hier erscheinen bald deine Abstimmungen</h1>
+        <li>Liste1</li>
+        <li>Liste2</li>
+        <li>Liste3</li>
 </section>
 
 </div>
