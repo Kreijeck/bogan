@@ -4,14 +4,16 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from bogan.db.models import db, User
 
 
-auth = Blueprint("auth", __name__, template_folder="templates")
+auth = Blueprint("auth", __name__, url_prefix="/auth", template_folder="templates")
 
 @auth.route("/login")
 def login():
+    print("LOGIN wird aufgerufen")
     return render_template("login.html")
 
 @auth.route("/login", methods=["POST"])
 def login_post():
+    print("Wird aufgerufen")
     email = request.form.get("email")
     password = request.form.get("password")
     remember = True if request.form.get("remember") else False

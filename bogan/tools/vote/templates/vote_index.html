@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="columns is-centered">
+    <div class="column is-one-half">
+
+<!--  Header -->
+<section class="container">
+    <h1 class="title">Abstimmungstool</h1>
+</section>
+
+<!-- Erstelle Abstimmung -->
+<section class="container my-3">
+    <h1 class="title">Erstelle neue Abstimmung</h1>
+    
+            <div class="box has-background-info-50">
+                <form method="POST" action="{{ url_for('tools.vote.add_vote_list')}}">
+                    <div class="field">
+                        <input class="input is-large" type="text" placeholder="Name der Abstimmung">
+                    </div>
+                    <div class="field">
+                        <button class="button is-info is-fullwidth">Erstelle</button>
+                    </div>
+                </form>
+            </div>
+        
+    
+
+</section>
+
+<!-- Füge Spiel hinzu -->
+<section class="container my-3">
+    <h1 class="title">Füge ein Spiel hinzu</h1>
+    <div class="box has-background-info-50">
+        <form method="POST" action="{{ url_for('tools.vote.add_game')}}">
+            <div class="field">
+                <input class="input is-large" type="text" placeholder="Suche nach einem Brettspiel">
+            </div>
+            <div class="field">
+                <button class="button is-info is-fullwidth">Suche</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Schau dir deine Abstimmungen an -->
+<section class="container my-3">
+    <h1 class="title">Hier erscheinen bald deine Abstimmungen</h1>
+</section>
+
+</div>
+</div>
+
+{% endblock %}

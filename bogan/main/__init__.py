@@ -17,19 +17,6 @@ def profile():
 def search():
     return render_template("search.html")
 
-@main.route("/search/", methods=["POST"])
-def search_post():
-    name = request.form.get("search")
-    response = search_boardgame(name)
-    data = []
-    for resp in response:
-        data.append({"id": resp.get("@id", ""),
-                     "name": resp.get("name", "").get("@value", ""),
-                     "publish": resp.get("yearpublished", "") ,
-                     })
-
-    return render_template("search.html", response=data)
-
 @main.route("/add_game", methods=["POST"])
 def add_game():
     pass

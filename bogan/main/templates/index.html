@@ -1,7 +1,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
+<!-- News -->
+<section class="section">
+  <article class="message is-dark">
+    <div class="message-header"> 
+      <p> News </p> 
+      <button class="delete" aria-label="delete"></button>
+    </div>
+    <div class="message-body">
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt quidem architecto quisquam sequi omnis, iste error quam laborum autem alias debitis amet iure numquam tempora ipsum eum inventore perspiciatis harum!
+    </div>
+  </article>
+
+<!-- Tools -->
+<section class="section">
+  <h1 class="title"> Tools </h1>
+  <ul>
+    <!-- .index?? -->
+    <li><a href="{{ url_for('tools.vote.add_game') }}" class="inherit-color"> Add Game </a></li>
+  </ul>
+</section>
+
+<!-- Statistik -->
+<section class="section">
+  <h1 class="title"> Statisik</h1>
+  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi vel minus quos esse exercitationem voluptate praesentium quisquam quidem autem ipsam. Fugiat vel recusandae quam! Incidunt consequuntur nobis eveniet voluptatum nisi?</p>
+
+</section>
+
+
+
+<!-- Sieht schön aus, wird bald entfernt! -->
+</section>
+<div class="co">
   <!-- Abstimmungslisten -->
   <h1 class="title"> Abstimmungslisten </h1>
   <ul >
