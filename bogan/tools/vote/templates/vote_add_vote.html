@@ -1,8 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <section class="section">
-        <h1 class="title">Neues Spiel</h1>
-        <h2 class="subtitle">Hier können Spiele gesucht und hinzugefügt werden</h2>
-    </section>
+<section class="section">
+    <h1 class="title">Neue Abstimmung</h1>
+    <h2 class="subtitle">Hier kann eine neue Abstimmung erstellt werden</h2>
+</section>
+
+<div class="box has-background-info-50">
+    <form method="POST" action="#">
+
+        <label class="label">Name</label>
+        <input class="input is-medium" type="text" name="name" placeholder="Name der Abstimmung" value="{{ name }}">
+
+        {% for i in range(num_of_games) %}
+        <div class="py-3">
+            <label class="label">Spiel {{ i+1 }}</label>
+            <div class="select">
+                <select name="spiel{{i+1}}">
+                    {% for game in games %}
+                    <option value="{{game}}">{{game}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="field py-4">
+            <div class="control">
+                <button class="button is-info is-fullwidth">Erstelle Abstimmung</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
 {% endblock %}

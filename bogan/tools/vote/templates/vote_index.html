@@ -17,11 +17,13 @@
         <form method="POST" action="{{ url_for('tools.vote.add_vote_list') }}">
             <div class="field is-grouped">
                 <div class="control is-expanded">
+                    <label class="label">Name</label>
                     <input class="input is-medium" type="text" name="name" placeholder="Name der Abstimmung">
                 </div>
                 <div class="control">
+                    <label class="label">Anzahl Spiele</label>
                     <div class="select is-medium">
-                        <select name="number_of_games">
+                        <select name="num_of_games">
                             {% for i in range(1, 21) %}
                                 <option value="{{ i }}">{{ i }}</option>
                             {% endfor %}

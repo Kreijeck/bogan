@@ -17,7 +17,16 @@ def add_game():
 @vote.route("/add_vote_list", methods=["POST"])
 @login_required
 def add_vote_list():
-    return render_template("vote_add_vote.html")
+    num_of_games = int(request.form.get("num_of_games"))
+    name = request.form.get("name")
+    games = [
+        "Wasserkraft",
+        "Heat",
+        "Gaia",
+        "Wasserwerk",
+    ]
+   
+    return render_template("vote_add_vote.html", name=name, num_of_games=num_of_games, games=games)
 
 # TODO Muss refactored, gelöscht werden
 @vote.route("/search", methods=["POST"])
