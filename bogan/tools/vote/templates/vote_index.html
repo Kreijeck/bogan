@@ -16,10 +16,11 @@
             <div class="box has-background-info-50">
                 <form method="POST" action="{{ url_for('tools.vote.add_vote_list')}}">
                     <div class="field">
-                        <input class="input is-large" type="text" placeholder="Name der Abstimmung">
+                        <input class="input is-large" type="text" name="name" placeholder="Name der Abstimmung">
+                        <input class="input is-medium" type="text" name="number_of_games" placeholder="Anzahl der Spiele">
                     </div>
                     <div class="field">
-                        <button class="button is-info is-fullwidth">Erstelle</button>
+                        <button class="button is-info is-fullwidth">Erstelle Abstimmung</button>
                     </div>
                 </form>
             </div>
@@ -37,7 +38,7 @@
                 <input class="input is-large" type="text" placeholder="Suche nach einem Brettspiel">
             </div>
             <div class="field">
-                <button class="button is-info is-fullwidth">Suche</button>
+                <button class="button is-info is-fullwidth">Suche Brettspiel in BGG</button>
             </div>
         </form>
     </div>

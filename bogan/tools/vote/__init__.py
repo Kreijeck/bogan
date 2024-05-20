@@ -12,12 +12,12 @@ def index():
 @vote.route("/add_game", methods=["POST"])
 @login_required
 def add_game():
-    return "<h1> Hier kannst du Spiele hinzufügen"
+    return render_template("vote_add_game.html")
 
 @vote.route("/add_vote_list", methods=["POST"])
 @login_required
 def add_vote_list():
-    return "<h1> Hier kannst du eine Abstimmung erzeugen"
+    return render_template("vote_add_vote.html")
 
 # TODO Muss refactored, gelöscht werden
 @vote.route("/search", methods=["POST"])
