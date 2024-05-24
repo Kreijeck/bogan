@@ -2,53 +2,60 @@
 {% block content %}
 
 
-<div class="columns">
-    <section class="container py-4">
-        <div class="column is-one-half is-center">
-            <!-- verschiedene Aktionen -->
+<div class="columns is-centered">
+    <div class="column is-one-third">
+        <!-- verschiedene Aktionen -->
+        <h1 class="title ">Abstimmungstool</h1>
 
-            <h1 class="title">Abstimmungstool</h1>
-
-            <!-- Erstelle neue Abstimmung -->
-            <form action="GET" action=" {{ url_for('tools.vote.add_vote_list') }}">
+        <!-- Erstelle neue Abstimmung -->
+        <section class="container my-2">
+            <form method="GET" action="{{ url_for('tools.vote.add_vote_list') }}">
                 <div class="control">
-                    <button class="button is-info-is-fullwidth"> Erstelle eine neue Abstimmung </button>
+                    <button class="button is-dark is-fullwidth">Erstelle eine neue Abstimmung</button>
                 </div>
             </form>
+        </section>
 
-            <!-- Füge neues Spiel hinzu -->
-            <form action="GET" action=" {{ url_for('tools.vote.add_game') }}">
+        <!-- Füge neues Spiel hinzu -->
+        <section class="container my-2">
+            <form method="GET" action="{{ url_for('tools.vote.add_game') }}">
                 <div class="control">
-                    <button class="button is-info-is-fullwidth"> Füge ein neues Spiel hinzu </button>
+                    <button class="button is-dark is-normal is-fullwidth">Füge ein neues Spiel hinzu</button>
                 </div>
             </form>
-        </div>
+        </section>
+    </div>
+
+    <!-- Platzhalter -->
+    <section class="container my-2"></section>
+
+    <!-- Aktuelle Spieleliste in der Datenbank -->
+    <section class="container my-4">
+        <h1 class="title">Vorhandene Brettspiele</h1>
+        <ul>
+            <li>Spiel 1</li>
+            <li>Spiel 2</li>
+            <li>Spiel 3</li>
+            <li>Spiel 4</li>
+        </ul>
     </section>
 </div>
 
-<!-- Aktuelle Spieleliste in der Datenbank -->
-<section class="container py-4">
-    <div class="column is-one-half">
-        <h1 class="title">Vorhandene Brettspiele</h1>
-        <ul>
-            <li> Spiel 1</li>
-            <li> Spiel 2</li>
-            <li> Spiel 3</li>
-            <li> Spiel 4</li>
-        </ul>
-    </div>
-</section>
+
 
 <!-- Aktuelle Abstimmungen -->
-<section class="container py-4">
-    <div class="column is-one-half">
-        <h1 class="title">Aktuelle Abstimmungen</h1>
-        <p>Hier erscheinen bald alle aktuellen Abstimmungen</p>
-        <li>Liste1</li>
-        <li>Liste2</li>
-        <li>Liste3</li>
-
+<div class="columns is-centered">
+    <div class="column is-half">
+        <section class="container py-4">
+            <h1 class="title">Aktuelle Abstimmungen</h1>
+            <p>Hier erscheinen bald alle aktuellen Abstimmungen</p>
+            <ul>
+                <li>Liste 1</li>
+                <li>Liste 2</li>
+                <li>Liste 3</li>
+            </ul>
+        </section>
     </div>
-</section>
+</div>
 
 {% endblock %}
