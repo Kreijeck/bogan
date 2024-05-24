@@ -1,74 +1,54 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="columns is-centered">
+
+<div class="columns">
+    <section class="container py-4">
+        <div class="column is-one-half is-center">
+            <!-- verschiedene Aktionen -->
+
+            <h1 class="title">Abstimmungstool</h1>
+
+            <!-- Erstelle neue Abstimmung -->
+            <form action="GET" action=" {{ url_for('tools.vote.add_vote_list') }}">
+                <div class="control">
+                    <button class="button is-info-is-fullwidth"> Erstelle eine neue Abstimmung </button>
+                </div>
+            </form>
+
+            <!-- Füge neues Spiel hinzu -->
+            <form action="GET" action=" {{ url_for('tools.vote.add_game') }}">
+                <div class="control">
+                    <button class="button is-info-is-fullwidth"> Füge ein neues Spiel hinzu </button>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+
+<!-- Aktuelle Spieleliste in der Datenbank -->
+<section class="container py-4">
     <div class="column is-one-half">
-
-<!-- Header -->
-<section class="container">
-    <h1 class="title">Abstimmungstool</h1>
-</section>
-
-<!-- Erstelle Abstimmung -->
-<section class="container my-5 py-4">
-    <h1 class="title">Erstelle neue Abstimmung</h1>
-    
-    <div class="box has-background-info-50">
-        <form method="POST" action="{{ url_for('tools.vote.add_vote_list') }}">
-            <div class="field is-grouped">
-                <div class="control is-expanded">
-                    <label class="label">Name</label>
-                    <input class="input is-medium" type="text" name="name" placeholder="Name der Abstimmung">
-                </div>
-                <div class="control">
-                    <label class="label">Anzahl Spiele</label>
-                    <div class="select is-medium">
-                        <select name="num_of_games">
-                            {% for i in range(1, 21) %}
-                                <option value="{{ i }}">{{ i }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <button class="button is-info is-fullwidth">Erstelle Abstimmung</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
-</section>
-
-<!-- Füge Spiel hinzu -->
-<section class="container my-5 py-4">
-    <h1 class="title">Füge ein Spiel hinzu</h1>
-    <div class="box has-background-info-50">
-        <form method="POST" action="{{ url_for('tools.vote.add_game') }}">
-            <div class="field">
-                <div class="control">
-                    <input class="input is-medium" type="text" placeholder="Suche nach einem Brettspiel">
-                </div>
-            </div>
-            <div class="field">
-                <div class="control">
-                    <button class="button is-info is-fullwidth">Suche Brettspiel in BGG</button>
-                </div>
-            </div>
-        </form>
+        <h1 class="title">Vorhandene Brettspiele</h1>
+        <ul>
+            <li> Spiel 1</li>
+            <li> Spiel 2</li>
+            <li> Spiel 3</li>
+            <li> Spiel 4</li>
+        </ul>
     </div>
 </section>
 
-<!-- Schau dir deine Abstimmungen an -->
-<section class="container my-5 py-4">
-    <h1 class="title">Hier erscheinen bald deine Abstimmungen</h1>
+<!-- Aktuelle Abstimmungen -->
+<section class="container py-4">
+    <div class="column is-one-half">
+        <h1 class="title">Aktuelle Abstimmungen</h1>
+        <p>Hier erscheinen bald alle aktuellen Abstimmungen</p>
         <li>Liste1</li>
         <li>Liste2</li>
         <li>Liste3</li>
-</section>
 
-</div>
-</div>
+    </div>
+</section>
 
 {% endblock %}

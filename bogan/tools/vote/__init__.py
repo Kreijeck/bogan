@@ -1,13 +1,12 @@
 from flask import Blueprint, render_template, request
-from flask_login import login_required, current_user
+from flask_login import login_required
 from bogan.db.ask_bgg import search_boardgame
 
 vote = Blueprint('vote',__name__, url_prefix="vote", template_folder='templates')
 
 @vote.route('/')
-@login_required
 def index():
-    return render_template('vote_index.html', name=current_user.name)
+    return render_template('vote_index.html')
 
 @vote.route("/add_game", methods=["POST"])
 @login_required
