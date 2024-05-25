@@ -8,7 +8,7 @@ vote = Blueprint('vote',__name__, url_prefix="vote", template_folder='templates'
 def index():
     return render_template('vote_index.html')
 
-@vote.route("/add_game", methods=["POST"])
+@vote.route("/add_game", methods=["POST", "GET"])
 @login_required
 def add_game():
     return render_template("vote_add_game.html")

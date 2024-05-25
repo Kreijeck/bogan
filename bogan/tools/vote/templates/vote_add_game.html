@@ -1,17 +1,64 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <section class="section">
-        <h1 class="title">Neue Abstimmung</h1>
-        <h2 class="subtitle">Hier kann eine neue Abstimmung erstellt werden</h2>
-    </section>
-    <!-- Erstelle Abstimmung -->
-    <section class="section">
-        <form action="{{ url_for('tools.vote.create_vote') }}"></form>
-        <div class="field">
-            <div class="control">
-                <input class="input is-medium", type="text" name="title" placeholder="Name der Abstimmung">
+<section class="section mb-5">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <form method="POST" action="{{ url_for('tools.vote.add_game') }}" class="centered-form">
+                    <!-- Suche nach Spielen auf BGG -->
+                    <div class="field py-5">
+                        <div class="control">
+                            <input type="text" class="input is-normal" name="search"
+                                placeholder="Suche auf BGG nach einem Spiel">
+                        </div>
+                        <button class="button is-info is-medium is-fullwidth">Suche</button>
+                    </div>
+                    <!-- Füge eines der gefundenen Spiele hinzu -->
+                    <!-- Hier muss automatisch die Spieleliste erscheinen, ansonsten fehlt dieser Block -->
+                    <div class="field py-5">
+                        <ul class="checkbox-list">
+                            {% for i in range(5) %}
+                            <li>
+                                <label>
+                                    <input type="radio" name="games" value="game_{{ i+1 }}">
+                                    <img src="https://via.placeholder.com/32" alt="Game Image">
+                                    <span> Game {{ i+1 }} - Erscheinungsdatum: 2024-0{{ i+1}}-01</span>
+                                </label>
+                            </li>
+                            {% endfor %}
+
+                        </ul>
+                        <button class="button is-info is-medium is-fullwidth">Füge das Spiel hinzu</button>
+                    </div>
+                    <!-- Ende des fehlenden Blocks -->
+                </form>
             </div>
         </div>
-    </section>
+    </div>
+</section>
+
+<!-- Aktuelle Spieleliste -->
+<section class="section my-5">
+    <h1 class="title">Bereits vorhandene Spiele</h1>
+    <div class="container">
+        <div class="columns is-multiline">
+            {% for i in range(10) %}
+            <div id="gameList" class="column is-one-quarter">
+                <div class="box">
+                    <figure class="image is-64-64">
+                        <img src="https://via.placeholder.com/64" alt="Placeholder Image">
+                    </figure>
+                    <div>
+                        <p><strong>Name</strong> Wasserkraft</p>
+                        <p><strong>Spieleranzahl</strong> 1-4</p>
+                        <p><strong>Dauer</strong> 120 min</p>
+                        <p><strong>Weight </strong> ITEM {{ i }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}
