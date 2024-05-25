@@ -2,3 +2,9 @@
 .inherit-color {
     color: inherit;
 }
+
+.ul-scroll {
+    height: 55vh;
+    overflow: hidden;
+    overflow-y: scroll;
+}
