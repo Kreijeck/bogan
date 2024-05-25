@@ -7,7 +7,7 @@
             <div class="column is-half">
                 <form method="POST" action="{{ url_for('tools.vote.add_game') }}" class="centered-form">
                     <!-- Suche nach Spielen auf BGG -->
-                    <div class="field py-3">
+                    <div class="field py-5">
                         <div class="control">
                             <input type="text" class="input is-normal" name="search"
                                 placeholder="Suche auf BGG nach einem Spiel">
@@ -15,30 +15,22 @@
                         <button class="button is-info is-medium is-fullwidth">Suche</button>
                     </div>
                     <!-- Füge eines der gefundenen Spiele hinzu -->
-                    <div class="field py-3 has addons">
-                        <h1 class="subtitle">Gefundene Spiele</h1>
-                        <ul class="checkbox-list ul-scroll">
-                            {% for i in range(25) %}
-                            <!-- Spieldaten -> Automatisch -->
-                            <label
-                                class="box is-flex is-align-items-center has-background-info-15 has-text-info-15-invert py-2"
-                                for="game_{{ i+1 }}">
-                                <input type="radio" id="game_{{ i+1 }}" name="games" value="game_{{ i+1 }}"
-                                    class="mx-3">
-                                <img src="https://cf.geekdo-images.com/jEPmWvvYpqkWrKOzqIHFsg__thumb/img/kMLIpeqA6UcUvQg2AdMwwQoEIfU=/fit-in/200x150/filters:strip_icc()/pic4336469.png"
-                                    alt="Game Image" class="image mx-3">
-                                <div class="container mx-2">
-                                    <p class="mx-1"> Game {{ i+1 }}</p>
-                                    <p class="mx-1"> Erscheinungsdatum {{ 2018 + i }}</p>
-                                    <p class="mx-1"> Spieler 1-4</p>
-                                </div>
-                            </label>
+                    <!-- Hier muss automatisch die Spieleliste erscheinen, ansonsten fehlt dieser Block -->
+                    <div class="field py-5">
+                        <ul class="checkbox-list">
+                            {% for i in range(5) %}
+                            <li>
+                                <label>
+                                    <input type="radio" name="games" value="game_{{ i+1 }}">
+                                    <img src="https://via.placeholder.com/32" alt="Game Image">
+                                    <span> Game {{ i+1 }} - Erscheinungsdatum: 2024-0{{ i+1}}-01</span>
+                                </label>
+                            </li>
                             {% endfor %}
-                        </ul>
-                        <!-- Button Füge Spiel hinzu -->
-                        <button class="button is-info is-medium is-fullwidth">Spiel hinzufügen</button>
-                    </div>
 
+                        </ul>
+                        <button class="button is-info is-medium is-fullwidth">Füge das Spiel hinzu</button>
+                    </div>
                     <!-- Ende des fehlenden Blocks -->
                 </form>
             </div>
@@ -46,18 +38,16 @@
     </div>
 </section>
 
-<!-- Aktuelle vorhandene Spiele -->
+<!-- Aktuelle Spieleliste -->
 <section class="section my-5">
     <h1 class="title">Bereits vorhandene Spiele</h1>
-    <input type="text" class="input is-normal" name="search_db" placeholder="Filter vorhandene Spiele">
     <div class="container">
         <div class="columns is-multiline">
             {% for i in range(10) %}
-            <div id="gameList" class="column is-one-fifth">
-                <div class="box p-1">
-                    <figure class="image is-32-32">
-                        <img src="https://cf.geekdo-images.com/jEPmWvvYpqkWrKOzqIHFsg__thumb/img/kMLIpeqA6UcUvQg2AdMwwQoEIfU=/fit-in/200x150/filters:strip_icc()/pic4336469.png"
-                            alt="Placeholder Image">
+            <div id="gameList" class="column is-one-quarter">
+                <div class="box">
+                    <figure class="image is-64-64">
+                        <img src="https://via.placeholder.com/64" alt="Placeholder Image">
                     </figure>
                     <div>
                         <p><strong>Name</strong> Wasserkraft</p>
@@ -71,5 +61,4 @@
         </div>
     </div>
 </section>
-
 {% endblock %}
