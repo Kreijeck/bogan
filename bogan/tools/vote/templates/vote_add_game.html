@@ -18,17 +18,20 @@
                     <!-- Hier muss automatisch die Spieleliste erscheinen, ansonsten fehlt dieser Block -->
                     <div class="field py-5">
                         <ul class="checkbox-list">
-                            {% for i in range(5) %}
+                            {% for i in range(25) %}
                             <li>
-                                <label>
-                                    <input type="radio" name="games" value="game_{{ i+1 }}">
-                                    <img src="https://via.placeholder.com/32" alt="Game Image">
-                                    <span> Game {{ i+1 }} - Erscheinungsdatum: 2024-0{{ i+1}}-01</span>
-                                </label>
+                                <table class="table is-fullwidth">
+                                    <tr class="has-text-info-20-invert has-background-info-20 ">
+                                        <th is-info><input type="radio" name="games" value="game_{{ i+1 }}"></th>
+                                        <td><img src="https://via.placeholder.com/32" alt="Game Image"></td>
+                                        <td>Game {{ i+1 }}</td>
+                                        <td>Erscheinungsdatum: 2024-0{{ i+1}}-01</td>
+                                    </tr>
+                                </table>
                             </li>
                             {% endfor %}
-
                         </ul>
+                        <!-- Button Füge Spiel hinzu -->
                         <button class="button is-info is-medium is-fullwidth">Füge das Spiel hinzu</button>
                     </div>
                     <!-- Ende des fehlenden Blocks -->
@@ -61,4 +64,5 @@
         </div>
     </div>
 </section>
+
 {% endblock %}
