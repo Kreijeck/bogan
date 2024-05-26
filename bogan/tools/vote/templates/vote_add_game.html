@@ -20,14 +20,13 @@
                         <ul class="checkbox-list ul-scroll">
                             {% for i in range(25) %}
                             <!-- Spieldaten -> Automatisch -->
-                            <li class="is-flex is-align-items-center py-2">
-                                <input type="radio" name="games" value="game_{{ i+1 }}" class="mx-3">
+                            <label class="is-flex is-align-items-center py-2" for="game_{{ i+1 }}">
+                                <input type="radio" id="game_{{ i+1 }}" name="games" value="game_{{ i+1 }}" class="mx-3">
                                 <img src="https://cf.geekdo-images.com/jEPmWvvYpqkWrKOzqIHFsg__thumb/img/kMLIpeqA6UcUvQg2AdMwwQoEIfU=/fit-in/200x150/filters:strip_icc()/pic4336469.png"
                                     alt="Game Image" class="image mx-3">
                                 <p class="mx-3"> Game {{ i+1 }}</p>
                                 <p class="mx-3"> Erscheinungsdatum {{ 2018 + i }}</p>
-
-                            </li>
+                            </label>
                             {% endfor %}
                         </ul>
                         <!-- Button Füge Spiel hinzu -->
