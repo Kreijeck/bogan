@@ -14,7 +14,9 @@ def env(env_var: str) -> str:
     return os.getenv(env_var)
 
 
-def nested_get(nested_input: Union[dict, list], keys: list, cast_type: Optional[type] = None) -> Any:
+def nested_get(
+    nested_input: Union[dict, list], keys: list, cast_type: Optional[type] = None
+) -> Any:
     """Utility function to get a value from a nested dictionary with a default value and optional type casting.
 
     Args:
@@ -44,4 +46,8 @@ def nested_get(nested_input: Union[dict, list], keys: list, cast_type: Optional[
             return None
 
     # convert to correct type if set
-    return cast_type(nested_input) if cast_type and nested_input is not None else nested_input
+    return (
+        cast_type(nested_input)
+        if cast_type and nested_input is not None
+        else nested_input
+    )
