@@ -1,6 +1,7 @@
 from typing import List
 from sqlalchemy import String, ForeignKey, Float, Integer
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from bogan.utils import nested_get
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 
@@ -8,38 +9,8 @@ from flask_sqlalchemy import SQLAlchemy
 class Base(DeclarativeBase):
     pass
 
+
 db = SQLAlchemy(model_class=Base)
-
-# Hilfsmethoden
-def _nested_get(d: dict, keys: list, typ: type):
-    """Usage of get method for nested dictionary to convert json-files
-
-    Args:
-        nested_dict (dict): nested dictionary/list
-        parameters (list): list of keys
-        typ (type): convert to specific type
-
-    Returns:
-        any: return value of specific type
-    """
-    for key in keys:
-        if isinstance(d, list):
-            try:
-                d = d[key]
-            except IndexError:
-                return None
-            
-        elif isinstance(d, dict):
-            d = d.get(key, None)
-        
-        else:
-            return None
-        
-        if d is None:
-            return None
-
-    # convert to correct type
-    return typ(d)
 
 
 class User(UserMixin, db.Model):
@@ -64,8 +35,8 @@ class User(UserMixin, db.Model):
 #     brettspiel: Mapped["Brettspiel"] = relationship(back_populates="in_votes")
 
 
-class Brettspiel(db.Model):
-    __tablename__ = "brettspiel"
+class Boardgame(db.Model):
+
     # default Information
     id: Mapped[int] = mapped_column(primary_key=True)
     bgg_id: Mapped[int] = mapped_column(Integer)
@@ -76,7 +47,7 @@ class Brettspiel(db.Model):
     yearpublished: Mapped[int] = mapped_column(Integer)
     minplayers: Mapped[int] = mapped_column(Integer)
     maxplayers: Mapped[int] = mapped_column(Integer)
-    playingtime: Mapped[int] = mapped_column(Integer)
+    playtime: Mapped[int] = mapped_column(Integer)
 
     # Rating
     rating: Mapped[float] = mapped_column(Float)
@@ -86,29 +57,60 @@ class Brettspiel(db.Model):
     # in_votes: Mapped[List["Vote"]] = relationship(back_populates="brettspiel", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
-        return f"Brettspiel {self.name_primary}, img={self.img}, img_small={self.img_small}, "\
-                f"published={self.yearpublished}, for {self.minplayers} - {self.maxplayers} Players, "\
-                f"playtime = {self.playingtime}, rating={self.rating}, weight= {self.weight}"
+        return (
+            f"Brettspiel {self.name_primary}, img={self.img}, img_small={self.img_small}, "
+            f"published={self.yearpublished}, for {self.minplayers} - {self.maxplayers} Players, "
+            f"playtime = {self.playtime}, rating={self.rating}, weight= {self.weight}"
+        )
 
-    def convert_from_bgg_full(self, json_file: dict):
-        """Read json File and auto-fill the arguments of the current boardgame
+    def from_json(self, json_file: dict, name: tuple[str, bool] = None):
+        """Read json File and auto-fill the arguments of the current boardgame instance
 
         Args:
-            json_file (dict): json-file from bgg
+            json_file (dict): JSON file from BGG
+            name (tuple[str, bool], optional): (alternative name, is_primary_name). Defaults to None.
 
         Returns:
             self: self with updated parameters
         """
+
+        def create_names(name: tuple[str, bool]):
+            """
+            self.name and self.name_primary are calculated here
+
+            Args:
+                name (tuple[str,bool]): (alternative name, is_primary_name) or None
+
+            Returns:
+                tuple: (self.name, self.name_primary)
+            """
+            default_name = nested_get(json_file, ["name", 0, "@value"], str)
+            # if name not None
+            if name:
+                if name[1]:
+                    return (name[0], name[0])
+                else:
+                    return (name[0], default_name)
+            # both values get the primary name
+            else:
+                return (default_name, default_name)
+
         # Add all data available in bgg
-        self.bgg_id = _nested_get(json_file,['id'], int)
-        self.name_primary = _nested_get(json_file, ["name", 0, "@value"], str)
-        self.img = _nested_get(json_file, ['image2'], str)
-        self.img_small = _nested_get(json_file, ['thumbnail'], str)
-        self.yearpublished = _nested_get(json_file, ['yearpublished', '@value'], int)
-        self.minplayers = _nested_get(json_file, ['minplayers', '@value'], int)
-        self.maxplayers = _nested_get(json_file, ["maxplayers", "@value"], int)
-        self.playingtime = _nested_get(json_file, ["playingtime", "@value"], int)
-        self.rating = _nested_get(json_file, ["statistics", "ratings", "average", "@value"], float)
-        self.weight = _nested_get(json_file, ["statistics", "ratings", "averageweight", "@value"], float)
+        self.bgg_id = nested_get(json_file, ["@id"], int)
+
+        # self.name and self.name_primary can be set with this function
+        self.name, self.name_primary = create_names(name)
+        self.img = nested_get(json_file, ["image"], str)
+        self.img_small = nested_get(json_file, ["thumbnail"], str)
+        self.yearpublished = nested_get(json_file, ["yearpublished", "@value"], int)
+        self.minplayers = nested_get(json_file, ["minplayers", "@value"], int)
+        self.maxplayers = nested_get(json_file, ["maxplayers", "@value"], int)
+        self.playtime = nested_get(json_file, ["playingtime", "@value"], int)
+        self.rating = nested_get(
+            json_file, ["statistics", "ratings", "average", "@value"], float
+        )
+        self.weight = nested_get(
+            json_file, ["statistics", "ratings", "averageweight", "@value"], float
+        )
 
         return self

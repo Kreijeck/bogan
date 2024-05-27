@@ -43,6 +43,7 @@
             <!-- LOGIN und Co -->
             <div class="navbar-end">
                 {% if current_user.is_authenticated %}
+                <a href="#" class="navbar-item">Hallo {{ current_user.name }}</a>
                 <a href="{{ url_for('auth.logout') }}" class="navbar-item">Logout</a>
                 {% endif %}
 

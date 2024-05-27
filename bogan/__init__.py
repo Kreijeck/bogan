@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 # init dotenv
 load_dotenv(override=True)
 
+
 def create_app():
     app = Flask(__name__, static_folder="static")
 
@@ -39,15 +40,16 @@ def create_app():
     # add all blueprints
     # Alle /templates Ordner aus Blueprints sind verfügbar. Bei gleichem Namen, wird der erste Import genommen
     from .main import main as main_bp
+
     app.register_blueprint(main_bp)
 
     from .auth import auth as auth_bp
+
     app.register_blueprint(auth_bp)
 
     from .tools import tools as tools_bp
+
     app.register_blueprint(tools_bp)
-
-
 
     with app.app_context():
         ## Delete Database
