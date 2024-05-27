@@ -7,16 +7,20 @@ from bogan.db.models import Boardgame
 from bogan.utils import nested_get
 
 
-def bgg_api_call_get(endpoint: str, parameter: dict, repeat: int=3) -> Union[dict, list[dict]]:
-    """ Create specific api call on bgg and convert xml to dictionary"""
-    
+def bgg_api_call_get(
+    endpoint: str, parameter: dict, repeat: int = 3
+) -> Union[dict, list[dict]]:
+    """Create specific api call on bgg and convert xml to dictionary"""
+
     raw_json = {}
 
     for i in range(repeat):
         resp = requests.get("/".join((BGG_BASE_URL, endpoint)), parameter)
 
         if resp.ok:
-            tmp_convert = xmltodict.parse(resp.text, encoding=ENCODING, force_list=FORCE_LIST_BBG)
+            tmp_convert = xmltodict.parse(
+                resp.text, encoding=ENCODING, force_list=FORCE_LIST_BBG
+            )
             raw_json = nested_get(tmp_convert, ["items", "item"])
             # TODO Remove print
             print(f"Received stats for URL: {resp.url}, with parameter:{parameter}")
@@ -26,26 +30,23 @@ def bgg_api_call_get(endpoint: str, parameter: dict, repeat: int=3) -> Union[dic
             time.sleep(0.5)
             # TODO remove print
             # print(f"Try {i+1}: Repeat API-call for URL: {resp.url}, Received: {resp.status}")
-            print(f"Try {i+1}, Repeat API-call for URL: {resp.url}, Received status code: {resp.status_code}")
+            print(
+                f"Try {i+1}, Repeat API-call for URL: {resp.url}, Received status code: {resp.status_code}"
+            )
 
     return raw_json
-
- 
 
 
 def search_boardgame(search: str) -> list[Boardgame]:
     endpoint = "search"
-    para = {
-        "type": "boardgame",
-        "query": search
-    }
-    bg_infos_list:  list[Boardgame] = []
+    para = {"type": "boardgame", "query": search}
+    bg_infos_list: list[Boardgame] = []
     # Check search not empty
     if not search:
         return []
-    
+
     raw_json = bgg_api_call_get(endpoint, para)
-    
+
     # if not empty or None
     if raw_json:
         # get ids
@@ -53,11 +54,13 @@ def search_boardgame(search: str) -> list[Boardgame]:
         names = []
         for item in raw_json:
             ids.append(str(item.get("@id")))
-            
-            name = nested_get(item, ['name', 0, '@value'])
-            name_is_primary = True if nested_get(item, ['name', 0, '@value']) == "primary" else False
+
+            name = nested_get(item, ["name", 0, "@value"])
+            name_is_primary = (
+                True if nested_get(item, ["name", 0, "@value"]) == "primary" else False
+            )
             names.append((name, name_is_primary))
-        
+
         # convert ids to correct format
         ids_string = ",".join(ids)
 
@@ -66,7 +69,8 @@ def search_boardgame(search: str) -> list[Boardgame]:
 
     return bg_infos_list
 
-def get_boardgame(ids: str, names:list[tuple[str, bool]]=None) -> list[Boardgame]:
+
+def get_boardgame(ids: str, names: list[tuple[str, bool]] = None) -> list[Boardgame]:
     """Get stats from specific boardgame
 
     Args:
@@ -75,34 +79,34 @@ def get_boardgame(ids: str, names:list[tuple[str, bool]]=None) -> list[Boardgame
                             multiple IDs: "12345,2342,2423"
 
     Returns:
-        list[Boardgame]:    Boardgame object, with values. 
+        list[Boardgame]:    Boardgame object, with values.
                             extended information about all stats, for example take a look here:
                             https://boardgamegeek.com/xmlapi2/thing?id=251247&stats=1 (items/item will be removed)
     """
     endpoint = "thing"
-    para = {
-        "stats": 1,
-        "id": ids
-    }
+    para = {"stats": 1, "id": ids}
 
     bg_results = []
-    len_ids = len(ids.split(','))
+    len_ids = len(ids.split(","))
 
     raw_json = bgg_api_call_get(endpoint, para)
 
     # Check das für alle Ids Spiele gefunden werden. Ansonsten setze names auf None
     if len_ids != len(raw_json):
         # TODO remove print
-        print(f"Es konnte nicht für alle Ids {ids} ein Eintrag gefunden werden, bitte überprüfe die Ids! -> names=None")
+        print(
+            f"Es konnte nicht für alle Ids {ids} ein Eintrag gefunden werden, bitte überprüfe die Ids! -> names=None"
+        )
         names = None
-    
+
     if raw_json:
         # validate das raw_json Liste gleich lang ist wie die names liste
         if names is not None and len_ids != len(names):
             # Überlgung ob hier das gleiche passiert wie oben und names=None gesetzt wird
-            raise ValueError("Names muss None sein oder die gleiche Länge wie Ids haben")
+            raise ValueError(
+                "Names muss None sein oder die gleiche Länge wie Ids haben"
+            )
 
-        
         # Create Boardgame List
         for i, bg_stat in enumerate(raw_json):
             # Name anpassen, wenn gesetzt
@@ -113,10 +117,11 @@ def get_boardgame(ids: str, names:list[tuple[str, bool]]=None) -> list[Boardgame
 
     return bg_results
 
+
 # TODO Remove after trying
 if __name__ == "__main__":
     res = search_boardgame("Wasserkraft")
-    
+
     ## negativ Fall
     # res = get_boardgame("12234,123,78229", [("Wass2r", True),("Wasse3", True)])
     # res = get_boardgame("396802")
@@ -126,7 +131,7 @@ if __name__ == "__main__":
         print(f"PRIMARY: {entry.name_primary}")
         print(f"IMG: {entry.img}")
         print("================")
-    
+
     # import json
     # import os
     # json_file = "data/example_multiple.json"
