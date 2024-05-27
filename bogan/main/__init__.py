@@ -1,24 +1,25 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template
 from flask_login import login_required, current_user
-from bogan.db.ask_bgg import search_boardgame
 
-main = Blueprint('main',__name__, template_folder='templates')
+main = Blueprint("main", __name__, template_folder="templates")
 
-@main.route('/')
+
+@main.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
-@main.route('/profile')
+
+@main.route("/profile")
 @login_required
 def profile():
-    return render_template('profile.html', name=current_user.name)
+    return render_template("profile.html", name=current_user.name)
+
 
 @main.route("/search")
 def search():
     return render_template("search.html")
 
+
 @main.route("/add_game", methods=["POST"])
 def add_game():
     pass
-
-    

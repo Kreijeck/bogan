@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 from flask_sqlalchemy import SQLAlchemy
 
+
 def create_new_db(delete_all: bool = False):
     load_dotenv(override=True)
     db_path = os.getenv("FLASK_DATABASE_URI")
@@ -14,7 +15,7 @@ def create_new_db(delete_all: bool = False):
     # Lösche zuerst alte Datenbank -> für debug Zwecke. Sollte später vermieden werden
     if delete_all:
         Base.metadata.drop_all(bind=engine)
-    
+
     # Erstelle Datenbank
     Base.metadata.create_all(bind=engine)
 
@@ -27,9 +28,5 @@ def create_new_db(delete_all: bool = False):
         session.commit()
 
 
-
 if __name__ == "__main__":
     create_new_db(delete_all=True)
-
-    
-

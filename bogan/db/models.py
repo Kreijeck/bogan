@@ -9,8 +9,8 @@ from flask_sqlalchemy import SQLAlchemy
 class Base(DeclarativeBase):
     pass
 
-db = SQLAlchemy(model_class=Base)
 
+db = SQLAlchemy(model_class=Base)
 
 
 class User(UserMixin, db.Model):
@@ -57,11 +57,13 @@ class Boardgame(db.Model):
     # in_votes: Mapped[List["Vote"]] = relationship(back_populates="brettspiel", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
-        return f"Brettspiel {self.name_primary}, img={self.img}, img_small={self.img_small}, "\
-                f"published={self.yearpublished}, for {self.minplayers} - {self.maxplayers} Players, "\
-                f"playtime = {self.playtime}, rating={self.rating}, weight= {self.weight}"
+        return (
+            f"Brettspiel {self.name_primary}, img={self.img}, img_small={self.img_small}, "
+            f"published={self.yearpublished}, for {self.minplayers} - {self.maxplayers} Players, "
+            f"playtime = {self.playtime}, rating={self.rating}, weight= {self.weight}"
+        )
 
-    def from_json(self, json_file: dict, name:tuple[str, bool] = None):
+    def from_json(self, json_file: dict, name: tuple[str, bool] = None):
         """Read json File and auto-fill the arguments of the current boardgame instance
 
         Args:
@@ -72,7 +74,7 @@ class Boardgame(db.Model):
             self: self with updated parameters
         """
 
-        def create_names(name: tuple[str,bool]):
+        def create_names(name: tuple[str, bool]):
             """
             self.name and self.name_primary are calculated here
 
@@ -80,7 +82,7 @@ class Boardgame(db.Model):
                 name (tuple[str,bool]): (alternative name, is_primary_name) or None
 
             Returns:
-                tuple: (self.name, self.name_primary) 
+                tuple: (self.name, self.name_primary)
             """
             default_name = nested_get(json_file, ["name", 0, "@value"], str)
             # if name not None
@@ -93,19 +95,22 @@ class Boardgame(db.Model):
             else:
                 return (default_name, default_name)
 
-
         # Add all data available in bgg
-        self.bgg_id = nested_get(json_file,['@id'], int)
-        
+        self.bgg_id = nested_get(json_file, ["@id"], int)
+
         # self.name and self.name_primary can be set with this function
         self.name, self.name_primary = create_names(name)
-        self.img = nested_get(json_file, ['image'], str)
-        self.img_small = nested_get(json_file, ['thumbnail'], str)
-        self.yearpublished = nested_get(json_file, ['yearpublished', '@value'], int)
-        self.minplayers = nested_get(json_file, ['minplayers', '@value'], int)
+        self.img = nested_get(json_file, ["image"], str)
+        self.img_small = nested_get(json_file, ["thumbnail"], str)
+        self.yearpublished = nested_get(json_file, ["yearpublished", "@value"], int)
+        self.minplayers = nested_get(json_file, ["minplayers", "@value"], int)
         self.maxplayers = nested_get(json_file, ["maxplayers", "@value"], int)
         self.playtime = nested_get(json_file, ["playingtime", "@value"], int)
-        self.rating = nested_get(json_file, ["statistics", "ratings", "average", "@value"], float)
-        self.weight = nested_get(json_file, ["statistics", "ratings", "averageweight", "@value"], float)
+        self.rating = nested_get(
+            json_file, ["statistics", "ratings", "average", "@value"], float
+        )
+        self.weight = nested_get(
+            json_file, ["statistics", "ratings", "averageweight", "@value"], float
+        )
 
         return self
