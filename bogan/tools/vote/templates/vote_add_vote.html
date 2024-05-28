@@ -3,75 +3,49 @@
 {% block content %}
 <section class="section">
     <h1 class="title">Neue Abstimmung</h1>
-    <h2 class="subtitle">Hier kann eine neue Abstimmung erstellt werden</h2>
+    <h2 class="subtitle">Hier kannst du eine neue Abstimmung erstellen</h2>
 </section>
 
-<div class="box has-background-info-50">
-    <form method="POST" action="#">
-
-        <label class="label">Name</label>
-        <input class="input is-medium has-background-info-20 has-text-info-20-invert" type="text" name="name"
-            placeholder="Name der Abstimmung" value="{{ name }}">
-
-        {% for i in range(num_of_games) %}
-        <div class="py-3">
-            <label class="label">Spiel {{ i+1 }}</label>
-            <input class="select has-background-info-20 has-text-info-20-invert" list="games">
-            <datalist id="games">
-                    {% for game in games %}
-                    <option value="{{ game }}">
-                        <img src="{{ url_for('static', filename='img/kaktus.svg') }}" alt="site logo">
-                        <!-- {{ game }} -->
-                    </option>
-                    {% endfor %}
-            </datalist>
-
-            <!-- <div class="select">
-                <select name="spiel{{i+1}}">
-                    {% for game in games %}
-                    <option value="{{game}}">{{game}}</option>
-                    {% endfor %}
-                </select>
-            </div> -->
-        </div>
-        {% endfor %}
-
-        <div class="field py-4">
-            <div class="control">
-                <button class="button is-info is-fullwidth">Erstelle Abstimmung</button>
-            </div>
-        </div>
-    </form>
-</div>
-
+<!--  Füge Spieler zur Abstimmung hinzu -->
 <section class="section">
-    <div class="box">
-        <input class="select has-background-info-40 has-text-info-40-invert" list="brow">
-        <datalist id="brow">
-            <option value="Internet Explorer">
-            <option value="Firefox">
-            <option value="Chrome">
-            <option value="Opera">
-            <option value="Safari">
-        </datalist>
+    <h1 class="subtitle">Spieler die teilnehmen</h1>
 
+    <div class="select is-multiple">
+        <select multiple>
+            {% for user in users %}
+            <option value=" {{ user.id }}"> {{ user.name }} ({{ user.email }})</option>
+            {% endfor %}
+        </select>
     </div>
 </section>
 
+<!-- Füge Spiele hinzu -->
+<section>
+    <h1 class="subtitle">Spiele auswählen</h1>
 
-<section class="section">
-    {% for i in range(num_of_games) %}
-    <label class="label">Spiel {{ i+1 }}</label>
-<select class="select has-background-info-20 has-text-info-20-invert">
-    <option value="" selected disabled hidden>Bitte wählen</option>
-    {% for game in games %}
-    <option value="{{ game }}">
-        {{ game }}
-        <img src="{{ url_for('static', filename='img/kaktus.svg') }}" alt="site logo">
-    </option>
+    <div class="select is-multiple">
+        <select multiple>
+            {% for boardgame in boardgames %}
+            <option value=" {{ boardgame.id }}"> <img src="{{boardgame.img_small}}" alt="Kein Bild vorhanden">
+                {{ boardgame.name }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+</section>
+
+<!-- TESTE CHECKBOX -->
+<section>
+    <h1 class="subtitle">Spiele auswählen</h1>
+    
+    <ul class="ul-scroll">
+    {% for boardgame in boardgames %}
+    <label class="checkbox">
+        <li> <input type="checkbox" /> {{ boardgame.name }} </li>
+    </label>
     {% endfor %}
-</select>
-{% endfor %}
+</ul>     
+    </div>
 </section>
 
 {% endblock %}

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required
 from bogan.db.ask_bgg import search_boardgame
-from bogan.db.models import Boardgame, db
+from bogan.db.models import Boardgame, User, db
 
 vote = Blueprint("vote", __name__, url_prefix="vote", template_folder="templates")
 
@@ -74,18 +74,11 @@ def add_game():
     return render_template("vote_add_game.html", boardgames=boardgames)
 
 
-@vote.route("/add_vote_list", methods=["POST"])
+@vote.route("/add_vote_list", methods=["POST", "GET"])
 @login_required
 def add_vote_list():
-    num_of_games = int(request.form.get("num_of_games"))
-    name = request.form.get("name")
-    games = [
-        "Wasserkraft",
-        "Heat",
-        "Gaia",
-        "Wasserwerk",
-    ]
+    boardgames = Boardgame.query.all()
+    users = User.query.all()
 
-    return render_template(
-        "vote_add_vote.html", name=name, num_of_games=num_of_games, games=games
-    )
+    return render_template("vote_add_vote.html", boardgames=boardgames, users=users)
+    
