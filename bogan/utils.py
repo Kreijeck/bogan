@@ -45,9 +45,14 @@ def nested_get(
         if nested_input is None:
             return None
 
-    # convert to correct type if set
-    return (
-        cast_type(nested_input)
-        if cast_type and nested_input is not None
-        else nested_input
-    )
+    # convert to correct type None type if cast type is known
+    if nested_input is None:
+        if cast_type == "dict":
+            return {}
+        elif cast_type == "list":
+            return []
+        else:
+            return None
+    
+    # Bei positiv Ergebnis konvertiere input, wenn bekannt. Ansonsten das normale value
+    return cast_type(nested_input) if cast_type else nested_input

@@ -8,7 +8,7 @@ from bogan.utils import nested_get
 
 
 def bgg_api_call_get(
-    endpoint: str, parameter: dict, repeat: int = 3
+    endpoint: str, parameter: dict, nested_paras: list = ['items', 'item'], repeat: int = 3
 ) -> Union[dict, list[dict]]:
     """Create specific api call on bgg and convert xml to dictionary"""
 
@@ -16,12 +16,12 @@ def bgg_api_call_get(
 
     for i in range(repeat):
         resp = requests.get("/".join((BGG_BASE_URL, endpoint)), parameter)
-
+               
         if resp.ok:
             tmp_convert = xmltodict.parse(
                 resp.text, encoding=ENCODING, force_list=FORCE_LIST_BBG
             )
-            raw_json = nested_get(tmp_convert, ["items", "item"])
+            raw_json = nested_get(tmp_convert, nested_paras)
             # TODO Remove print
             print(f"Received stats for URL: {resp.url}, with parameter:{parameter}")
             break
@@ -86,11 +86,11 @@ def get_boardgame(ids: str, names: list[tuple[str, bool]] = None) -> list[Boardg
     endpoint = "thing"
     para = {"stats": 1, "id": ids}
 
-    bg_results = []
-    len_ids = len(ids.split(","))
-
+    # Get Request as json
     raw_json = bgg_api_call_get(endpoint, para)
 
+    bg_results = []
+    len_ids = len(ids.split(","))
     # Check das für alle Ids Spiele gefunden werden. Ansonsten setze names auf None
     if len_ids != len(raw_json):
         # TODO remove print
@@ -116,6 +116,34 @@ def get_boardgame(ids: str, names: list[tuple[str, bool]] = None) -> list[Boardg
                 bg_results.append(Boardgame().from_json(bg_stat))
 
     return bg_results
+
+def get_games_from(user: str, _page: int=1, _tmp_games:list = []) -> list:
+    """Erhalte Spiele eines Users aus Boargamegeek
+
+    Args:
+        user (str): Username in BGG
+        _page (int, optional): wird für Rekursion benötigt, pro Seite maximal 100 Einträge. Defaults to 1.
+        _tmp_games(dict, optional): wird für Rekursion benötigt, speichert aktuelle Ergebnisse
+    
+    Returns:
+        dict: json-Datei mit allen Spielen
+    """
+    endpoint = "plays"
+    para = {
+        'username': user,
+        'page': _page
+    }
+
+    response = bgg_api_call_get(endpoint, para, nested_paras=["plays", "play"])
+    
+    # Solange Daten erhalten werden sind, wird die nächste Seite aufgerufen
+    while response:
+        _tmp_games.extend(response)
+        return get_games_from(user, _page + 1, _tmp_games)
+
+    return _tmp_games
+
+
 
 
 # TODO Remove after trying
