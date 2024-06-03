@@ -52,8 +52,12 @@ dmypy.json
 *scretch.py
 *example*
 tmp/*
+data/scretch_small_model.py
+data/tmo.db
+
 # Logging
 *.log
 
 # Database
 db.sqlite
+
