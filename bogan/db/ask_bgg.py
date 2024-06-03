@@ -2,26 +2,26 @@ import xmltodict
 import requests
 from typing import Union
 import time
-from bogan.db.config import BGG_BASE_URL, ENCODING, FORCE_LIST_BBG
+from bogan.db.config import BGG_BASE_URL, ENCODING, TAG2LIST_BOARDGAME, TAG2LIST_PLAY
 from bogan.db.models import Boardgame
 from bogan.utils import nested_get
 
 
 def bgg_api_call_get(
-    endpoint: str, parameter: dict, nested_paras: list = ['items', 'item'], repeat: int = 3
+    endpoint: str, parameter: dict, nested_paras: list = [], tag2list: tuple = {}, repeat: int = 3
 ) -> Union[dict, list[dict]]:
     """Create specific api call on bgg and convert xml to dictionary"""
 
     raw_json = {}
 
     for i in range(repeat):
-        resp = requests.get("/".join((BGG_BASE_URL, endpoint)), parameter)
+        resp = requests.get("/".join((BGG_BASE_URL, endpoint)), parameter, timeout=10)
                
         if resp.ok:
-            tmp_convert = xmltodict.parse(
-                resp.text, encoding=ENCODING, force_list=FORCE_LIST_BBG
-            )
+
+            tmp_convert = xmltodict.parse(resp.text, encoding=ENCODING, force_list=tag2list)
             raw_json = nested_get(tmp_convert, nested_paras)
+
             # TODO Remove print
             print(f"Received stats for URL: {resp.url}, with parameter:{parameter}")
             break
@@ -29,7 +29,6 @@ def bgg_api_call_get(
         else:
             time.sleep(0.5)
             # TODO remove print
-            # print(f"Try {i+1}: Repeat API-call for URL: {resp.url}, Received: {resp.status}")
             print(
                 f"Try {i+1}, Repeat API-call for URL: {resp.url}, Received status code: {resp.status_code}"
             )
@@ -45,7 +44,7 @@ def search_boardgame(search: str) -> list[Boardgame]:
     if not search:
         return []
 
-    raw_json = bgg_api_call_get(endpoint, para)
+    raw_json = bgg_api_call_get(endpoint,para, tag2list=TAG2LIST_BOARDGAME, nested_paras=["items", "item"])
 
     # if not empty or None
     if raw_json:
@@ -62,35 +61,42 @@ def search_boardgame(search: str) -> list[Boardgame]:
             names.append((name, name_is_primary))
 
         # convert ids to correct format
-        ids_string = ",".join(ids)
+        # ids_string = ",".join(ids)
 
         # get stats for boardgame
-        bg_infos_list = get_boardgame(ids_string, names=names)
+        bg_infos_list = ask_boardgame(ids, names=names)
 
     return bg_infos_list
 
 
-def get_boardgame(ids: str, names: list[tuple[str, bool]] = None) -> list[Boardgame]:
+def ask_boardgame(ids: Union[str, list[str]], names: list[tuple[str, bool]] = None) -> list[Boardgame]:
     """Get stats from specific boardgame
 
     Args:
-        id (str):   all boardgame ids to get the stats from, separated by < , >.
-                    e.g.:   One ID: "12345"
-                            multiple IDs: "12345,2342,2423"
+        id (str, list):     all boardgame ids as list
+                            or one id a str
 
     Returns:
         list[Boardgame]:    Boardgame object, with values.
                             extended information about all stats, for example take a look here:
                             https://boardgamegeek.com/xmlapi2/thing?id=251247&stats=1 (items/item will be removed)
     """
+
+    # Convert all types into a list with length 1 and as str
+    if not isinstance(ids, list):
+        ids = [str(ids)]
+
+    # Convert list to comma seperated string
+    len_ids = len(ids)
+    ids = ",".join(ids)
+
     endpoint = "thing"
     para = {"stats": 1, "id": ids}
 
     # Get Request as json
-    raw_json = bgg_api_call_get(endpoint, para)
+    raw_json = bgg_api_call_get(endpoint, para, nested_paras=["items", "item"], tag2list=TAG2LIST_BOARDGAME)
 
     bg_results = []
-    len_ids = len(ids.split(","))
     # Check das für alle Ids Spiele gefunden werden. Ansonsten setze names auf None
     if len_ids != len(raw_json):
         # TODO remove print
@@ -111,13 +117,13 @@ def get_boardgame(ids: str, names: list[tuple[str, bool]] = None) -> list[Boardg
         for i, bg_stat in enumerate(raw_json):
             # Name anpassen, wenn gesetzt
             if names:
-                bg_results.append(Boardgame().from_json(bg_stat, name=names[i]))
+                bg_results.append(Boardgame().from_bgg(bg_stat, name=names[i]))
             else:
-                bg_results.append(Boardgame().from_json(bg_stat))
+                bg_results.append(Boardgame().from_bgg(bg_stat))
 
     return bg_results
 
-def get_games_from(user: str, _page: int=1, _tmp_games:list = []) -> list:
+def ask_games_from(user: str, _page: int=1, _tmp_games:list = []) -> list:
     """Erhalte Spiele eines Users aus Boargamegeek
 
     Args:
@@ -134,12 +140,12 @@ def get_games_from(user: str, _page: int=1, _tmp_games:list = []) -> list:
         'page': _page
     }
 
-    response = bgg_api_call_get(endpoint, para, nested_paras=["plays", "play"])
+    response = bgg_api_call_get(endpoint, para, nested_paras=["plays", "play"], tag2list=TAG2LIST_PLAY)
     
     # Solange Daten erhalten werden sind, wird die nächste Seite aufgerufen
     while response:
         _tmp_games.extend(response)
-        return get_games_from(user, _page + 1, _tmp_games)
+        return ask_games_from(user, _page + 1, _tmp_games)
 
     return _tmp_games
 

@@ -18,9 +18,10 @@ def create_app():
     migrate = Migrate(app, db, directory=env("DB_MIGRATE_DIR"))
 
     app.config["SECRET_KEY"] = env("FLASK_SECRET_KEY")
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        f"mysql+pymysql://{env('DB_USER')}:{env('DB_PW')}@{env('DB_URL')}:{env('DB_PORT')}/{env('DB_NAME')}"
-    )
+    # app.config["SQLALCHEMY_DATABASE_URI"] = (
+    #     f"mysql+pymysql://{env('DB_USER')}:{env('DB_PW')}@{env('DB_URL')}:{env('DB_PORT')}/{env('DB_NAME')}"
+    # )
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///example.db"
     app.config["VERSION"] = env("BOGAN_VERSION")
 
     # init Database
