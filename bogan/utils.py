@@ -1,5 +1,7 @@
 import os
 from typing import Union, Optional, Any
+from sqlalchemy import create_engine
+from dotenv import load_dotenv
 
 
 def env(env_var: str) -> str:
@@ -14,9 +16,7 @@ def env(env_var: str) -> str:
     return os.getenv(env_var)
 
 
-def nested_get(
-    nested_input: Union[dict, list], keys: list, cast_type: Optional[type] = None
-) -> Any:
+def nested_get(nested_input: Union[dict, list], keys: list, cast_type: Optional[type] = None) -> Any:
     """Utility function to get a value from a nested dictionary with a default value and optional type casting.
 
     Args:
@@ -37,22 +37,31 @@ def nested_get(
         elif isinstance(nested_input, dict):
             nested_input = nested_input.get(key, None)
 
-        # Wird dieser Block überhaupt benötigt?
-        # else:
-        #     return None
-
         # Verlasse Schleife auf jeden Fall, sobald nested_input == None ist
         if nested_input is None:
-            return None
+            break
 
     # convert to correct type None type if cast type is known
-    if nested_input is None:
+    if not nested_input:  # is None:
         if cast_type == "dict":
             return {}
         elif cast_type == "list":
             return []
+        elif cast_type == "str":
+            return ""
+        elif cast_type == "int":
+            return -1
         else:
             return None
-    
+
     # Bei positiv Ergebnis konvertiere input, wenn bekannt. Ansonsten das normale value
     return cast_type(nested_input) if cast_type else nested_input
+
+
+def get_db_engine(debug: bool):
+    load_dotenv(override=True)
+    if debug:
+        os.path.abspath("bogan/instance/example.db")
+        return create_engine(env('DB_DEBUG'))
+    else:
+        return create_engine(f"mysql+pymysql://{env('DB_USER')}:{env('DB_PW')}@{env('DB_URL')}:{env('DB_PORT')}/{env('DB_NAME')}")
