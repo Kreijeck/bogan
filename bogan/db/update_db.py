@@ -156,7 +156,8 @@ def update_db():
             for player_pos_dict in my_game.get("players").get("player"):
                 player_obj = get_player(session, player_pos_dict)
                 get_player_pos(session, player_pos_dict, game_obj, player_obj)
-
+            
+            print(f"Update game id={game_obj.game_bgg_id} - {game_obj.boardgame.name} on {game_obj.datum}")
         session.commit()
 
 
