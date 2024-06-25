@@ -38,12 +38,22 @@
                     </div>
                 </div>
                 <!-- Zusätzliche Reiter -->
-                <a href="{{ url_for('main.profile') }}" class="navbar-item">Profil</a>
+                <div class="navbar-item has dropdown is-hoverable">
+                    <a href="#" class="navbar-link">Events</a>
+                    <div class="navbar-dropdown">
+                        {% for event in events %}
+                        <a href="{{ url_for('main.show_event', event=event)}}" class="navbar-item"> {{ event }}</a>
+                        {% endfor %}
+                            
+                    </div>
+                </div>
+                <a href="{{ url_for('main.profile') }}" class="navbar-item">Noch nix</a>
+
             </div>
             <!-- LOGIN und Co -->
             <div class="navbar-end">
                 {% if current_user.is_authenticated %}
-                <a href="#" class="navbar-item">Hallo {{ current_user.name }}</a>
+                <a href="{{ url_for('main.profile') }}" class="navbar-item">{{ current_user.name }}'s Profil</a>
                 <a href="{{ url_for('auth.logout') }}" class="navbar-item">Logout</a>
                 {% endif %}
 

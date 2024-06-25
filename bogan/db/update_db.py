@@ -1,5 +1,4 @@
 import json
-import os
 from sqlalchemy.orm import Session
 from datetime import datetime
 from bogan.config import ENCODING, GAME_USER
@@ -134,7 +133,7 @@ def get_game(session: Session, json_file: dict, boardgame: Boardgame, location: 
 
 def update_db(from_api: bool, save_file=False):
 
-    save_path = "data/example_plays.json"
+    save_path = "data/example/example_plays.json"
 
     # MIT API CALL
     if from_api:
