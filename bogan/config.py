@@ -32,3 +32,6 @@ GAME_USER = "Kreijeck"
 # additional xmltodict information
 TAG2LIST_BOARDGAME = ("name", "item")
 TAG2LIST_PLAY = "player"
+
+### Pathinformation ###
+EVENT_YAML = "bogan/events.yaml"

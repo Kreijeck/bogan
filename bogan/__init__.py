@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from bogan.db.models import db, User
 import bogan.config as cfg
+from bogan.utils import load_yaml
 
 
 def create_app():
@@ -30,6 +31,13 @@ def create_app():
     def load_user(user_id):
         # since the user_id is primary key, use it in the query
         return User.query.get(int(user_id))
+    
+    # global verfügbare Parameter
+    @app.context_processor
+    def inject_nav_parameter():
+        events = load_yaml(cfg.EVENT_YAML)
+        events = [event for event in events.keys()]
+        return dict(events=events)
 
     # add all blueprints
     # Alle /templates Ordner aus Blueprints sind verfügbar. Bei gleichem Namen, wird der erste Import genommen
