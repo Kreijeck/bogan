@@ -3,25 +3,19 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from bogan.db.models import db, User
-from bogan.utils import env
-from dotenv import load_dotenv
-
-
-# init dotenv
-load_dotenv(override=True)
+import bogan.config as cfg
 
 
 def create_app():
     app = Flask(__name__, static_folder="static")
 
     # add migrate
-    migrate = Migrate(app, db, directory=env("DB_MIGRATE_DIR"))
+    migrate = Migrate(app, db, directory=cfg.DB_MIGRATE_DIR)
 
-    app.config["SECRET_KEY"] = env("FLASK_SECRET_KEY")
-    app.config["SQLALCHEMY_DATABASE_URI"] = (
-        f"mysql+pymysql://{env('DB_USER')}:{env('DB_PW')}@{env('DB_URL')}:{env('DB_PORT')}/{env('DB_NAME')}"
-    )
-    app.config["VERSION"] = env("BOGAN_VERSION")
+    app.config["SECRET_KEY"] = cfg.FLASK_SECRET_KEY
+    app.config["SQLALCHEMY_DATABASE_URI"] = cfg.DB_SERVER
+    app.config["DEBUG"] = cfg.FLASK_DEBUG
+    app.config["VERSION"] = cfg.BOGAN_VERSION
 
     # init Database
     db.init_app(app)
@@ -51,10 +45,10 @@ def create_app():
 
     app.register_blueprint(tools_bp)
 
-    with app.app_context():
+    # with app.app_context():
         ## Delete Database
         # db.drop_all()
         ## Create Database
-        db.create_all()
+        # db.create_all()
 
     return app

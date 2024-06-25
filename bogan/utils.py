@@ -1,7 +1,7 @@
 import os
 from typing import Union, Optional, Any
 from sqlalchemy import create_engine
-from dotenv import load_dotenv
+
 
 
 def env(env_var: str) -> str:
@@ -58,10 +58,10 @@ def nested_get(nested_input: Union[dict, list], keys: list, cast_type: Optional[
     return cast_type(nested_input) if cast_type else nested_input
 
 
-def get_db_engine(debug: bool):
-    load_dotenv(override=True)
-    if debug:
+def get_db_engine(local: bool):
+    import bogan.config as cfg
+    if local:
         os.path.abspath("bogan/instance/example.db")
-        return create_engine(env('DB_DEBUG'))
+        return create_engine(cfg.DB_LOKAL)
     else:
-        return create_engine(f"mysql+pymysql://{env('DB_USER')}:{env('DB_PW')}@{env('DB_URL')}:{env('DB_PORT')}/{env('DB_NAME')}")
+        return create_engine(cfg.DB_SERVER)

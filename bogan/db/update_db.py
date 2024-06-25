@@ -2,13 +2,13 @@ import json
 import os
 from sqlalchemy.orm import Session
 from datetime import datetime
-from bogan.db.config import ENCODING, GAME_USER
+from bogan.config import ENCODING, GAME_USER
 from bogan.db.models import Base, Boardgame, Location, Game, Player, PlayerPos
 from bogan.db.ask_bgg import ask_boardgame, ask_games_from
 from bogan.utils import nested_get, get_db_engine
 
 
-engine = get_db_engine(debug=False)
+engine = get_db_engine(local=False)
 ## Delete Database
 # Base.metadata.drop_all(engine)
 ## Create Database
@@ -122,26 +122,34 @@ def get_game(session: Session, json_file: dict, boardgame: Boardgame, location: 
         game.location_id = location.id
     else:
         game = Game(game_bgg_id=game_bgg_id, datum=datum, playtime=playtime, boardgame=boardgame, location=location)
-        #TODO remove print
-        print(f"neue Partie hinzugefügt: Game(game_bgg_id={game_bgg_id}, brettspiel={game.boardgame.name}, datum={game.datum})")
+        # TODO remove print
+        print(
+            f"neue Partie hinzugefügt: Game(game_bgg_id={game_bgg_id}, brettspiel={game.boardgame.name}, datum={game.datum})"
+        )
 
     session.add(game)
 
     return game
 
 
-def update_db():
+def update_db(from_api: bool, save_file=False):
+
+    save_path = "data/example_plays.json"
 
     # MIT API CALL
-    my_games = ask_games_from(GAME_USER)
+    if from_api:
+        print("Receive games from API")
+        my_games = ask_games_from(GAME_USER)
+        # Speicher Datei
+        if save_file:
+            with open(save_path, "w", encoding=ENCODING) as file:
+                json.dump(my_games, file, indent=4, ensure_ascii=False)
 
-    # # Speicher Datei
-    # save_path = "data/example_plays.json"
-    # with open(game_path, "w", encoding=ENCODING) as file:
-    #     json.dump(my_games, file, indent=4, ensure_ascii=False)
-    # Lade datei, für schnellere Tests
-    # with open(save_path, "r", encoding=ENCODING) as file:
-    #     my_games = json.load(file)
+    else:
+        # Lade datei, für schnellere Tests
+        with open(save_path, "r", encoding=ENCODING) as file:
+            print("Receive games from local save-file")
+            my_games = json.load(file)
 
     with Session(engine) as session:
         # First fetch all boardgmes
@@ -156,7 +164,7 @@ def update_db():
             for player_pos_dict in my_game.get("players").get("player"):
                 player_obj = get_player(session, player_pos_dict)
                 get_player_pos(session, player_pos_dict, game_obj, player_obj)
-            
+
             print(f"Update game id={game_obj.game_bgg_id} - {game_obj.boardgame.name} on {game_obj.datum}")
         session.commit()
 
@@ -165,7 +173,7 @@ if __name__ == "__main__":
     from time import time
 
     t_start = time()
-    update_db()
+    update_db(from_api=True)
     t_stop = time()
     # TODO remove print
     t_ges = round(t_stop - t_start, 4)
