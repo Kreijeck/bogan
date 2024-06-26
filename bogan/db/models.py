@@ -56,7 +56,7 @@ class PlayerPos(db.Model):
 
 
     def __repr__(self) -> str:
-        return f"PlayerPos(id={self.id}, name={self.user.name}, punktzahl={self.points}, partie={self.game.boardgame.name})"
+        return f"PlayerPos(id={self.id}, name={self.player.name}, punktzahl={self.points}, partie={self.game.boardgame.name})"
 
 class Location(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -87,7 +87,7 @@ class Game(db.Model):
     def __repr__(self) -> str:
         return (
             f"Game(id={self.id}, game_bgg_id={self.game_bgg_id}, boardgame={self.boardgame.name}, "
-            f"datum={self.datum}, location={self.location}, player={self.player})"
+            f"datum={self.datum}, location={self.location}, player={self.player_pos})"
         )
 
 

@@ -1,7 +1,9 @@
 import os
 from typing import Union, Optional, Any
 from sqlalchemy import create_engine
-
+import yaml
+from datetime import datetime
+from enum import Enum
 
 
 def env(env_var: str) -> str:
@@ -60,8 +62,24 @@ def nested_get(nested_input: Union[dict, list], keys: list, cast_type: Optional[
 
 def get_db_engine(local: bool):
     import bogan.config as cfg
+
     if local:
         os.path.abspath("bogan/instance/example.db")
         return create_engine(cfg.DB_LOKAL)
     else:
         return create_engine(cfg.DB_SERVER)
+
+
+def load_yaml(yaml_file: str) -> Any:
+    with open(yaml_file, "r") as stream:
+        return yaml.safe_load(stream)
+
+
+class DateFormat(Enum):
+    DEFAULT = "%Y-%m-%d"
+    YAML = "%d.%m.%Y"
+    BGG = "%Y-%m-%d"
+
+
+def get_date(date_str, from_source: DateFormat = DateFormat.DEFAULT):
+    return datetime.strptime(date_str, str(from_source.value)).date()
