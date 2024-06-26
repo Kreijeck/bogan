@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bogan"
-version = "0.2.1"
+version = "0.3.0"
 description = "Website with tools and stats all around boardgames played and managed in BGG"
 authors = ["thomas <thomas-strehler@gmx.de>"]
 readme = "README.md"
