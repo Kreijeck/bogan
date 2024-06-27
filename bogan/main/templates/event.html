@@ -7,19 +7,22 @@
     <div class="container">
         <h1 class="title">Tabellenübersicht</h1>
         <div class="table-container">
-            <table class="table is-bordered is-hoverable is-fullwidth">
+            <table class="table is-bordered is-hoverable is-fullwidth has-text-centered">
                 <thead>
                     <tr>
-                        <th>Spiel</th>
+                        <th class="has-text-centered">Spiel</th>
                         {% for player in players %}
-                        <th>{{ player }}</th>
+                        <th class="has-text-centered">{{ player }}</th>
                         {% endfor %}
                     </tr>
                 </thead>
                 <tbody>
                     {% for game, scores in table_data.items() %}
                     <tr>
-                        <td>{{ game }}</td>
+                        <td>
+                            <img class="" src="{{ scores['img_small'] }}" , alt="Leider kein Bild vorhanden">
+                            <p> {{game }}</p>
+                        </td>
                         {% for player in players %}
                         <td>
                             {% if scores[player][1] %}

@@ -33,6 +33,7 @@ def get_game_list(event_name:str) -> list[dict]:
             spiel_dict["name"] = match.boardgame.name
             spiel_dict["playtime"] = match.playtime
             spiel_dict["game_bgg_id"] = match.game_bgg_id
+            spiel_dict["img_small"] = match.boardgame.img_small
             # Get Players and sort
             players_tmp = []
             for player in match.player_pos:
@@ -58,8 +59,10 @@ def create_table(spiele_list: list):
     counter = 1
 
     for game in spiele_list:
-        # game_name = f"{game.get('name')}({game.get('game_bgg_id')})"
         game_name = f"{counter:02}_{game.get('name')}"
+        table[game_name] = {}
+
+        table[game_name]['img_small'] = game.get('img_small')
         for player in game["players"]:
             name = player['name']
             punkte = player['punkte']
