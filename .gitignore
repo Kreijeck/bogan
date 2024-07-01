@@ -49,7 +49,7 @@ dmypy.json
 #.idea/
 
 # local Files
-*scretch.py
+*scretch*
 *example*
 tmp/*
 data/scretch_small_model.py

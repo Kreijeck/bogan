@@ -34,6 +34,8 @@ def get_game_list(event_name:str) -> list[dict]:
             spiel_dict["playtime"] = match.playtime
             spiel_dict["game_bgg_id"] = match.game_bgg_id
             spiel_dict["img_small"] = match.boardgame.img_small
+            spiel_dict["playtime"] = match.playtime
+            spiel_dict["weight"] = match.boardgame.weight
             # Get Players and sort
             players_tmp = []
             for player in match.player_pos:

@@ -31,3 +31,14 @@ def show_event(event: str):
     game_list = get_game_list(event)
     table_data, players = create_table(game_list)
     return render_template("event.html", game_list=game_list, players=players, table_data=table_data)
+
+@main.route("/table", methods=["GET"])
+def table():
+    def path_to_img_html(path):
+        return f'<img src="{path}"/>'
+    
+    from bogan.main.lib.example_pandas import df
+    df['img_small'] = df['img_small'].apply(path_to_img_html)
+    html_table = df.to_html(escape=False, classes='table is-striped')
+
+    return render_template("scretch_table.html", html_table=html_table)
