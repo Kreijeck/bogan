@@ -1,5 +1,6 @@
 import pandas as pd
 from bogan.main.lib.event_analysis import get_game_list
+import matplotlib.pyplot as plt
 
 import datetime
 
@@ -99,17 +100,24 @@ print(df_summary_weight)
 print("Duration calculation")
 print(df_summary_playtime)
 
-# # Plot the ranking over time
-# import matplotlib.pyplot as plt
+# Plot the ranking over time
 
-# # Calculate cumulative points over time for each player
-# df_scores['cumulative_points'] = df_scores.groupby('name')['tabellenpunkte'].cumsum()
 
-# # Pivot the DataFrame to get a time series for each player
-# df_pivot = df_scores.pivot(index='datum', columns='name', values='cumulative_points').fillna(0)
+# Verlauf der Punkte darstellen
+df_scores['cumulative_points'] = df_scores.groupby('name')['tabellenpunkte'].cumsum()
 
-# # Plot the cumulative points for each player
-# plt.figure(figsize=(12, 8))
+# Plot erstellen
+plt.figure(figsize=(12, 8))
+for spieler in df_scores['name'].unique():
+    player_data = df_scores[df_scores['name'] == spieler]
+    plt.plot(player_data['datum'], player_data['cumulative_points'], marker='o', label=spieler)
+
+plt.title('Punktverlauf der Spieler')
+plt.xlabel('Datum')
+plt.ylabel('Kumulative Tabellenpunkte')
+
+# #Show Plot -> not pretty
+# plt.show()
 
 #######################################################################################################################
 

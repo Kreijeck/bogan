@@ -37,7 +37,7 @@ def table():
     def path_to_img_html(path):
         return f'<img src="{path}"/>'
     
-    from bogan.main.lib.example_pandas import df
+    from bogan.main.lib.pandas_analysis import df
     df['img_small'] = df['img_small'].apply(path_to_img_html)
     html_table = df.to_html(escape=False, classes='table is-striped')
 
