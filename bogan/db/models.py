@@ -39,6 +39,7 @@ class Player(db.Model):
         "PlayerPos", back_populates="player", cascade="all, delete-orphan"
     )
     user: Mapped["User"] = relationship("User", back_populates="player")
+    # hier gibt noch mehr
 
     def __repr__(self) -> str:
         return f"Player(id={self.id}, name={self.name}, bgg_name={self.bgg_name}, user={self.user})"
