@@ -63,6 +63,8 @@ class Location(db.Model):
     name: Mapped[str] = mapped_column(String(128), unique=True)
     # Relationship
     game: Mapped[List["Game"]] = relationship("Game", back_populates="location", cascade="all, delete-orphan")
+    plz: Mapped[List] = mapped_column(Integer)
+
 
     def __repr__(self) -> str:
         return f"Location(id={self.id}, name={self.name})"
