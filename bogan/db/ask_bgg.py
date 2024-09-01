@@ -88,40 +88,59 @@ def ask_boardgame(ids: Union[str, list[str]], names: list[tuple[str, bool]] = No
                             https://boardgamegeek.com/xmlapi2/thing?id=251247&stats=1 (items/item will be removed)
     """
 
+    def split_list(input_list, chunk_size=15):
+        """
+        Teilt eine Liste in mehrere Listen mit maximal 'chunk_size' Einträgen.
+
+        :param input_list: Die Liste, die aufgeteilt werden soll.
+        :param chunk_size: Die maximale Anzahl der Einträge pro Liste (Standard: 20).
+        :return: Eine Liste von Listen mit jeweils maximal 'chunk_size' Einträgen.
+        """
+        # Erzeuge Teil-Listen mit der angegebenen Größe
+        return [input_list[i : i + chunk_size] for i in range(0, len(input_list), chunk_size)]
+
     # Convert all types into a list with length 1 and as str
     if not isinstance(ids, list):
         ids = [str(ids)]
+    else:
+        ids = [str(id_) for id_ in ids]
 
-    # Convert list to comma seperated string
-    len_ids = len(ids)
-    ids = ",".join(ids)
+    # Split the ids list into chunks of 20
+    chunked_ids = split_list(ids, chunk_size=20)
 
     endpoint = "thing"
-    para = {"stats": 1, "id": ids}
-
-    # Get Request as json
-    raw_json = bgg_api_call_get(endpoint, para, nested_paras=["items", "item"], tag2list=TAG2LIST_BOARDGAME)
-
     bg_results = []
-    # Check das für alle Ids Spiele gefunden werden. Ansonsten setze names auf None
-    if len_ids != len(raw_json):
-        # TODO remove print
-        print(f"Es konnte nicht für alle Ids {ids} ein Eintrag gefunden werden, bitte überprüfe die Ids! -> names=None")
-        names = None
 
-    if raw_json:
-        # validate das raw_json Liste gleich lang ist wie die names liste
-        if names is not None and len_ids != len(names):
-            # Überlgung ob hier das gleiche passiert wie oben und names=None gesetzt wird
-            raise ValueError("Names muss None sein oder die gleiche Länge wie Ids haben")
+    # Process each chunk of ids
+    for chunk in chunked_ids:
+        # Convert list to comma separated string
+        ids_chunk = ",".join(chunk)
+        len_chunk = len(chunk)
 
-        # Create Boardgame List
-        for i, bg_stat in enumerate(raw_json):
-            # Name anpassen, wenn gesetzt
-            if names:
-                bg_results.append(Boardgame().from_bgg(bg_stat, name=names[i]))
-            else:
-                bg_results.append(Boardgame().from_bgg(bg_stat))
+        para = {"stats": 1, "id": ids_chunk}
+
+        # Get Request as json
+        raw_json = bgg_api_call_get(endpoint, para, nested_paras=["items", "item"], tag2list=TAG2LIST_BOARDGAME)
+
+        # Check that for all Ids games are found; otherwise, set names to None
+        if len_chunk != len(raw_json):
+            print(
+                f"Es konnte nicht für alle Ids {ids_chunk} ein Eintrag gefunden werden, bitte überprüfe die Ids! -> names=None"
+            )
+            names = None
+
+        if raw_json:
+            # Validate that raw_json list is the same length as the names list
+            if names is not None and len_chunk != len(names):
+                raise ValueError("Names muss None sein oder die gleiche Länge wie Ids haben")
+
+            # Create Boardgame List
+            for i, bg_stat in enumerate(raw_json):
+                # Name anpassen, wenn gesetzt
+                if names:
+                    bg_results.append(Boardgame().from_bgg(bg_stat, name=names[i]))
+                else:
+                    bg_results.append(Boardgame().from_bgg(bg_stat))
 
     return bg_results
 
@@ -148,25 +167,3 @@ def ask_games_from(user: str, _page: int = 1, _tmp_games: list = []) -> list:
         return ask_games_from(user, _page + 1, _tmp_games)
 
     return _tmp_games
-
-
-# TODO Remove after trying
-if __name__ == "__main__":
-    res = search_boardgame("Wasserkraft")
-
-    ## negativ Fall
-    # res = get_boardgame("12234,123,78229", [("Wass2r", True),("Wasse3", True)])
-    # res = get_boardgame("396802")
-
-    for entry in res:
-        print(f"NAME: {entry.name}")
-        print(f"PRIMARY: {entry.name_primary}")
-        print(f"IMG: {entry.img}")
-        print("================")
-
-    # import json
-    # import os
-    # json_file = "data/example_multiple.json"
-    # with open(json_file, 'w', encoding=ENCODING) as f:
-    #     json.dump(get_multiple_boardgames(), f, indent=4, ensure_ascii=False)
-    #     print(f"Successfully write Json in {os.path.abspath(json_file)}")
