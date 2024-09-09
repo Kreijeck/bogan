@@ -6,7 +6,7 @@ load_dotenv(override=True)
 
 
 ### Generic ###
-BOGAN_VERSION = "0.3.1"
+BOGAN_VERSION = "0.3.2"
 ENCODING = "utf-8"
 
 ### Flask ###
