@@ -8,7 +8,7 @@ from bogan.db.ask_bgg import ask_boardgame, ask_games_from
 from bogan.utils import nested_get, get_db_engine
 
 
-engine = get_db_engine(local=True)
+engine = get_db_engine(local=False)
 print(f"Datenbank URL {engine.url} wird verwendet")
 session = Session(bind=engine)
 ## Delete complete Database
@@ -216,7 +216,7 @@ if __name__ == "__main__":
     from time import time
 
     t_start = time()
-    update_db(from_api=False)
+    update_db(from_api=True)
     t_stop = time()
     t_ges = round(t_stop - t_start, 4)
     # TODO remove print
