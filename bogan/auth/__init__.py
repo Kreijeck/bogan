@@ -4,14 +4,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from bogan.db.models import db, User
 
 
-auth = Blueprint("auth", __name__, template_folder="templates")
+auth = Blueprint("auth", __name__, url_prefix="/auth", template_folder="templates")
+
 
 @auth.route("/login")
 def login():
+    print("LOGIN wird aufgerufen")
     return render_template("login.html")
+
 
 @auth.route("/login", methods=["POST"])
 def login_post():
+    print("Wird aufgerufen")
     email = request.form.get("email")
     password = request.form.get("password")
     remember = True if request.form.get("remember") else False
@@ -23,15 +27,17 @@ def login_post():
         # TODO Remove print
         print("User existiert nicht oder Passwort ist falsch")
         return redirect(url_for("auth.login"))
-    
+
     # Wenn dieser Check erfolgt ist, wurden die korrekten Credentials verwendet
     login_user(user, remember=remember)
 
     return redirect(url_for("main.profile"))
 
+
 @auth.route("/signup")
 def signup():
     return render_template("signup.html")
+
 
 @auth.route("/signup", methods=["POST"])
 def signup_post():
@@ -44,10 +50,10 @@ def signup_post():
 
     # Wenn email schon vorhanden, reset to basic
     if user:
-        #TODO remove print!
+        # TODO remove print!
         print("Email address already exist!")
         return redirect(url_for("auth.signup"))
-    
+
     # Erstelle neuen Benutzer
     new_user = User(email=email, name=name, password=generate_password_hash(password))
     db.session.add(new_user)
@@ -55,9 +61,10 @@ def signup_post():
 
     return redirect(url_for("auth.login"))
 
+
 @auth.route("/logout")
 @login_required
 def logout():
-    
+
     logout_user()
     return redirect(url_for("main.index"))

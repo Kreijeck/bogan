@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div class="columns">
+    <div class="column is-one-third">
+        <!-- verschiedene Aktionen -->
+        <h1 class="title has-text-centered">Abstimmungstool</h1>
+
+        <!-- Erstelle neue Abstimmung -->
+        <section class="container my-2">
+            <form method="GET" action="{{ url_for('tools.vote.add_vote_list') }}">
+                <div class="control">
+                    <button class="button is-dark is-fullwidth">Erstelle eine neue Abstimmung</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Füge neues Spiel hinzu -->
+        <section class="container my-2">
+            <form method="GET" action="{{ url_for('tools.vote.add_game') }}">
+                <div class="control">
+                    <button class="button is-dark is-normal is-fullwidth">Füge ein neues Spiel hinzu</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- Platzhalter -->
+    <section class="container my-2">
+    </section>
+
+    <!-- Aktuelle Spieleliste in der Datenbank -->
+    <section class="container">
+        <h1 class="title">Vorhandene Spiele</h1>
+        <input type="text" class="input is-normal" name="search_db" placeholder="Filter vorhandene Spiele">
+
+        <ul class="ul-scroll">
+            <div class="columns is-multiline">
+                {% for boardgame in boardgames %}
+                <div class="column is-one-third">
+                    <div class="box has-text-centered">
+                        <img src="{{ boardgame.img_small }}" alt="Leider kein Bild vorhanden">
+                        <a src="#">{{ boardgame.name }}</a>
+                        <p>von {{ boardgame.yearpublished }}</p>
+                        <p>Rating {{ boardgame.rating }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </ul>
+    </section>
+
+</div>
+
+
+
+<!-- Aktuelle Abstimmungen -->
+<div class="columns is-centered">
+    <div class="column is-half">
+        <section class="container py-4">
+            <h1 class="title">Aktuelle Abstimmungen</h1>
+            <p>Hier erscheinen bald alle aktuellen Abstimmungen</p>
+            <ul>
+                <li>Liste 1</li>
+                <li>Liste 2</li>
+                <li>Liste 3</li>
+            </ul>
+        </section>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section mb-5">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <form method="POST" action="{{ url_for('tools.vote.add_game') }}" class="centered-form">
+                    
+                    <!-- Suche nach Spielen auf BGG -->
+                    <div class="field py-3">
+                        <div class="control">
+                            <input type="text" class="input is-normal" name="search_input"
+                                placeholder="Suche auf BGG nach einem Spiel">
+                        </div>
+                        <button class="button is-info is-medium is-fullwidth" name="button_pressed" value="search_bg">Suche</button>
+                    </div>
+
+                    
+                    <!-- Gefundene Spiele -->
+                    {% if found_games %}
+                    <div class="field py-3 has addons">
+                        <h1 class="subtitle">Gefundene Spiele</h1>
+                        <!-- Button Füge Spiel hinzu -->
+                        <button class="button is-info is-medium is-fullwidth mx-1" name="button_pressed" value="add_bg">Spiel hinzufügen</button>
+                        
+                        <!-- Auswahl Spiele - wird nur nach einer Suche angezeigt -->
+                        <ul class="checkbox-list ul-scroll">
+                            {% for found_game in found_games %}
+                            <!-- Spieldaten -> Automatisch -->
+                            <label
+                                class="box is-flex is-align-items-center has-background-info-15 has-text-info-15-invert py-2"
+                                for="{{ found_game.bgg_id }}">
+                                <input type="radio" id="{{ found_game.bgg_id }}" name="game_id" value="{{ found_game.bgg_id }}"
+                                    class="mx-3">
+                                    
+                                <img src="{{ found_game.img_small }}" alt="Leider kein Bild vorhanden" class="image mx-3">
+                                <div class="container mx-2">
+                                    <h2 class="subtitle mx-1"> {{ found_game.name }}</h2>
+                                    <p class="has-text-left mx-1"> BGG ID:{{ found_game.bgg_id }}</p>
+                                    <p class="has-text-left mx-1"> Jahr: {{ found_game.yearpublished }}</p>
+                                    <p class="has-text-left mx-1"> Spieler: {{ found_game.minplayers }}-{{found_game.maxplayers}}</p>
+                                </div>
+                            </label>
+                            {% endfor %}
+                        </ul>
+                        
+                    </div>
+                        
+                    {% endif %}
+                    
+
+                    <!-- Ende des fehlenden Blocks -->
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Aktuelle vorhandene Spiele -->
+<section class="section my-5">
+    <h1 class="title">Bereits vorhandene Spiele</h1>
+    <input type="text" class="input is-normal" name="search_db" placeholder="Filter vorhandene Spiele">
+    <div class="container">
+        <div class="columns is-multiline">
+            {% for boardgame in boardgames %}
+            <div id="gameList" class="column is-one-fifth">
+                <div class="box p-1">
+                    <figure class="image">
+                        <img src="{{ boardgame.img_small }}"
+                            alt="Leider kein Bild vorhanden">
+                    </figure>
+                    <div>
+                        <p><strong>Name:</strong> {{ boardgame.name }}</p>
+                        <p><strong>Spieleranzahl:</strong> {{ boardgame.minplayers}}-{{ boardgame.maxplayers }} </p>
+                        <p><strong>Dauer:</strong> {{ boardgame.playtime }}min</p>
+                        <p><strong>Weight:</strong> {{ boardgame.weight }} </p>
+                        <p><strong>Rating:</strong> {{ boardgame.rating}} </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

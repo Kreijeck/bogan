@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- aktuelle Tabelle über alle Spiele -->
+<section class="section">
+    <div class="container">
+        <h1 class="title">Tabellenübersicht</h1>
+        <div class="table-container">
+            <table class="table is-bordered is-hoverable is-fullwidth has-text-centered">
+                <thead>
+                    <tr>
+                        <th class="has-text-centered">Spiel</th>
+                        {% for player in players %}
+                        <th class="has-text-centered">{{ player }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for game, scores in table_data.items() %}
+                    <tr>
+                        <td>
+                            <img class="" src="{{ scores['img_small'] }}" , alt="Leider kein Bild vorhanden">
+                            <p> {{game }}</p>
+                        </td>
+                        {% for player in players %}
+                        <td>
+                            {% if scores[player][1] %}
+                            <b>Pos: {{ scores[player][1] }}</b><br> (Pkt: {{ scores[player][0] }})
+                            {% else %}
+                            - -
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<br>
+<br>
+
+<!-- Spieleübersicht -->
+<section class="section">
+    <div class="container">
+        <h1 class="title">Übersicht über alle Spiele</h1>
+        <div class="content">
+            {% for game in game_list %}
+            <p>
+                <span>{{ game.datum }}: </span><a href="#">{{ game.name }}</a>
+            </p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% endblock %}

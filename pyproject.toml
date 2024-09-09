@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bogan"
-version = "0.1.0"
+version = "0.3.2"
 description = "Website with tools and stats all around boardgames played and managed in BGG"
 authors = ["thomas <thomas-strehler@gmx.de>"]
 readme = "README.md"
@@ -16,9 +16,13 @@ SQLAlchemy = "^2.0.30"
 requests = "^2.31.0"
 python-dotenv = "^1.0.1"
 xmltodict = "^0.13.0"
+pymysql = "^1.1.0"
 
 [tool.poetry.group.dev.dependencies]
 uvicorn = "^0.29.0"
+
+[tool.black]
+line-length = 120
 
 [build-system]
 requires = ["poetry-core"]
