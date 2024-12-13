@@ -15,7 +15,7 @@ session = Session(bind=engine)
 # Base.metadata.drop_all(engine)
 
 # delete specific tables
-table_to_reset = ["player", "player_pos", "location", "game"]
+table_to_reset = ["player_pos", "game", "location"]
 metadata = MetaData()
 
 for table_name in table_to_reset:

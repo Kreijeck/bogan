@@ -61,3 +61,5 @@ data/tmo.db
 # Database
 db.sqlite
 
+# Local created files
+data/*
