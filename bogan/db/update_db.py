@@ -5,11 +5,13 @@ from datetime import datetime
 from bogan.config import ENCODING, GAME_USER
 from bogan.db.models import Base, Boardgame, Location, Game, Player, PlayerPos
 from bogan.db.ask_bgg import ask_boardgame, ask_games_from
-from bogan.utils import nested_get, get_db_engine
+from bogan.utils import nested_get, get_db_engine, Logger
 
+# Add Logging
+logger = Logger().setup_logger(__file__)
 
 engine = get_db_engine(local=False)
-print(f"Datenbank URL {engine.url} wird verwendet")
+logger.info(f"Datenbank URL {engine.url} wird verwendet")
 session = Session(bind=engine)
 ## Delete complete Database
 # Base.metadata.drop_all(engine)
@@ -25,9 +27,9 @@ for table_name in table_to_reset:
         table = Table(table_name, metadata, autoload_with=engine)
         # Lösche die Tabelle
         table.drop(engine)
-        print(f"Cleared table {table_name}")
+        logger.info(f"Cleared table {table_name}")
     except Exception as e:
-        print(f"Table {table_name} does not exist or could not be dropped: {e}")
+        logger.error(f"Table {table_name} does not exist or could not be dropped: {e}")
 
 ## Create Database
 Base.metadata.create_all(engine)
@@ -64,12 +66,12 @@ def get_boardgames(my_games: dict) -> dict[Boardgame]:
         # Update mit aktuellen Daten
         if boardgame_db:
             boardgame_db = boardgame_db.update(boardgame)
-            print(f" Update {boardgame_db.name}, ID: {boardgame_db.bgg_id}")
+            logger.info(f" Update {boardgame_db.name}, ID: {boardgame_db.bgg_id}")
 
         # Erstelle neuen Eintrag
         else:
             boardgame_db = boardgame
-            print(f"neues Spiel gefunden! {boardgame}")
+            logger.info(f"neues Spiel gefunden! {boardgame}")
             # session.add(boardgame_db)
 
         session.add(boardgame_db)
@@ -180,7 +182,7 @@ def update_db(from_api: bool, save_file=False):
 
     # MIT API CALL
     if from_api:
-        print("Receive games from API")
+        logger.info("Receive games from API")
         my_games = ask_games_from(GAME_USER)
         # Speicher Datei
         if save_file:
@@ -190,7 +192,7 @@ def update_db(from_api: bool, save_file=False):
     else:
         # Lade datei, für schnellere Tests
         with open(save_path, "r", encoding=ENCODING) as file:
-            print("Receive games from local save-file")
+            logger.info("Receive games from local save-file")
             my_games = json.load(file)
 
     # First fetch all boardgmes
@@ -206,7 +208,7 @@ def update_db(from_api: bool, save_file=False):
             player_obj = get_player(player_pos_dict)
             get_player_pos(player_pos_dict, game_obj, player_obj)
 
-        print(f"Erstelle Partie: game id={game_obj.game_bgg_id} - {game_obj.boardgame.name} on {game_obj.datum}")
+        logger.info(f"Erstelle Partie: game id={game_obj.game_bgg_id} - {game_obj.boardgame.name} on {game_obj.datum}")
 
         # Speicher Datenbank
         session.commit()
@@ -219,5 +221,4 @@ if __name__ == "__main__":
     update_db(from_api=True)
     t_stop = time()
     t_ges = round(t_stop - t_start, 4)
-    # TODO remove print
-    print(f"SUCCESS: Das Updaten/Erstellen der Datenbank dauerte {t_ges} sek")
+    logger.info(f"SUCCESS: Das Updaten/Erstellen der Datenbank dauerte {t_ges} sek")

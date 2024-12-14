@@ -1,8 +1,21 @@
+import os
 from dotenv import load_dotenv
-from bogan.utils import env
+from dataclasses import dataclass
 
 # init dotenv
 load_dotenv(override=True)
+
+# easy env
+def env(env_var: str) -> str:
+    """Simplify to read environment Variable
+
+    Args:
+        env_var (str): name of environment variable
+
+    Returns:
+        str : value of environment variable
+    """
+    return os.getenv(env_var)
 
 
 ### Generic ###
@@ -35,3 +48,19 @@ TAG2LIST_PLAY = "player"
 
 ### Pathinformation ###
 EVENT_YAML = "bogan/events.yaml"
+
+### LOGGING ###
+@dataclass
+class LoggerConfig:
+    dir: str = "logs"
+    format: str =  "%(asctime)s - %(filename)s L%(lineno)d - %(levelname)s - %(message)s"
+    datefmt: str =  "%d.%m.%y %H:%M:%S"
+    log_in_file: bool = True
+    log_in_stream: bool = True
+    loglevel_file: str = "info"
+    loglevel_stream: str = "info"
+    filename_datefmt: str = "%Y%m%d"
+    filename_prefix: str = "log"
+
+logger_cfg = LoggerConfig()
+    
