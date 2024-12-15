@@ -5,7 +5,7 @@ import bogan.config as cfg
 from sqlalchemy.orm import Session
 from bogan.db.models import Game, PlayerPos, Location
 
-engine = get_db_engine(False)
+engine = get_db_engine()
 
 events = load_yaml(cfg.EVENT_YAML)
 

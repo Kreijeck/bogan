@@ -53,10 +53,10 @@ def nested_get(nested_input: Union[dict, list], keys: list, cast_type: Optional[
     return cast_type(nested_input) if cast_type else nested_input
 
 
-def get_db_engine(local: bool):
+def get_db_engine():
     import bogan.config as cfg
 
-    if local:
+    if cfg.DB_LOKAL:
         os.path.abspath("bogan/instance/example.db")
         return create_engine(cfg.DB_LOKAL)
     else:

@@ -10,7 +10,7 @@ from bogan.utils import nested_get, get_db_engine, Logger
 # Add Logging
 logger = Logger().setup_logger(__file__)
 
-engine = get_db_engine(local=False)
+engine = get_db_engine()
 logger.info(f"Datenbank URL {engine.url} wird verwendet")
 session = Session(bind=engine)
 ## Delete complete Database
