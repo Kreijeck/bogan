@@ -14,7 +14,7 @@ def create_app():
     migrate = Migrate(app, db, directory=cfg.DB_MIGRATE_DIR)
 
     app.config["SECRET_KEY"] = cfg.FLASK_SECRET_KEY
-    app.config["SQLALCHEMY_DATABASE_URI"] = cfg.DB_SERVER
+    app.config["SQLALCHEMY_DATABASE_URI"] = cfg.DB2USE
     app.config["DEBUG"] = cfg.FLASK_DEBUG
     app.config["VERSION"] = cfg.BOGAN_VERSION
 
@@ -54,9 +54,9 @@ def create_app():
     app.register_blueprint(tools_bp)
 
     # with app.app_context():
-        ## Delete Database
+        # # Delete Database
         # db.drop_all()
-        ## Create Database
+        # # Create Database
         # db.create_all()
 
     return app

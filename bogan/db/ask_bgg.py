@@ -5,7 +5,10 @@ from typing import Union
 import time
 from bogan.config import BGG_BASE_URL, ENCODING, TAG2LIST_BOARDGAME, TAG2LIST_PLAY
 from bogan.db.models import Boardgame
-from bogan.utils import nested_get
+from bogan.utils import nested_get, Logger
+
+# Add Logging
+logger = Logger().setup_logger(__file__)
 
 
 def bgg_api_call_get(
@@ -24,22 +27,18 @@ def bgg_api_call_get(
                 tmp_convert = xmltodict.parse(resp.text, encoding=ENCODING, force_list=tag2list)
                 raw_json = nested_get(tmp_convert, nested_paras)
 
-                # TODO Remove print
-                print(f"BGG API Call on URL: {resp.url}, with parameter:{parameter}")
+                logger.info(f"BGG API Call on URL: {resp.url}, with parameter:{parameter}")
                 break
             # on negative response
             else:
                 time.sleep(1)
-                # TODO remove print
-                print(f"Try {i+1}, Repeat API-call for URL: {resp.url}, Received status code: {resp.status_code}")
+                logger.info(f"Try {i+1}, Repeat API-call for URL: {resp.url}, Received status code: {resp.status_code}")
         except ChunkedEncodingError as e:
             time.sleep(1)
-            # TODO remove print
-            print(f"Try {i+1}, ChunkedEncodingError for URL: {resp.url if resp in locals() else endpoint}, Error: {e}")
+            logger.info(f"Try {i+1}, ChunkedEncodingError for URL: {resp.url if resp in locals() else endpoint}, Error: {e}")
         except RequestException as e:
             time.sleep(1)
-            # TODO remove print
-            print(f"Try {i+1}, RequestException for URL: {resp.url if resp in locals() else endpoint}, Error: {e}")
+            logger.info(f"Try {i+1}, RequestException for URL: {resp.url if resp in locals() else endpoint}, Error: {e}")
 
     return raw_json
 
@@ -124,7 +123,7 @@ def ask_boardgame(ids: Union[str, list[str]], names: list[tuple[str, bool]] = No
 
         # Check that for all Ids games are found; otherwise, set names to None
         if len_chunk != len(raw_json):
-            print(
+            logger.info(
                 f"Es konnte nicht für alle Ids {ids_chunk} ein Eintrag gefunden werden, bitte überprüfe die Ids! -> names=None"
             )
             names = None

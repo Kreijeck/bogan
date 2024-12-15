@@ -2,6 +2,10 @@ from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required
 from bogan.db.ask_bgg import search_boardgame
 from bogan.db.models import Boardgame, db
+from bogan.utils import Logger
+
+# Add Logging
+logger = Logger().setup_logger(__file__)
 
 vote = Blueprint("vote", __name__, url_prefix="vote", template_folder="templates")
 
@@ -24,8 +28,7 @@ def add_game():
     if request.method == "POST":
         # Search a Boardgame
         button_pressed = request.form.get("button_pressed")
-        # TODO change print to logging
-        print(f"Button {button_pressed} wurde gedrückt")
+        logger.info(f"Button {button_pressed} wurde gedrückt")
 
         # Suche Brettspiel
         if button_pressed == "search_bg":
@@ -46,7 +49,6 @@ def add_game():
 
         # Füge Brettspiel hinzu
         elif button_pressed == "add_bg":
-            # TODO remove print
             # new_game: Boardgame = Boardgame(request.form.get("games"))
             game_id = str(request.form.get("game_id"))
             for game in current_bg_results:
@@ -57,7 +59,7 @@ def add_game():
 
             if boardgame:
                 # TODO Warnmeldung hinzufügen
-                print(f"Spiel {new_game.name} existiert bereits in der Datenbank")
+                logger.warning(f"Spiel {new_game.name} existiert bereits in der Datenbank")
                 return redirect(url_for("tools.vote.add_game"))
 
             # Füge Spiel hinzu
@@ -65,7 +67,7 @@ def add_game():
             db.session.commit()
 
             # TODO Hinweimeldung hinzufügen
-            print(f"Add Game {new_game}")
+            logger.info(f"Add Game {new_game}")
             boardgames = Boardgame.query.order_by("name").all()
 
             return render_template("vote_add_game.html", boardgames=boardgames)

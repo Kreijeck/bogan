@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 import yaml
 from datetime import datetime
 from enum import Enum
-from bogan.config import logger_cfg, ENCODING
+from bogan.config import logger_cfg
 
 
 
@@ -56,11 +56,7 @@ def nested_get(nested_input: Union[dict, list], keys: list, cast_type: Optional[
 def get_db_engine():
     import bogan.config as cfg
 
-    if cfg.DB_LOKAL:
-        os.path.abspath("bogan/instance/example.db")
-        return create_engine(cfg.DB_LOKAL)
-    else:
-        return create_engine(cfg.DB_SERVER)
+    return create_engine(cfg.DB2USE)
 
 
 def load_yaml(yaml_file: str) -> Any:

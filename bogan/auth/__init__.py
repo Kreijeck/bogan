@@ -2,6 +2,10 @@ from flask import Blueprint, render_template, redirect, url_for, request
 from flask_login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from bogan.db.models import db, User
+from bogan.utils import Logger
+
+# Add Logging
+logger = Logger().setup_logger(__file__)
 
 
 auth = Blueprint("auth", __name__, url_prefix="/auth", template_folder="templates")
@@ -9,23 +13,21 @@ auth = Blueprint("auth", __name__, url_prefix="/auth", template_folder="template
 
 @auth.route("/login")
 def login():
-    print("LOGIN wird aufgerufen")
+    logger.info("LOGIN wird aufgerufen")
     return render_template("login.html")
 
 
 @auth.route("/login", methods=["POST"])
 def login_post():
-    print("Wird aufgerufen")
+    logger.info("Wird aufgerufen")
     email = request.form.get("email")
     password = request.form.get("password")
     remember = True if request.form.get("remember") else False
-
     user = User.query.filter_by(email=email).first()
 
     # check if the user exist and check the password
     if not user or not check_password_hash(user.password, password):
-        # TODO Remove print
-        print("User existiert nicht oder Passwort ist falsch")
+        logger.info("User existiert nicht oder Passwort ist falsch")
         return redirect(url_for("auth.login"))
 
     # Wenn dieser Check erfolgt ist, wurden die korrekten Credentials verwendet
@@ -50,8 +52,7 @@ def signup_post():
 
     # Wenn email schon vorhanden, reset to basic
     if user:
-        # TODO remove print!
-        print("Email address already exist!")
+        logger.info("Email address already exist!")
         return redirect(url_for("auth.signup"))
 
     # Erstelle neuen Benutzer
