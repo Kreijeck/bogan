@@ -29,7 +29,7 @@ FLASK_RUN_PORT = env("FLASK_RUN_PORT")
 FLASK_SECRET_KEY = env("FLASK_SECRET_KEY")
 
 ### Database ###
-INSTANCE_PATH = os.path.join(os.path.dirname(__file__), "..", "instance") # Needed for Flask on root
+INSTANCE_PATH = os.path.join(os.path.dirname(__file__), "instance") # Needed for Flask on root
 DB_USER = env("DB_USER")
 DB_PW = env("DB_PW")
 DB_URL = env("DB_URL")
