@@ -1,5 +1,4 @@
 import json
-from sqlalchemy import MetaData, Table
 from sqlalchemy.orm import Session
 from datetime import datetime
 from bogan.config import ENCODING, GAME_USER
@@ -12,90 +11,8 @@ engine = get_db_engine()
 logger.info(f"Datenbank URL {engine.url} wird verwendet")
 session = Session(bind=engine)
 
-# Erstelle alle Datenbank
+# Erstelle alle Felder der Datenbank
 Base.metadata.create_all(engine)
-
-
-# -----------------------------------------------------------
-# Hilfsfunktionen zum Vergleich/Update von Feldern mit Logging
-# -----------------------------------------------------------
-
-
-def compare_and_update_boardgame(db_obj: Boardgame, new_data: Boardgame) -> bool:
-    """
-    Vergleicht relevante Felder zwischen db_obj und new_data.
-    Wenn sich etwas ändert, wird es übernommen und es wird True zurückgegeben.
-    Bleibt alles gleich, wird False zurückgegeben.
-    """
-    changed = False
-
-    # Beispielhafter Vergleich einiger Felder
-    if db_obj.name != new_data.name:
-        db_obj.name = new_data.name
-        changed = True
-
-    if db_obj.yearpublished != new_data.yearpublished:
-        db_obj.yearpublished = new_data.yearpublished
-        changed = True
-
-    if db_obj.minplayers != new_data.minplayers:
-        db_obj.minplayers = new_data.minplayers
-        changed = True
-
-    if db_obj.maxplayers != new_data.maxplayers:
-        db_obj.maxplayers = new_data.maxplayers
-        changed = True
-
-    # ... weitere Felder nach Bedarf ...
-
-    return changed
-
-
-def compare_and_update_game(db_game: Game, new_datum, new_playtime, new_location_id, new_boardgame_id) -> bool:
-    """
-    Vergleicht relevante Felder im Game-Objekt.
-    Gibt True zurück, wenn sich etwas geändert hat, sonst False.
-    """
-    changed = False
-    if db_game.datum != new_datum:
-        db_game.datum = new_datum
-        changed = True
-
-    if db_game.playtime != new_playtime:
-        db_game.playtime = new_playtime
-        changed = True
-
-    if db_game.location_id != new_location_id:
-        db_game.location_id = new_location_id
-        changed = True
-
-    if db_game.boardgame_id != new_boardgame_id:
-        db_game.boardgame_id = new_boardgame_id
-        changed = True
-
-    return changed
-
-
-def compare_and_update_playerpos(pp_obj: PlayerPos, new_points, new_win) -> bool:
-    """
-    Vergleicht relevante Felder im PlayerPos-Objekt.
-    Gibt True zurück, wenn sich etwas geändert hat, sonst False.
-    """
-    changed = False
-    if pp_obj.points != new_points:
-        pp_obj.points = new_points
-        changed = True
-
-    if pp_obj.win != new_win:
-        pp_obj.win = new_win
-        changed = True
-
-    return changed
-
-
-# -----------------------------------------------------------
-# Deine eigentlichen Workflow-Funktionen
-# -----------------------------------------------------------
 
 
 def get_boardgames(my_games: list[dict]) -> dict[int, Boardgame]:
@@ -120,7 +37,7 @@ def get_boardgames(my_games: list[dict]) -> dict[int, Boardgame]:
         boardgame_db = session.query(Boardgame).filter_by(bgg_id=boardgame.bgg_id).first()
         if boardgame_db:
             # Felder vergleichen und ggf. updaten
-            if compare_and_update_boardgame(boardgame_db, boardgame):
+            if boardgame_db.update(boardgame):
                 logger.info(f"Boardgame aktualisiert: {boardgame_db.name}, ID: {boardgame_db.bgg_id}")
             else:
                 logger.debug(f"Boardgame unverändert: {boardgame_db.name}, ID: {boardgame_db.bgg_id}")
@@ -218,23 +135,31 @@ def update_player_positions(db_game: Game, players_json: list[dict]):
         points = nested_get(p_json, ["@score"], float) or 0.0
         win = True if p_json.get("@win") == "1" else False
 
+        current_pp = PlayerPos(
+            points=points,
+            win=win,
+            game_id=db_game.id,
+            player_id=player_obj.id,
+        )
+
         # Falls PlayerPos existiert, updaten
         existing_pp = existing_positions_map.get(player_obj.id)
         if existing_pp:
-            changed = compare_and_update_playerpos(existing_pp, points, win)
-            if changed:
+            if existing_pp.update(current_pp):
                 logger.info(
-                    f"PlayerPos aktualisiert: Player={player_obj.name}, Game_ID={db_game.game_bgg_id} "
-                    f"(points={points}, win={win})"
+                    f"PlayerPos aktualisiert: Player={player_obj.name}, boardgame={db_game.boardgame.name}, "
+                    f"Game_ID={db_game.game_bgg_id}(points={points}, win={win})"
                 )
             else:
-                logger.debug(f"PlayerPos unverändert: Player={player_obj.name}, Game_ID={db_game.game_bgg_id}")
+                logger.debug(
+                    f"PlayerPos unverändert: Player={player_obj.name}, boardgame={db_game.boardgame.name}, Game_ID={db_game.game_bgg_id}"
+                )
         else:
             # Neu erstellen
-            pp = PlayerPos(points=points, win=win, game=db_game, player=player_obj)
+            pp = current_pp
             session.add(pp)
             logger.info(
-                f"Neue PlayerPos erstellt: Player={player_obj.name}, "
+                f"Neue PlayerPos erstellt: Player={player_obj.name}, boardgame={db_game.boardgame.name} "
                 f"Game_ID={db_game.game_bgg_id} (points={points}, win={win})"
             )
 
@@ -251,29 +176,35 @@ def update_or_create_game(my_game: dict, boardgame_obj: Boardgame, location_obj:
     datum = datetime.strptime(datum_str, "%Y-%m-%d").date() if datum_str else None
     playtime = nested_get(my_game, ["@length"], int)
 
+    current_game = Game(
+        game_bgg_id=game_bgg_id,
+        datum=datum,
+        playtime=playtime,
+        boardgame_id=boardgame_obj.id,
+        location_id=location_obj.id,
+    )
+
     db_game = session.query(Game).filter_by(game_bgg_id=game_bgg_id).first()
     if not db_game:
         # Neues Game anlegen
-        db_game = Game(
-            game_bgg_id=game_bgg_id, datum=datum, playtime=playtime, boardgame=boardgame_obj, location=location_obj
-        )
+        db_game = current_game
         session.add(db_game)
         session.commit()
-        logger.info(f"Neues Game erstellt: game_bgg_id={game_bgg_id}")
+        logger.info(
+            f"Neues Game erstellt: game_bgg_id={db_game.game_bgg_id}, "
+            f"datum={db_game.datum}, boardgame={db_game.boardgame.name}"
+        )
     else:
         # Updates vergleichen
-        changed = compare_and_update_game(
-            db_game=db_game,
-            new_datum=datum,
-            new_playtime=playtime,
-            new_location_id=location_obj.id if location_obj else None,
-            new_boardgame_id=boardgame_obj.id if boardgame_obj else None,
-        )
+        changed = db_game.update(current_game)
+
         if changed:
             session.commit()
-            logger.info(f"Game aktualisiert: game_bgg_id={game_bgg_id}")
+            logger.info(f"Game aktualisiert: game_bgg_id={game_bgg_id} "
+                        f"datum={db_game.datum}, boardgame={db_game.boardgame.name}")
         else:
-            logger.debug(f"Game unverändert: game_bgg_id={game_bgg_id}")
+            logger.debug(f"Game unverändert: game_bgg_id={game_bgg_id} "
+                         f"datum={db_game.datum}, boardgame={db_game.boardgame.name}")
 
     return db_game
 
@@ -312,7 +243,8 @@ def update_db(from_api: bool, save_file=False):
     all_db_games = session.query(Game).all()
     for db_game in all_db_games:
         if db_game.game_bgg_id not in json_game_ids:
-            logger.info(f"Game wird gelöscht, da nicht mehr in der JSON: game_bgg_id={db_game.game_bgg_id}")
+            logger.info("Game wird gelöscht, da nicht mehr in der JSON: "
+                        f"game_bgg_id={db_game.game_bgg_id}, datum={db_game.datum}, boardgame={db_game.boardgame.name}")
             session.delete(db_game)
     session.commit()
 

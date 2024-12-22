@@ -1,5 +1,5 @@
 from typing import List
-from datetime import date, datetime
+from datetime import date
 from sqlalchemy import String, ForeignKey, Float, Integer, Date, Boolean
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from bogan.utils import nested_get
@@ -54,19 +54,51 @@ class PlayerPos(db.Model):
     game: Mapped["Game"] = relationship("Game", back_populates="player_pos")
     player: Mapped["Player"] = relationship("Player", back_populates="player_pos")
 
-
     def __repr__(self) -> str:
         return f"PlayerPos(id={self.id}, name={self.player.name}, punktzahl={self.points}, partie={self.game.boardgame.name})"
+
+    def update(self, other) -> bool:
+        """Update PlayerPos mit aktuellen Werten
+
+        Args:
+            other (player_pos): neues "PlayerPos"-Objekt
+
+        Raises:
+            TypeError: ungültiges Objekt übergeben
+
+        Returns:
+            bool: Gab es Änderungen
+        """
+
+        if not isinstance(other, type(self)):
+            raise TypeError("Update nicht möglich, es handelt sich um kein game-model")
+
+        changed = False
+
+        if self.points != other.points:
+            self.points = other.points
+            changed = True
+        if self.win != other.win:
+            self.win = other.win
+            changed = True
+        if self.game_id != other.game_id:
+            self.game_id = other.game_id
+            changed = True
+        if self.player_id != other.player_id:
+            self.player_id = other.player_id
+            changed = True
+
+        return changed
+
 
 class Location(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(128), unique=True)
     # Relationship
-    game: Mapped[List["Game"]] = relationship("Game", back_populates="location", cascade="all, delete-orphan")
+    games: Mapped[List["Game"]] = relationship("Game", back_populates="location", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         return f"Location(id={self.id}, name={self.name})"
-
 
 
 class Game(db.Model):
@@ -77,18 +109,50 @@ class Game(db.Model):
     boardgame_id: Mapped[int] = mapped_column(ForeignKey("boardgame.id"))
     location_id: Mapped[int] = mapped_column(ForeignKey("location.id"))
     # Relationship
-    boardgame: Mapped["Boardgame"] = relationship(back_populates="game")
-    location: Mapped["Location"] = relationship(back_populates="game")
+    boardgame: Mapped["Boardgame"] = relationship(back_populates="games")
+    location: Mapped["Location"] = relationship(back_populates="games")
     player_pos: Mapped[List["PlayerPos"]] = relationship(
         "PlayerPos", back_populates="game", cascade="all, delete-orphan"
     )
-
 
     def __repr__(self) -> str:
         return (
             f"Game(id={self.id}, game_bgg_id={self.game_bgg_id}, boardgame={self.boardgame.name}, "
             f"datum={self.datum}, location={self.location}, player={self.player_pos})"
         )
+
+    def update(self, other) -> bool:
+        """Update Game mit aktuellen Werten
+
+        Args:
+            other (game): neues "Game"-Objekt
+
+        Raises:
+            TypeError: ungültiges Objekt übergeben
+
+        Returns:
+            bool: Gab es Änderungen
+        """
+
+        if not isinstance(other, type(self)):
+            raise TypeError("Update nicht möglich, es handelt sich um kein game-model")
+
+        changed = False
+
+        if self.datum != other.datum:
+            self.datum = other.datum
+            changed = True
+        if self.playtime != other.playtime:
+            self.playtime = other.playtime
+            changed = True
+        if self.location_id != other.location_id:
+            self.location_id = other.location_id
+            changed = True
+        if self.boardgame_id != other.boardgame_id:
+            self.boardgame_id = other.boardgame_id
+            changed = True
+
+        return changed
 
 
 class Boardgame(db.Model):
@@ -108,8 +172,7 @@ class Boardgame(db.Model):
     rating: Mapped[float] = mapped_column(Float)
     weight: Mapped[float] = mapped_column(Float)
     # Relationship
-    game: Mapped[List["Game"]] = relationship(back_populates="boardgame", cascade="all, delete-orphan")
-
+    games: Mapped[List["Game"]] = relationship(back_populates="boardgame", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         return (
@@ -118,24 +181,57 @@ class Boardgame(db.Model):
             f"playtime = {self.playtime}, rating={self.rating}, weight= {self.weight}, koop={self.koop}"
         )
 
-    def update(self, other):
+    def update(self, other) -> bool:
+        """Update Boardgame mit aktuellen Werten
+
+        Args:
+            other (boardgame): neues "Boardgame"-Objekt
+
+        Raises:
+            TypeError: ungültiges Objekt übergeben
+
+        Returns:
+            bool: Gab es Änderungen
+        """
         if not isinstance(other, type(self)):
             raise TypeError("Update nicht möglich, es handelt sich um kein boardgame-model")
+        changed = False
 
-        self.bgg_id = other.bgg_id
-        self.name_primary = other.name_primary
-        self.img = other.img
-        self.img_small = other.img_small
-        self.yearpublished = other.yearpublished
-        self.minplayers = other.minplayers
-        self.maxplayers = other.maxplayers
-        self.playtime = other.playtime
-        self.rating = other.rating
-        self.weight = other.weight
-        self.koop = other.koop
+        if self.bgg_id != other.bgg_id:
+            self.bgg_id = other.bgg_id
+            changed = True
+        if self.name_primary != other.name_primary:
+            self.name_primary = other.name_primary
+            changed = True
+        if self.img != other.img:
+            self.img = other.img
+            changed = True
+        if self.img_small != other.img_small:
+            self.img_small = other.img_small
+            changed = True
+        if self.yearpublished != other.yearpublished:
+            self.yearpublished = other.yearpublished
+            changed = True
+        if self.minplayers != other.minplayers:
+            self.minplayers = other.minplayers
+            changed = True
+        if self.maxplayers != other.maxplayers:
+            self.maxplayers = other.maxplayers
+            changed = True
+        if self.playtime != other.playtime:
+            self.playtime = other.playtime
+            changed = True
+        if self.rating != other.rating:
+            self.rating = other.rating
+            changed = True
+        if self.weight != other.weight:
+            self.weight = other.weight
+            changed = True
+        if self.koop != other.koop:
+            self.koop = other.koop
+            changed = True
 
-        return self
-
+        return changed
 
     def from_bgg(self, json_file: dict, name: tuple[str, bool] = None):
         """Read json File and auto-fill the arguments of the current boardgame instance
