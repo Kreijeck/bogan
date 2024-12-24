@@ -64,8 +64,6 @@ def get_location(json_file: dict) -> Location:
     
     """
     name = json_file.get("@location")
-    if not name:
-        return None
 
     location = session.query(Location).filter_by(name=name).first()
     if not location:
@@ -196,6 +194,8 @@ def update_or_create_game(my_game: dict, boardgame_obj: Boardgame, location_obj:
         # Neues Game anlegen
         db_game = current_game
         session.add(db_game)
+        # Spiel in Datenbank für Logs 'flushen'
+        session.flush()
         logger.info(
             f"[Game] neu erstellt: game_bgg_id={db_game.game_bgg_id}, "
             f"datum={db_game.datum}, boardgame={db_game.boardgame.name if db_game.boardgame else 'None'}"
