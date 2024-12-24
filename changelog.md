@@ -1,5 +1,12 @@
 # Version Changelog
 
+## Current Version
+
+- Anpassungen an Datenbankupdate
+  - Update statt löschen
+  - Aussagekräftige Logs
+- Einfügen von Logging
+
 ## 0.3.2
 
 - Bilder werden in event-Tabelle angezeigt
