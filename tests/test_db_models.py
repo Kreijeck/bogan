@@ -6,24 +6,51 @@ def test_create_boardgame(db_session):
     """
     Einfacher Test: Boardgame anlegen und prüfen, ob es gespeichert wird.
     """
-    bg = Boardgame(bgg_id=123, name_primary="Test Game Prim", name="Test Game")
+    bg = Boardgame(
+        bgg_id=12345,
+        name_primary="Originaltitel",
+        name="Deutscher Titel",
+        img="https://example.com/image.jpg",
+        img_small="https://example.com/image_small.jpg",
+        yearpublished=2023,
+        minplayers=1,
+        maxplayers=4,
+        playtime=60,
+        koop=False,       # oder True, je nachdem
+        rating=7.2,
+        weight=2.5
+    )
     db_session.add(bg)
     db_session.commit()
 
     # Aus der DB holen und prüfen
-    saved_bg = db_session.query(Boardgame).filter_by(bgg_id=123).first()
+    saved_bg = db_session.query(Boardgame).filter_by(bgg_id=12345).first()
     assert saved_bg is not None
-    assert saved_bg.name == "Test Game"
+    assert saved_bg.name == "Deutscher Titel"
 
 def test_relationship_game(db_session):
     """
     Prüfen, ob ein Game korrekt mit einem Boardgame verknüpft werden kann.
     """
     boardgame = Boardgame(bgg_id=999, name="Game999")
+    boardgame = Boardgame(
+        bgg_id=999,
+        name_primary="Game999 prima",
+        name="Game999",
+        img="https://example.com/image.jpg",
+        img_small="https://example.com/image_small.jpg",
+        yearpublished=2023,
+        minplayers=1,
+        maxplayers=4,
+        playtime=60,
+        koop=False,       # oder True, je nachdem
+        rating=7.2,
+        weight=2.5
+    )
     db_session.add(boardgame)
     db_session.commit()
 
-    game = Game(game_bgg_id=555, boardgame=boardgame)
+    game = Game(game_bgg_id=555, boardgame=boardgame, location_id=1)
     db_session.add(game)
     db_session.commit()
 
