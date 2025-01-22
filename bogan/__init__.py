@@ -4,17 +4,20 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from bogan.db.models import db, User
 import bogan.config as cfg
-from bogan.utils import load_yaml
+from bogan.utils import load_yaml, make_dir
 
 
 def create_app():
     app = Flask(__name__, static_folder="static")
 
+    make_dir(app.instance_path)
+    print(app.instance_path)
+
     # add migrate
     migrate = Migrate(app, db, directory=cfg.DB_MIGRATE_DIR)
 
     app.config["SECRET_KEY"] = cfg.FLASK_SECRET_KEY
-    app.config["SQLALCHEMY_DATABASE_URI"] = cfg.DB_SERVER
+    app.config["SQLALCHEMY_DATABASE_URI"] = cfg.DB2USE
     app.config["DEBUG"] = cfg.FLASK_DEBUG
     app.config["VERSION"] = cfg.BOGAN_VERSION
 
@@ -54,9 +57,9 @@ def create_app():
     app.register_blueprint(tools_bp)
 
     # with app.app_context():
-        ## Delete Database
+        # # Delete Database
         # db.drop_all()
-        ## Create Database
+        # # Create Database
         # db.create_all()
 
     return app
