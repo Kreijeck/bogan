@@ -2,35 +2,44 @@
 
 {% block content %}
 
-<!-- aktuelle Tabelle über alle Spiele -->
+<!-- absolvierte Spiele anzeigen-->
 <section class="section">
     <div class="container">
-        <h1 class="title">Tabellenübersicht</h1>
-        <div class="table-container">
+        <h1 class="title has-text-primary" onclick="toggleVisibility('partien-table')" style="cursor: pointer;">
+            Partienübersicht</h1>
+        <div id="partien-table" class="table-container box"
+            style="box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow-x: auto;">
             <table class="table is-bordered is-hoverable is-fullwidth has-text-centered">
-                <thead>
+                <thead class="has-background-primary-dark has-text-white">
                     <tr>
-                        <th class="has-text-centered">Spiel</th>
-                        {% for player in players %}
-                        <th class="has-text-centered">{{ player }}</th>
+                        <th>Datum</th>
+                        <th>Spiel</th>
+                        <th>Bild</th>
+                        <th>Dauer (h)</th>
+                        {% for i in range(max_positions) %}
+                        <th>Pos {{ i + 1 }}</th>
                         {% endfor %}
                     </tr>
                 </thead>
                 <tbody>
-                    {% for game, scores in table_data.items() %}
+                    {% for game in games %}
                     <tr>
+                        <td>{{ game.datum_fmt }}</td>
+                        <td><strong>{{ game.name }}</strong></td>
                         <td>
-                            <img class="" src="{{ scores['img_small'] }}" , alt="Leider kein Bild vorhanden">
-                            <p> {{game }}</p>
+                            <img src="{{ game.img_small }}" alt="Bild nicht verfügbar"
+                                style="width: 75px; height: auto; border-radius: 8px;">
                         </td>
-                        {% for player in players %}
+                        <td>{% if game.playtime < 10 %}-{% else %}{{ (game.playtime // 60)|int }}h{{ (game.playtime %
+                                60)|int }}min{% endif %}</td>
+                                {% for player in game.players %}
                         <td>
-                            {% if scores[player][1] %}
-                            <b>Pos: {{ scores[player][1] }}</b><br> (Pkt: {{ scores[player][0] }})
-                            {% else %}
-                            - -
-                            {% endif %}
+                            <strong>{{ player.name }}</strong> <br>
+                            ({{ player.punkte }} Pkte)
                         </td>
+                        {% endfor %}
+                        {% for _ in range(max_positions - game.players|length) %}
+                        <td> </td>
                         {% endfor %}
                     </tr>
                     {% endfor %}
@@ -40,21 +49,193 @@
     </div>
 </section>
 
-<br>
-<br>
-
-<!-- Spieleübersicht -->
+<!-- Ranking default anzeigen-->
 <section class="section">
     <div class="container">
-        <h1 class="title">Übersicht über alle Spiele</h1>
-        <div class="content">
-            {% for game in game_list %}
-            <p>
-                <span>{{ game.datum }}: </span><a href="#">{{ game.name }}</a>
-            </p>
-            {% endfor %}
+        <h1 class="title has-text-primary" onclick="toggleVisibility('ranking-table-default')" style="cursor: pointer;">
+            Ranking Übersicht - default</h1>
+
+        <!-- Add Info Box -->
+        {% set md_content = url_for('static', filename='document/ranking_default.md') %}
+        <!-- Button nur in einer kleinen Box -->
+            <button class="button is-info" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_default')">
+                ℹ️ Info
+            </button>
+        <!-- Markdown-Content direkt darunter, mit gleicher Info-Farbe -->
+        <div id="markdown-content_default" class="notification is-info mt-3" style="display: none;"></div>
+        
+
+        <!-- Ranking Table-->
+        <div id="ranking-table-default" class="table-container box"
+            style="box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow-x: auto;">
+            <table class="table is-bordered is-hoverable is-fullwidth has-text-centered">
+                <thead class="has-background-primary-dark has-text-white">
+                    <tr>
+                        <th style="min-width: 80px;">Position</th>
+                        <th style="min-width: 150px;">Spieler</th>
+                        <th style="min-width: 120px;">Gesamtpunkte</th>
+                        <th style="min-width: 200px;">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player, data in ranking_default %}
+                    <tr>
+                        <td><strong>{{ loop.index }}</strong></td>
+                        <td><strong>{{ player }}</strong></td>
+                        <td><strong>{{ data.total|round(2) }}</strong></td>
+                        <td>
+                            <button class="button is-small is-primary"
+                                onclick="toggleVisibility('details-default{{ loop.index }}')">Details</button>
+                            <div id="details-default{{ loop.index }}" class="details-content"
+                                style="display: none; margin-top: 10px;">
+                                <ul style="list-style-type: none; padding-left: 1.5rem; text-align: left;">
+                                    {% for detail in data.details %}
+                                    <li>{{ detail.datum }}: <span class="has-text-weight-bold"> {{ detail.game
+                                            }}:</span> Pos {{ detail.position }} (Pkte {{ detail.points|round(2) }})
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </section>
+
+<!-- Ranking playtime anzeigen-->
+<section class="section">
+    <div class="container">
+
+        <!-- Add Info Box -->
+        {% set md_content = url_for('static', filename='document/ranking_playtime.md') %}
+        <!-- Button nur in einer kleinen Box -->
+            <button class="button is-info" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_playtime')">
+                ℹ️ Info
+            </button>
+        <!-- Markdown-Content direkt darunter, mit gleicher Info-Farbe -->
+        <div id="markdown-content_playtime" class="notification is-info mt-3" style="display: none;"></div>
+
+
+        <h1 class="title has-text-primary" onclick="toggleVisibility('ranking-table-playtime')"
+            style="cursor: pointer;">Ranking Übersicht - playtime</h1>
+        <div id="ranking-table-playtime" class="table-container box"
+            style="box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow-x: auto;">
+            <table class="table is-bordered is-hoverable is-fullwidth has-text-centered">
+                <thead class="has-background-primary-dark has-text-white">
+                    <tr>
+                        <th style="min-width: 80px;">Position</th>
+                        <th style="min-width: 150px;">Spieler</th>
+                        <th style="min-width: 120px;">Gesamtpunkte</th>
+                        <th style="min-width: 200px;">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player, data in ranking_playtime %}
+                    <tr>
+                        <td><strong>{{ loop.index }}</strong></td>
+                        <td><strong>{{ player }}</strong></td>
+                        <td><strong>{{ data.total|round(2) }}</strong></td>
+                        <td>
+                            <button class="button is-small is-primary"
+                                onclick="toggleVisibility('details-playtime{{ loop.index }}')">Details</button>
+                            <div id="details-playtime{{ loop.index }}" class="details-content"
+                                style="display: none; margin-top: 10px;">
+                                <ul style="list-style-type: none; padding-left: 1.5rem; text-align: left;">
+                                    {% for detail in data.details %}
+                                    <li>{{ detail.datum }}: <span class="has-text-weight-bold"> {{ detail.game
+                                            }}:</span> Pos {{ detail.position }} (Pkte {{ detail.points|round(2) }})
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- Ranking complexity anzeigen-->
+<section class="section">
+    <div class="container">
+        
+        <!-- Add Info Box -->
+        {% set md_content = url_for('static', filename='document/ranking_complexity.md') %}
+        <!-- Button nur in einer kleinen Box -->
+            <button class="button is-info" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_complexity')">
+                ℹ️ Info
+            </button>
+        <!-- Markdown-Content direkt darunter, mit gleicher Info-Farbe -->
+        <div id="markdown-content_complexity" class="notification is-info mt-3" style="display: none;"></div>
+
+        <h1 class="title has-text-primary" onclick="toggleVisibility('ranking-table-complexity')"
+            style="cursor: pointer;">Ranking Übersicht - complexity</h1>
+        <div id="ranking-table-complexity" class="table-container box"
+            style="box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow-x: auto;">
+            <table class="table is-bordered is-hoverable is-fullwidth has-text-centered">
+                <thead class="has-background-primary-dark has-text-white">
+                    <tr>
+                        <th style="min-width: 80px;">Position</th>
+                        <th style="min-width: 150px;">Spieler</th>
+                        <th style="min-width: 120px;">Gesamtpunkte</th>
+                        <th style="min-width: 200px;">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player, data in ranking_complexity %}
+                    <tr>
+                        <td><strong>{{ loop.index }}</strong></td>
+                        <td><strong>{{ player }}</strong></td>
+                        <td><strong>{{ data.total|round(2) }}</strong></td>
+                        <td>
+                            <button class="button is-small is-primary"
+                                onclick="toggleVisibility('details-complexity{{ loop.index }}')">Details</button>
+                            <div id="details-complexity{{ loop.index }}" class="details-content"
+                                style="display: none; margin-top: 10px;">
+                                <ul style="list-style-type: none; padding-left: 1.5rem; text-align: left;">
+                                    {% for detail in data.details %}
+                                    <li>{{ detail.datum }}: <span class="has-text-weight-bold"> {{ detail.game
+                                            }}:</span> Pos {{ detail.position }} (Pkte {{ detail.points|round(2) }})
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+
+<style>
+    @media screen and (max-width: 768px) {
+        .table-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            font-size: 0.9rem;
+        }
+
+        th,
+        td {
+            padding: 0.5rem;
+        }
+
+        .button {
+            font-size: 0.8rem;
+        }
+    }
+</style>
 
 {% endblock %}

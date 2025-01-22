@@ -2,6 +2,9 @@
 
 ## Current Version
 
+## 0.3.2
+
+- Anpassung der Events -> Formatierungsfix und Anzeigen von Rankingtabellen - [Update EventPage #19](https://github.com/Kreijeck/bogan/issues/19)
 - Anpassungen an Datenbankupdate
   - Update statt löschen
   - Aussagekräftige Logs
