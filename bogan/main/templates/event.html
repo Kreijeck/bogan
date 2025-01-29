@@ -58,12 +58,12 @@
         <!-- Add Info Box -->
         {% set md_content = url_for('static', filename='document/ranking_default.md') %}
         <!-- Button nur in einer kleinen Box -->
-            <button class="button is-info" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_default')">
-                ℹ️ Info
-            </button>
+        <button class="button is-info" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_default')">
+            ℹ️ Info
+        </button>
         <!-- Markdown-Content direkt darunter, mit gleicher Info-Farbe -->
         <div id="markdown-content_default" class="notification is-info mt-3" style="display: none;"></div>
-        
+
 
         <!-- Ranking Table-->
         <div id="ranking-table-default" class="table-container box"
@@ -109,18 +109,18 @@
 <section class="section">
     <div class="container">
 
+        <h1 class="title has-text-primary" onclick="toggleVisibility('ranking-table-playtime')"
+            style="cursor: pointer;">Ranking Übersicht - playtime</h1>
+
         <!-- Add Info Box -->
         {% set md_content = url_for('static', filename='document/ranking_playtime.md') %}
         <!-- Button nur in einer kleinen Box -->
-            <button class="button is-info" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_playtime')">
-                ℹ️ Info
-            </button>
+        <button class="button is-info" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_playtime')">
+            ℹ️ Info
+        </button>
         <!-- Markdown-Content direkt darunter, mit gleicher Info-Farbe -->
         <div id="markdown-content_playtime" class="notification is-info mt-3" style="display: none;"></div>
 
-
-        <h1 class="title has-text-primary" onclick="toggleVisibility('ranking-table-playtime')"
-            style="cursor: pointer;">Ranking Übersicht - playtime</h1>
         <div id="ranking-table-playtime" class="table-container box"
             style="box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow-x: auto;">
             <table class="table is-bordered is-hoverable is-fullwidth has-text-centered">
@@ -163,18 +163,18 @@
 <!-- Ranking complexity anzeigen-->
 <section class="section">
     <div class="container">
-        
+        <h1 class="title has-text-primary" onclick="toggleVisibility('ranking-table-complexity')"
+            style="cursor: pointer;">Ranking Übersicht - complexity</h1>
+
         <!-- Add Info Box -->
         {% set md_content = url_for('static', filename='document/ranking_complexity.md') %}
         <!-- Button nur in einer kleinen Box -->
-            <button class="button is-info" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_complexity')">
-                ℹ️ Info
-            </button>
+        <button class="button is-info" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_complexity')">
+            ℹ️ Info
+        </button>
         <!-- Markdown-Content direkt darunter, mit gleicher Info-Farbe -->
         <div id="markdown-content_complexity" class="notification is-info mt-3" style="display: none;"></div>
 
-        <h1 class="title has-text-primary" onclick="toggleVisibility('ranking-table-complexity')"
-            style="cursor: pointer;">Ranking Übersicht - complexity</h1>
         <div id="ranking-table-complexity" class="table-container box"
             style="box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); overflow-x: auto;">
             <table class="table is-bordered is-hoverable is-fullwidth has-text-centered">
