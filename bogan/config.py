@@ -19,7 +19,7 @@ def env(env_var: str) -> str:
 
 
 ### Generic ###
-BOGAN_VERSION = "0.4.0"
+BOGAN_VERSION = "0.4.1"
 ENCODING = "utf-8"
 
 ### Flask ###

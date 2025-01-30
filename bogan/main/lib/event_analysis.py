@@ -33,7 +33,8 @@ def get_game_list(event_name: str, mode: str) -> list[dict]:
             spiel_dict = {}
             spiel_dict["datum"] = match.datum
             spiel_dict["datum_fmt"] = match.datum.strftime("%d.%b %Y")
-            spiel_dict["name"] = match.boardgame.name
+            spiel_dict["boardgame"] = match.boardgame.name
+            spiel_dict["bgg_id"] = match.boardgame.bgg_id
             spiel_dict["playtime"] = match.playtime
             spiel_dict["game_bgg_id"] = match.game_bgg_id
             spiel_dict["img_small"] = match.boardgame.img_small
@@ -171,7 +172,7 @@ def prepare_ranking_table(game_list, event_name):
             # Details für dieses Spiel
             ranking[name]["details"].append(
                 {
-                    "game": game["name"],
+                    "game": game["boardgame"],
                     "position": player["position"],
                     "points": player["ranking_point"],
                     "datum": game["datum_fmt"],
