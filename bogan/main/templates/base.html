@@ -45,7 +45,7 @@
                         {% for event in events %}
                         <a href="{{ url_for('main.show_event', event=event)}}" class="navbar-item"> {{ event }}</a>
                         {% endfor %}
-                            
+
                     </div>
                 </div>
                 <a href="{{ url_for('main.profile') }}" class="navbar-item">Noch nix</a>
@@ -76,7 +76,7 @@
     <footer class="footer">
         <div class="content has-text-right">
             <p> <strong>Bogan </strong> powered by Kreijeck. </p>
-            <p>Version: <span class="has-text-link-80"> {{ config['VERSION']  }} </span></p>
+            <p>Version: <a href="https://github.com/Kreijeck/bogan/blob/master/changelog.md">{{ config['VERSION'] }}</a></p>
         </div>
     </footer>
     <!-- Scripte -->

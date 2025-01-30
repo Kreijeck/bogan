@@ -2,7 +2,11 @@
 
 ## Current Version
 
-## 0.3.2
+## 0.4.1
+
+- Brettspielseite als Übersicht [analyse specific queries](https://github.com/Kreijeck/bogan/issues/14)
+
+## 0.4.0
 
 - Anpassung der Events -> Formatierungsfix und Anzeigen von Rankingtabellen - [Update EventPage #19](https://github.com/Kreijeck/bogan/issues/19)
 - Anpassungen an Datenbankupdate

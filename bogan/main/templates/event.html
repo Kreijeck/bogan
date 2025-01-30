@@ -25,7 +25,7 @@
                     {% for game in games %}
                     <tr>
                         <td>{{ game.datum_fmt }}</td>
-                        <td><strong>{{ game.name }}</strong></td>
+                        <td><strong><a href="{{ url_for('main.show_boardgame', boardgame_id=game.bgg_id)}}">{{ game.boardgame }}</a></strong></td>
                         <td>
                             <img src="{{ game.img_small }}" alt="Bild nicht verfügbar"
                                 style="width: 75px; height: auto; border-radius: 8px;">
