@@ -10,6 +10,10 @@ def get_boardgame_by(id: str, session: Session):
     boardgame = session.query(Boardgame).filter(Boardgame.bgg_id == id).first()
     return boardgame
 
+def get_all_boardgames(session: Session):
+    boardgames = session.query(Boardgame).order_by(Boardgame.name).all()
+    return boardgames
+
 
 def get_games_by(boardgame_id: int, session: Session):
     print(f"Type ID: {type(boardgame_id)}")

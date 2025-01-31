@@ -1,4 +1,3 @@
-
 .inherit-color {
     color: inherit;
 }
@@ -8,3 +7,45 @@
     overflow: hidden;
     overflow-y: scroll;
 }
+
+/* Allgemeine Container-Styles */
+.search-control {
+    display: inline-block;
+    margin: 0.2rem auto;
+  }
+  
+  .responsive-box {
+    display: inline-block;
+    margin: 0.2rem auto;
+  }
+  
+  .list-item {
+    padding: 1rem;
+  }
+  
+  /* Desktop-Ansicht */
+  .boardgame-figure {
+    width: 10vw;
+    margin-top: 0.2rem;
+  }
+  
+  .game-title {
+    display: block;
+    max-width: 250px;
+    white-space: normal;
+    overflow-wrap: break-word;
+    margin-bottom: 0.2rem;
+  }
+  
+  /* Mobile Ansicht */
+  @media (max-width: 768px) {
+    .boardgame-figure {
+      width: 50vw !important;
+      margin-top: 0.2rem;
+    }
+    .responsive-box {
+      display: block !important;
+      width: 100% !important;
+      margin: 0.2rem auto;
+    }
+  }

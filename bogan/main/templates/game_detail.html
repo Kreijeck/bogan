@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <section class="section">
+    <div class="container">
+      <h1 class="title has-text-centered">Spiele Übersicht</h1>
+
+      <!-- Beispielkarte für ein Spiel -->
+      <div class="card">
+        <!-- Kartenkopf mit Spielname und Datum -->
+        <header class="card-header">
+          <p class="card-header-title">
+            <!-- Spielname aus item/@name -->
+            Barrage
+          </p>
+          <p class="card-header-icon">
+            <!-- Icon + Datum (z.B. @date) -->
+            <span class="icon">
+              <i class="fas fa-calendar-alt"></i>
+            </span>
+            <span>22.06.2022</span>
+          </p>
+        </header>
+
+        <!-- Karteninhalt -->
+        <div class="card-content">
+          <div class="content">
+            <!-- Spielinfos -->
+            <p><strong>Ort:</strong> Mittwochsrunde</p>
+            <p><strong>Menge:</strong> 1</p>
+            <p><strong>Länge:</strong> 0</p>
+            <p><strong>Unvollständig:</strong> 0</p>
+            <p><strong>Now in Stats:</strong> 0</p>
+            <!-- Kommentare (Zeilenumbrüche werden in HTML mit <br> ersetzt) -->
+            <p>
+              <strong>Kommentare:</strong><br>
+              Played with expansions:<br>
+              - Wasserkraft: Das Leeghwater-Projekt
+            </p>
+          </div>
+
+          <!-- Tabelle der Spieler -->
+          <div class="table-container">
+            <table class="table is-fullwidth is-hoverable">
+              <thead>
+                <tr>
+                  <th>Spieler</th>
+                  <th>Punkte</th>
+                  <th>Gewonnen</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Simon D.</td>
+                  <td>130</td>
+                  <td>
+                    <!-- Falls win=1 -->
+                    <span class="tag is-success">Ja</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Strähli</td>
+                  <td>107</td>
+                  <td>
+                    <!-- Falls win=0 -->
+                    <span class="tag is-danger">Nein</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Kartenfuß -->
+        <footer class="card-footer">
+          <p class="card-footer-item">
+            <span>ID: 64901091</span>
+          </p>
+          <p class="card-footer-item">
+            <span>Anzahl Spieler: 2</span>
+          </p>
+        </footer>
+      </div>
+    </div>
+  </section>
+{% endblock %}

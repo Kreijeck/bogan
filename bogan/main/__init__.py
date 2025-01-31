@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from sqlalchemy.orm import Session
 
 from bogan.main.lib.event_analysis import get_game_list, prepare_ranking_table
-from bogan.main.lib.fetch_db import get_boardgame_by, get_games_by, engine
+from bogan.main.lib.fetch_db import get_boardgame_by, get_games_by, get_all_boardgames, engine
 
 main = Blueprint("main", __name__, template_folder="templates")
 
@@ -57,6 +57,18 @@ def show_boardgame(boardgame_id: str):
         print(games)
 
         return render_template("boardgame_detail.html", boardgame=boardgame, games=games)
+
+@main.route("/boardgames", methods=["GET"])    
+def show_all_boardgames():
+    with Session(engine) as session:
+        boardgames = get_all_boardgames(session)
+
+        return render_template("boardgames_overview.html", boardgames=boardgames)
+    
+@main.route("/game", methods=["GET"])
+def show_game():
+    return render_template("game_detail.html")
+
 
 
 

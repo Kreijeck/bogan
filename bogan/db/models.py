@@ -54,6 +54,49 @@ class PlayerPos(db.Model):
     game: Mapped["Game"] = relationship("Game", back_populates="player_pos")
     player: Mapped["Player"] = relationship("Player", back_populates="player_pos")
 
+    @property
+    def position(self) -> int:
+        """
+        Berechnet den Rang des Spielers in diesem Spiel anhand:
+          - win=True -> bevorzugt (oben)
+          - Punkte (höher = besser)
+          - Bei Gleichstand teilen sich die Spieler die Position,
+            und die nächste wird entsprechend übersprungen.
+        """
+
+        # Alle Einträge für das gleiche Spiel holen
+        all_positions = self.game.player_pos
+
+        # Sortieren: zuerst nach win (absteigend), dann nach points (absteigend)
+        # Hinweis: In Python bedeutet sort(reverse=True), dass zuerst die größte
+        # Zahl kommt.
+        sorted_positions = sorted(
+            all_positions,
+            key=lambda p: (p.win, p.points if p.points is not None else 0.0),
+            reverse=True
+        )
+
+        # Jetzt eine Rangliste (1,2,2,4-Logik) erzeugen.
+        current_rank = 1
+        last_value = None  # um den letzten (win, points)-Tuple zu speichern
+        rank_map = {}
+
+        for i, player_pos in enumerate(sorted_positions):
+            # Tuple erstellen, das für den "Vergleich" relevant ist
+            compare_key = (player_pos.win, player_pos.points)
+
+            # Falls es nicht der Gewinner ist und die Punktzahl sich ändert wird der Rang erhöht
+            # (i+1, weil `i` bei 0 beginnt).
+            if last_value is not None and not compare_key[0] and compare_key[1] != last_value[1]:
+                current_rank = i + 1
+
+            # rank_map[player_pos.id] = current_rank
+            rank_map[player_pos.player.name] = current_rank
+            last_value = compare_key
+
+        # Am Ende hat rank_map für jede ID den berechneten Rang
+        return rank_map[self.id]
+
     def __repr__(self) -> str:
         return f"PlayerPos(id={self.id}, name={self.player.name}, punktzahl={self.points}, partie={self.game.boardgame.name})"
 
