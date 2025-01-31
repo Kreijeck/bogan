@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="title">Brettspiele</h1>
+
+    <!-- Suchfeld -->
+    <div class="field">
+      <label class="label">Suche</label>
+      <div class="control search-control">
+        <input id="searchInput" class="input" type="text" placeholder="Nach einem Spiel suchen...">
+      </div>
+    </div>
+
+    <!-- Liste der Brettspiele -->
+    <div class="box responsive-box">
+      <ul id="gameList" class="list">
+        {% for boardgame in boardgames %}
+        <li class="list-item">
+          <a href="{{ url_for('main.show_boardgame', boardgame_id=boardgame.bgg_id) }}">
+            <p class="has-text-weight-bold game-title">{{ boardgame.name }}</p>
+            <figure class="image boardgame-figure">
+              <img src="{{ boardgame.img_small }}" alt="Bild nicht verfügbar">
+            </figure>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Initialisiere die Live-Suche -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    initLiveSearch('searchInput', 'gameList', '.list-item');
+  });
+</script>
+{% endblock %}
