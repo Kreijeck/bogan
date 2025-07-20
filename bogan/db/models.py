@@ -63,39 +63,73 @@ class PlayerPos(db.Model):
           - Bei Gleichstand teilen sich die Spieler die Position,
             und die nächste wird entsprechend übersprungen.
         """
-
-        # Alle Einträge für das gleiche Spiel holen
-        all_positions = self.game.player_pos
-
-        # Sortieren: zuerst nach win (absteigend), dann nach points (absteigend)
-        # Hinweis: In Python bedeutet sort(reverse=True), dass zuerst die größte
-        # Zahl kommt.
-        sorted_positions = sorted(
-            all_positions,
+        # Alle PlayerPos für das gleiche Spiel holen und sortieren
+        all_positions = sorted(
+            self.game.player_pos,
             key=lambda p: (p.win, p.points if p.points is not None else 0.0),
             reverse=True
         )
-
-        # Jetzt eine Rangliste (1,2,2,4-Logik) erzeugen.
+        
+        # Position basierend auf der sortierten Liste berechnen
         current_rank = 1
-        last_value = None  # um den letzten (win, points)-Tuple zu speichern
-        rank_map = {}
-
-        for i, player_pos in enumerate(sorted_positions):
-            # Tuple erstellen, das für den "Vergleich" relevant ist
-            compare_key = (player_pos.win, player_pos.points)
-
-            # Falls es nicht der Gewinner ist und die Punktzahl sich ändert wird der Rang erhöht
-            # (i+1, weil `i` bei 0 beginnt).
-            if last_value is not None and not compare_key[0] and compare_key[1] != last_value[1]:
-                current_rank = i + 1
-
-            # rank_map[player_pos.id] = current_rank
-            rank_map[player_pos.player.name] = current_rank
-            last_value = compare_key
-
-        # Am Ende hat rank_map für jede ID den berechneten Rang
-        return rank_map[self.id]
+        for i, player_pos in enumerate(all_positions):
+            if player_pos.id == self.id:
+                return current_rank
+            
+            # Prüfen, ob der nächste Spieler eine andere Punktzahl hat
+            if i + 1 < len(all_positions):
+                current_player = (player_pos.win, player_pos.points)
+                next_player = (all_positions[i + 1].win, all_positions[i + 1].points)
+                
+                # Wenn sich die Werte unterscheiden, erhöhe den Rang für den nächsten Spieler
+                if current_player != next_player:
+                    current_rank = i + 2  # i+2 weil wir 1-basiert zählen
+        
+        return current_rank  # Fallback, sollte nie erreicht werden
+    
+    @classmethod
+    def get_game_rankings(cls, game_id: int) -> dict[str, int]:
+        """
+        Berechnet die Rankings für alle Spieler in einem Spiel auf einmal.
+        Effizienter als einzelne position-Aufrufe.
+        
+        Args:
+            game_id: ID des Spiels
+            
+        Returns:
+            Dictionary mit player_name -> position Mapping
+        """
+        from sqlalchemy.orm import Session
+        from bogan.utils import get_db_engine
+        
+        engine = get_db_engine()
+        with Session(engine) as session:
+            player_positions = session.query(cls).filter_by(game_id=game_id).all()
+            
+            # Sortieren nach win (absteigend), dann nach points (absteigend)
+            sorted_positions = sorted(
+                player_positions,
+                key=lambda p: (p.win, p.points if p.points is not None else 0.0),
+                reverse=True
+            )
+            
+            # Rankings berechnen
+            rankings = {}
+            current_rank = 1
+            
+            for i, player_pos in enumerate(sorted_positions):
+                rankings[player_pos.player.name] = current_rank
+                
+                # Prüfen, ob der nächste Spieler eine andere Punktzahl hat
+                if i + 1 < len(sorted_positions):
+                    current_player = (player_pos.win, player_pos.points)
+                    next_player = (sorted_positions[i + 1].win, sorted_positions[i + 1].points)
+                    
+                    # Wenn sich die Werte unterscheiden, erhöhe den Rang für den nächsten Spieler
+                    if current_player != next_player:
+                        current_rank = i + 2
+            
+            return rankings
 
     def __repr__(self) -> str:
         return f"PlayerPos(id={self.id}, name={self.player.name}, punktzahl={self.points}, partie={self.game.boardgame.name})"
@@ -157,6 +191,60 @@ class Game(db.Model):
     player_pos: Mapped[List["PlayerPos"]] = relationship(
         "PlayerPos", back_populates="game", cascade="all, delete-orphan"
     )
+
+    def get_player_rankings(self) -> dict[str, int]:
+        """
+        Berechnet die Rankings für alle Spieler in diesem Spiel.
+        
+        Returns:
+            Dictionary mit player_name -> position Mapping
+        """
+        # Sortieren nach win (absteigend), dann nach points (absteigend)
+        sorted_positions = sorted(
+            self.player_pos,
+            key=lambda p: (p.win, p.points if p.points is not None else 0.0),
+            reverse=True
+        )
+        
+        # Rankings berechnen
+        rankings = {}
+        current_rank = 1
+        
+        for i, player_pos in enumerate(sorted_positions):
+            rankings[player_pos.player.name] = current_rank
+            
+            # Prüfen, ob der nächste Spieler eine andere Punktzahl hat
+            if i + 1 < len(sorted_positions):
+                current_player = (player_pos.win, player_pos.points)
+                next_player = (sorted_positions[i + 1].win, sorted_positions[i + 1].points)
+                
+                # Wenn sich die Werte unterscheiden, erhöhe den Rang für den nächsten Spieler
+                if current_player != next_player:
+                    current_rank = i + 2
+        
+        return rankings
+
+    def get_sorted_players(self) -> List[dict]:
+        """
+        Gibt eine sortierte Liste der Spieler mit ihren Positionen zurück.
+        Nützlich für Templates und die event_analysis.
+        
+        Returns:
+            Liste von Dictionaries mit player-Daten inklusive Position
+        """
+        rankings = self.get_player_rankings()
+        
+        players = []
+        for player_pos in self.player_pos:
+            players.append({
+                "name": player_pos.player.name,
+                "punkte": player_pos.points,
+                "position": rankings[player_pos.player.name],
+                "win": player_pos.win
+            })
+        
+        # Nach Position sortieren
+        return sorted(players, key=lambda x: x["position"])
 
     def __repr__(self) -> str:
         return (

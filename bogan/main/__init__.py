@@ -2,7 +2,7 @@ from flask import Blueprint, render_template
 from flask_login import login_required, current_user
 from sqlalchemy.orm import Session
 
-from bogan.main.lib.event_analysis import get_game_list, prepare_ranking_table
+from bogan.main.lib.event_analysis import prepare_all_rankings
 from bogan.main.lib.fetch_db import get_boardgame_by, get_games_by, get_all_boardgames, engine
 
 main = Blueprint("main", __name__, template_folder="templates")
@@ -30,23 +30,16 @@ def add_game():
 
 @main.route("/event/<path:event>", methods=["GET"])
 def show_event(event: str):
-    game_list_default = get_game_list(event, mode="default")
-    game_list_playtime = get_game_list(event, mode="playtime")
-    game_list_complexity = get_game_list(event, mode="complexity")
-    max_positions = max((len(game['players']) for game in game_list_default if isinstance(game.get('players'), list)), default=0)
-
-    # Ranking-Daten vorbereiten
-    ranking_default = prepare_ranking_table(game_list_default, event)
-    ranking_playtime = prepare_ranking_table(game_list_playtime, event)
-    ranking_complexity = prepare_ranking_table(game_list_complexity, event)
-
+    # Alle Rankings und Daten auf einmal berechnen
+    event_data = prepare_all_rankings(event)
+    
     return render_template(
         "event.html",
-        games=game_list_default,
-        max_positions=max_positions,
-        ranking_default=ranking_default,
-        ranking_playtime=ranking_playtime,
-        ranking_complexity=ranking_complexity,
+        games=event_data["games"],
+        max_positions=event_data["max_positions"],
+        ranking_default=event_data["ranking_default"],
+        ranking_playtime=event_data["ranking_playtime"],
+        ranking_complexity=event_data["ranking_complexity"],
     )
 
 @main.route("/boardgame/<path:boardgame_id>", methods=["GET"])
