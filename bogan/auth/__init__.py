@@ -19,11 +19,11 @@ def login():
 
 @auth.route("/login", methods=["POST"])
 def login_post():
-    logger.info("Wird aufgerufen")
-    email = request.form.get("email")
+    logger.info("Login wird aufgerufen")
+    name = request.form.get("name")
     password = request.form.get("password")
     remember = True if request.form.get("remember") else False
-    user = User.query.filter_by(email=email).first()
+    user = User.query.filter_by(name=name).first()
 
     # check if the user exist and check the password
     if not user or not check_password_hash(user.password, password):
@@ -43,20 +43,24 @@ def signup():
 
 @auth.route("/signup", methods=["POST"])
 def signup_post():
-    email = request.form.get("email")
+    email = request.form.get("email")  # Email ist jetzt optional
     name = request.form.get("name")
     password = request.form.get("password")
 
-    # Überprüft ob email bereits vergeben ist
-    user = User.query.filter_by(email=email).first()
+    # Überprüft ob Name bereits vergeben ist (Name ist jetzt der eindeutige Identifier)
+    user = User.query.filter_by(name=name).first()
 
-    # Wenn email schon vorhanden, reset to basic
+    # Wenn Name schon vorhanden, reset to basic
     if user:
-        logger.info("Email address already exist!")
+        logger.info("Name already exists!")
         return redirect(url_for("auth.signup"))
 
-    # Erstelle neuen Benutzer
-    new_user = User(email=email, name=name, password=generate_password_hash(password))
+    # Erstelle neuen Benutzer (Email kann None/leer sein)
+    new_user = User(
+        email=email if email else None, 
+        name=name, 
+        password=generate_password_hash(password)
+    )
     db.session.add(new_user)
     db.session.commit()
 

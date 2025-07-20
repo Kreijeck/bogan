@@ -17,9 +17,9 @@ db = SQLAlchemy(model_class=Base)
 class User(UserMixin, db.Model):
     __tablename__ = "user"
     id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(String(128), unique=True)
+    name: Mapped[str] = mapped_column(String(128), unique=True)
+    email: Mapped[str] = mapped_column(String(128), nullable=True)
     password: Mapped[str] = mapped_column(String(256))
-    name: Mapped[str] = mapped_column(String(128))
     role: Mapped[str] = mapped_column(String(128), default="user")
     player_id: Mapped[int] = mapped_column(ForeignKey("player.id"), nullable=True)
 
@@ -27,7 +27,7 @@ class User(UserMixin, db.Model):
     player: Mapped["Player"] = relationship("Player", back_populates="user")
 
     def __repr__(self) -> str:
-        return f"User(id={self.id}, email={self.email}, name={self.name}, bgg_name={self.bgg_name}, role={self.role})"
+        return f"User(id={self.id}, email={self.email}, name={self.name}, role={self.role})"
 
 
 class Player(db.Model):
