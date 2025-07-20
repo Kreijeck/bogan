@@ -1,4 +1,6 @@
 import os
+from importlib import metadata
+from pathlib import Path
 from dotenv import load_dotenv
 from dataclasses import dataclass
 
@@ -17,9 +19,27 @@ def env(env_var: str) -> str:
     """
     return os.getenv(env_var)
 
+# Read version from package metadata or pyproject.toml as fallback
+def get_version() -> str:
+    """Read version from package metadata or pyproject.toml as fallback"""
+    try:
+        # Try to get version from installed package metadata
+        return metadata.version("bogan")
+    except metadata.PackageNotFoundError:
+        # Fallback: read from pyproject.toml
+        import re
+        pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
+        with open(pyproject_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        
+        version_match = re.search(r'^version\s*=\s*["\']([^"\']+)["\']', content, re.MULTILINE)
+        if version_match:
+            return version_match.group(1)
+        else:
+            raise ValueError("Version not found")
 
 ### Generic ###
-BOGAN_VERSION = "0.4.1"
+BOGAN_VERSION = get_version()
 ENCODING = "utf-8"
 
 ### Flask ###

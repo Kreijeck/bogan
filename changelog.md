@@ -2,6 +2,11 @@
 
 ## Current Version
 
+## 0.5.0
+
+- use uv for dependency management
+- change login screen and db - name and pw is enough to login
+
 ## 0.4.1
 
 - Brettspielseite als Übersicht [analyse specific queries](https://github.com/Kreijeck/bogan/issues/14)
