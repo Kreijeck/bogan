@@ -289,7 +289,7 @@ if __name__ == "__main__":
     from time import time
 
     t_start = time()
-    update_db(from_api=True, save_file=True)
+    update_db(from_api=True, save_file=False)
     t_stop = time()
     t_ges = round(t_stop - t_start, 4)
     logger.info(f"[SUCCESS] Das Updaten/Erstellen der Datenbank dauerte {t_ges} sek")
