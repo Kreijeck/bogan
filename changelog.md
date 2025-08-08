@@ -2,10 +2,16 @@
 
 ## Current Version
 
+## 0.6.0
+
+- Landing Page mit Leben gefüllt
+- Mehr Details bei den Brettspielen
+- Statistiken für Spieler
+
 ## 0.5.0
 
-- use uv for dependency management
-- change login screen and db - name and pw is enough to login
+- Packetmanager uv wird verwendet
+- Login Mechanismus - name und Passwort ist genug - breaking change in db
 
 ## 0.4.1
 
