@@ -8,6 +8,211 @@
     overflow-y: scroll;
 }
 
+/* Homepage Hero Section */
+.hero-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.hero-with-bg {
+    background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('../img/Logo_Gamechanger.jpeg');
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-with-bg .title,
+.hero-with-bg .subtitle {
+    color: white !important;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+/* CSS Logo für Bogan */
+.bogan-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'Arial Black', Arial, sans-serif;
+    font-weight: 900;
+    font-size: 3rem;
+    color: white;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+    margin-bottom: 1rem;
+}
+
+.bogan-logo .dice-icon {
+    font-size: 2.5rem;
+    color: #FFD700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    transform: rotate(-15deg);
+    animation: dice-bounce 2s infinite;
+}
+
+.bogan-logo .logo-text {
+    letter-spacing: 0.1em;
+    background: linear-gradient(45deg, #FFD700, #FFA500, #FF6B35);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+}
+
+@keyframes dice-bounce {
+    0%, 100% { transform: rotate(-15deg) translateY(0); }
+    50% { transform: rotate(-15deg) translateY(-5px); }
+}
+
+.board-elements {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.board-elements span {
+    color: #FFD700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    animation: float 3s ease-in-out infinite;
+}
+
+.board-elements span:nth-child(2) { animation-delay: 0.5s; }
+.board-elements span:nth-child(3) { animation-delay: 1s; }
+.board-elements span:nth-child(4) { animation-delay: 1.5s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+.hero-body {
+    position: relative;
+}
+
+/* Game Cards */
+.game-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    height: 100%;
+}
+
+.game-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.game-card .card-image img {
+    transition: transform 0.3s ease;
+}
+
+.game-card:hover .card-image img {
+    transform: scale(1.05);
+}
+
+.game-card .card-image {
+    overflow: hidden;
+}
+
+/* Tools Section */
+.tool-box {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border 0.2s ease-in-out;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.tool-box:hover {
+    transform: translateY(-4px);
+    border-color: #3273dc;
+    box-shadow: 0 8px 25px rgba(50, 115, 220, 0.15);
+}
+
+.bounce-on-hover {
+    transition: transform 0.3s ease;
+}
+
+.bounce-on-hover:hover {
+    transform: scale(1.1);
+}
+
+/* Events Section */
+.event-box {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border 0.2s ease-in-out;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    height: 100%;
+}
+
+/* Sehr spezifische Regel für Event-Boxen */
+.box.event-box.event-box-blue {
+    background-color: #9ac9eb !important;
+    border: 2px solid #326a99 !important;
+}
+
+/* Bessere Lesbarkeit der Event-Titel auf blauem Hintergrund */
+.event-box .title.has-text-primary {
+    color: #1565c0 !important; /* Dunkleres Blau für besseren Kontrast */
+}
+
+.event-box:hover {
+    transform: translateY(-2px);
+    border-color: #3273dc;
+    box-shadow: 0 6px 20px rgba(50, 115, 220, 0.12);
+}
+
+.event-box .level {
+    margin-bottom: 1rem;
+}
+
+.event-box .content {
+    padding-bottom: 0;
+}
+
+/* Statistics Section */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+/* Winner Badge */
+.winner-tag {
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    color: #2c3e50 !important;
+    font-weight: bold;
+}
+
+/* Animation für Icons */
+.bounce-on-hover {
+    transition: transform 0.3s ease;
+}
+
+.bounce-on-hover:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Responsive Verbesserungen */
+@media (max-width: 768px) {
+    .hero.is-medium .hero-body {
+        padding: 3rem 1.5rem;
+    }
+    
+    .title.is-1 {
+        font-size: 2.5rem !important;
+    }
+    
+    .subtitle.is-3 {
+        font-size: 1.5rem !important;
+    }
+    
+    .column.is-one-fifth-desktop {
+        flex-basis: 50% !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .column.is-one-fifth-desktop {
+        flex-basis: 100% !important;
+    }
+}
+
 /* Allgemeine Container-Styles */
 .search-control {
     display: inline-block;
