@@ -34,7 +34,9 @@
                     {% for game in games %}
                     <tr>
                         <td>{{ game.datum_fmt }}</td>
-                        <td><strong><a href="{{ url_for('main.show_boardgame', boardgame_id=game.bgg_id)}}">{{ game.boardgame }}</a></strong></td>
+                        <td><strong>
+                            <a href="{{ url_for('main.show_game', game_id=game.id) }}" class="has-text-link">{{ game.boardgame }}</a>
+                        </strong></td>
                         <td>
                             <img src="{{ game.img_small }}" alt="Bild nicht verfügbar"
                                 style="width: 75px; height: auto; border-radius: 8px;">
@@ -43,7 +45,11 @@
                                 60)|int }}min{% endif %}</td>
                                 {% for player in game.players %}
                         <td>
-                            <strong>{{ player.name }}</strong> <br>
+                            <strong>
+                              <a href="{{ url_for('main.show_player', player_name=player.name) }}" class="has-text-primary player-link">
+                                {{ player.name }}
+                              </a>
+                            </strong> <br>
                             ({{ player.punkte }} Pkte)
                         </td>
                         {% endfor %}
@@ -99,7 +105,11 @@
                         {% for player, data in ranking_default %}
                         <tr>
                             <td><strong>{{ loop.index }}</strong></td>
-                            <td><strong>{{ player }}</strong></td>
+                            <td><strong>
+                              <a href="{{ url_for('main.show_player', player_name=player) }}" class="has-text-primary player-link">
+                                {{ player }}
+                              </a>
+                            </strong></td>
                             <td><strong>{{ data.total|round(2) }}</strong></td>
                             <td>
                                 <button class="button is-small is-primary"
@@ -164,7 +174,11 @@
                         {% for player, data in ranking_playtime %}
                         <tr>
                             <td><strong>{{ loop.index }}</strong></td>
-                            <td><strong>{{ player }}</strong></td>
+                            <td><strong>
+                              <a href="{{ url_for('main.show_player', player_name=player) }}" class="has-text-primary player-link">
+                                {{ player }}
+                              </a>
+                            </strong></td>
                             <td><strong>{{ data.total|round(2) }}</strong></td>
                             <td>
                                 <button class="button is-small is-primary"

@@ -90,13 +90,27 @@
         {% for game in games %}
         <div class="column is-half">
           <article class="box">
-            <h3 class="title is-5">Partie vom {{ game.datum.strftime('%d.%b %Y') }}</h3>
+            <h3 class="title is-5">
+              <a href="{{ url_for('main.show_game', game_id=game.id) }}" class="has-text-primary game-link">
+                Partie vom {{ game.datum.strftime('%d.%b %Y') }}
+              </a>
+            </h3>
             <!-- Sieger -->
-            <p class="has-text-info-50"><strong class="has-text-info-60">Sieger:</strong> {{game.player_pos[0].player.name}} </p>
+            <p class="has-text-info-50"><strong class="has-text-info-60">Sieger:</strong> 
+              <a href="{{ url_for('main.show_player', player_name=game.player_pos[0].player.name) }}" class="has-text-primary player-link">
+                {{ game.player_pos[0].player.name }}
+              </a>
+            </p>
             <p> <br> </p>
             <p><strong>Spieler (Punkte):</strong>
               {% for player in game.player_pos %}
-            <p> Pos {{ loop.index}}: <strong>{{ player.player.name }}</strong> ({{ player.points }} Punkte) </p>
+            <p> Pos {{ loop.index}}: 
+              <strong>
+                <a href="{{ url_for('main.show_player', player_name=player.player.name) }}" class="has-text-primary player-link">
+                  {{ player.player.name }}
+                </a>
+              </strong> ({{ player.points }} Punkte) 
+            </p>
             {% endfor %}
             <p> <br> </p>
             <p><strong>Spielzeit[min]</strong> {{ '-' if game.playtime < 15 else game.playtime }}</p>
@@ -149,7 +163,11 @@
                 </div>
               </div>
               <div class="media-content">
-                <p class="title is-5">{{ player.name }}</p>
+                <p class="title is-5">
+                  <a href="{{ url_for('main.show_player', player_name=player.name) }}" class="has-text-primary player-link">
+                    {{ player.name }}
+                  </a>
+                </p>
                 <p class="subtitle is-6 has-text-grey">
                   {{ player.games_played }} Spiel{{ 'e' if player.games_played != 1 else '' }}
                 </p>

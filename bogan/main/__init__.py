@@ -6,6 +6,7 @@ from bogan.main.lib.event_analysis import prepare_all_rankings
 from bogan.main.lib.fetch_db import get_boardgame_by, get_games_by, get_all_boardgames, engine
 from bogan.main.lib.boardgame_ranking import calculate_player_ranking, get_boardgame_stats
 from bogan.main.lib.player_stats import get_player_stats, get_all_players
+from bogan.main.lib.game_detail import get_game_detail_data
 from bogan.db.models import Game, Boardgame, Location
 from bogan.utils import load_yaml
 import bogan.config as cfg
@@ -72,7 +73,10 @@ def index():
     # Sortiere Events nach Startdatum (neueste zuerst)
     events_data.sort(key=lambda x: x['start_date'], reverse=True)
     
-    return render_template("index.html", latest_games=games_data, events=events_data)
+    # Erstelle zusätzlich eine nach Namen sortierte Liste für die Navigation
+    events_nav = sorted(events_data, key=lambda x: x['name'])
+    
+    return render_template("index.html", latest_games=games_data, events=events_nav)
 
 
 @main.route("/profile")
@@ -146,9 +150,29 @@ def show_player(player_name: str):
                              player_data=player_data)
 
 
+@main.route("/game/<int:game_id>", methods=["GET"])
+def show_game(game_id: int):
+    """
+    Zeigt Details einer einzelnen gespielten Partie.
+    
+    Args:
+        game_id: Die eindeutige ID der Partie in der Datenbank
+    """
+    with Session(engine) as session:
+        try:
+            game_data = get_game_detail_data(game_id, session)
+            return render_template("game_detail.html", game=game_data)
+        except ValueError as e:
+            # Wenn Spiel nicht gefunden wird, zur Übersicht weiterleiten
+            return render_template("error.html", 
+                                 error_message=str(e), 
+                                 error_code=404), 404
+
+
 @main.route("/game", methods=["GET"])
-def show_game():
-    return render_template("game_detail.html")
+def show_game_legacy():
+    """Legacy route - leitet zur Spieleübersicht weiter"""
+    return render_template("boardgames_overview.html")
 
 
 
