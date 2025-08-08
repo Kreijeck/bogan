@@ -6,6 +6,7 @@
 <section class="section">
   <div class="container">
     <h1 class="title"> {{ boardgame.name }}</h1>
+    
     <div class="columns">
       <!-- Spalte für das Bild -->
       <div class="column is-one-third">
@@ -23,6 +24,36 @@
         <p><strong>BGG ID</strong> {{ boardgame.bgg_id }}</p>
       </div>
     </div>
+    
+    <!-- Allgemeine Spielstatistiken -->
+    {% if game_stats and game_stats.total_games > 0 %}
+    <div class="box game-stats-box mt-5">
+      <div class="columns is-mobile">
+        <div class="column has-text-centered">
+          <p class="heading">Gespielt</p>
+          <p class="title is-4 has-text-white">{{ game_stats.total_games }}</p>
+        </div>
+        <div class="column has-text-centered">
+          <p class="heading">Ø Punkte</p>
+          <p class="title is-4 has-text-white">{{ game_stats.avg_points }}</p>
+        </div>
+        <div class="column has-text-centered">
+          <p class="heading">Höchste</p>
+          <p class="title is-4 has-text-white">{{ game_stats.highest_score }}</p>
+        </div>
+        <div class="column has-text-centered">
+          <p class="heading">Niedrigste</p>
+          <p class="title is-4 has-text-white">{{ game_stats.lowest_score }}</p>
+        </div>
+        {% if game_stats.avg_playtime > 0 %}
+        <div class="column has-text-centered">
+          <p class="heading">Ø Spielzeit</p>
+          <p class="title is-4 has-text-white">{{ game_stats.avg_playtime }} min</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
   </div>
 </section>
 
@@ -57,46 +88,100 @@
   </div>
 </section>
 
-<!-- Tabelle: Spielerstatistik / Ranking , muss noch angelegt werden!!!!-->
-<!-- <section class="section">
+<!-- Spieler-Ranking für dieses Brettspiel -->
+{% if player_ranking %}
+<section class="section">
   <div class="container">
-    <h2 class="subtitle">Aktuelle Spielerstatistik</h2>
-    <table class="table is-fullwidth is-hoverable">
-      <thead>
-        <tr>
-          <th>Rang</th>
-          <th>Spieler</th>
-          <th>Gesamtpunkte</th>
-          <th>Durchschnitt</th>
-          <th>Siegquote</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>Anna</td>
-          <td>203</td>
-          <td>101.5</td>
-          <td>50%</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Bernd</td>
-          <td>199</td>
-          <td>99.5</td>
-          <td>50%</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Claudius</td>
-          <td>72</td>
-          <td>72</td>
-          <td>0%</td>
-        </tr>
-      </tbody>
-    </table>
+    <h2 class="title is-3 has-text-centered has-text-primary">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-trophy"></i>
+        </span>
+        <span>Spieler-Ranking für {{ boardgame.name }}</span>
+      </span>
+    </h2>
+    <p class="subtitle has-text-centered mb-6 has-text-grey-dark">
+      Leistung aller Spieler in diesem Spiel
+    </p>
+
+    <div class="columns is-multiline">
+      {% for player in player_ranking %}
+      <div class="column is-half-tablet is-one-third-desktop">
+        <div class="box player-rank-box">
+          <div class="media">
+            <div class="media-left">
+              <div class="rank-badge rank-{{ loop.index }}">
+                {% if loop.index == 1 %}
+                  <i class="fas fa-crown"></i>
+                {% elif loop.index == 2 %}
+                  <i class="fas fa-medal"></i>
+                {% elif loop.index == 3 %}
+                  <i class="fas fa-award"></i>
+                {% else %}
+                  {{ loop.index }}
+                {% endif %}
+              </div>
+            </div>
+            <div class="media-content">
+              <p class="title is-5">{{ player.name }}</p>
+              <p class="subtitle is-6 has-text-grey">
+                {{ player.games_played }} Spiel{{ 'e' if player.games_played != 1 else '' }}
+              </p>
+            </div>
+          </div>
+          
+          <div class="content">
+            <div class="columns is-gapless is-multiline">
+              <div class="column is-half">
+                <div class="has-text-centered">
+                  <p class="heading">Durchschnitt</p>
+                  <p class="title is-6 has-text-primary">{{ player.avg_points }} Pkt</p>
+                </div>
+              </div>
+              <div class="column is-half">
+                <div class="has-text-centered">
+                  <p class="heading">Ø Position</p>
+                  <p class="title is-6 has-text-info">{{ player.avg_position }}</p>
+                </div>
+              </div>
+              <div class="column is-half">
+                <div class="has-text-centered">
+                  <p class="heading">Siegquote</p>
+                  <p class="title is-6 has-text-success">{{ player.win_rate }}%</p>
+                </div>
+              </div>
+              <div class="column is-half">
+                <div class="has-text-centered">
+                  <p class="heading">Siege</p>
+                  <p class="title is-6 has-text-warning">{{ player.wins }}</p>
+                </div>
+              </div>
+            </div>
+            
+            <hr class="my-3">
+            
+            <div class="level is-mobile">
+              <div class="level-item has-text-centered">
+                <div>
+                  <p class="heading">Bester Score</p>
+                  <p class="title is-6">{{ player.best_score }}</p>
+                </div>
+              </div>
+              <div class="level-item has-text-centered">
+                <div>
+                  <p class="heading">Schlechtester</p>
+                  <p class="title is-6">{{ player.worst_score }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
   </div>
-</section> -->
+</section>
+{% endif %}
 
 
 {% endblock %}
