@@ -203,4 +203,62 @@
   </div>
 </section>
 
+<!-- Navigation Links -->
+<section class="section">
+  <div class="container">
+    <h2 class="title is-4 has-text-primary collapsible-header" data-target="navigation">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-compass"></i>
+        </span>
+        <span>Navigation</span>
+        <span class="icon collapse-icon">
+          <i class="fas fa-chevron-up"></i>
+        </span>
+      </span>
+    </h2>
+    
+    <div id="navigation" class="collapsible-content">
+      <div class="columns">
+        <div class="column">
+          <div class="box has-text-centered">
+            <h4 class="title is-6 has-text-primary">Brettspiel</h4>
+            <a href="{{ url_for('main.show_boardgame', boardgame_id=game.boardgame.id) }}" 
+               class="button is-primary is-fullwidth">
+              <span class="icon">
+                <i class="fas fa-dice"></i>
+              </span>
+              <span>{{ game.boardgame.name }}</span>
+            </a>
+          </div>
+        </div>
+        <div class="column">
+          <div class="box has-text-centered">
+            <h4 class="title is-6 has-text-primary">Alle Spieler</h4>
+            <a href="{{ url_for('main.show_all_players') }}" 
+               class="button is-info is-fullwidth">
+              <span class="icon">
+                <i class="fas fa-users"></i>
+              </span>
+              <span>Spieler-Übersicht</span>
+            </a>
+          </div>
+        </div>
+        <div class="column">
+          <div class="box has-text-centered">
+            <h4 class="title is-6 has-text-primary">Alle Brettspiele</h4>
+            <a href="{{ url_for('main.show_all_boardgames') }}" 
+               class="button is-success is-fullwidth">
+              <span class="icon">
+                <i class="fas fa-list"></i>
+              </span>
+              <span>Spiele-Übersicht</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 {% endblock %}

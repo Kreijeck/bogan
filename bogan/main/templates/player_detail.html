@@ -175,7 +175,11 @@
                     <div class="level-left">
                       <div class="level-item">
                         <div>
-                          <p class="title is-6 has-text-primary">{{ game.boardgame_name }}</p>
+                          <p class="title is-6 has-text-primary">
+                            <a href="{{ url_for('main.show_game', game_id=game.game_id) }}" class="has-text-primary game-link">
+                              {{ game.boardgame_name }}
+                            </a>
+                          </p>
                           <p class="subtitle is-7 has-text-grey">{{ game.date_fmt }}</p>
                         </div>
                       </div>

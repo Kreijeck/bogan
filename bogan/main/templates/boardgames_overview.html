@@ -75,17 +75,31 @@
   </div>
 </section>
 
-{% endblock %}
-
-{% block scripts %}
+<!-- Initialisiere die Live-Suche -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialisiere Boardgames Search mit Konfiguration
-    initializeBoardgamesSearch({
-        searchInputId: 'searchInput',
-        gridSelector: '#gameGrid',
-        itemSelector: '.game-item'
-    });
-});
+  document.addEventListener('DOMContentLoaded', function() {
+    // Angepasste Suche für das neue Grid-Layout
+    const searchInput = document.getElementById('searchInput');
+    const gameGrid = document.getElementById('gameGrid');
+    const gameItems = gameGrid.querySelectorAll('.game-item');
+
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        
+        gameItems.forEach(function(item) {
+          const gameTitle = item.querySelector('.game-title');
+          if (gameTitle) {
+            const titleText = gameTitle.textContent.toLowerCase();
+            if (titleText.includes(searchTerm)) {
+              item.style.display = '';
+            } else {
+              item.style.display = 'none';
+            }
+          }
+        });
+      });
+    }
+  });
 </script>
 {% endblock %}
