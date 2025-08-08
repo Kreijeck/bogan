@@ -150,6 +150,81 @@
     color: #1565c0 !important; /* Dunkleres Blau für besseren Kontrast */
 }
 
+/* Player Ranking Boxes */
+.player-rank-box {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 2px solid transparent;
+    height: 100%;
+}
+
+.player-rank-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border-color: #3273dc;
+}
+
+/* Bessere Formatierung für Statistik-Werte */
+.player-rank-box .heading {
+    margin-bottom: 0.2rem !important;
+}
+
+.player-rank-box .title.is-6 {
+    margin-bottom: 0.75rem !important;
+}
+
+.player-rank-box .level .level-item {
+    margin-bottom: 0.5rem;
+}
+
+.rank-badge {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.rank-1 {
+    background: linear-gradient(45deg, #FFD700, #FFA500);
+    box-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
+}
+
+.rank-2 {
+    background: linear-gradient(45deg, #C0C0C0, #A8A8A8);
+    box-shadow: 0 4px 8px rgba(192, 192, 192, 0.3);
+}
+
+.rank-3 {
+    background: linear-gradient(45deg, #CD7F32, #B8860B);
+    box-shadow: 0 4px 8px rgba(205, 127, 50, 0.3);
+}
+
+.rank-badge:not(.rank-1):not(.rank-2):not(.rank-3) {
+    background: linear-gradient(45deg, #3273dc, #1976d2);
+    box-shadow: 0 4px 8px rgba(50, 115, 220, 0.3);
+}
+
+/* Game Statistics Box */
+.game-stats-box {
+    background: linear-gradient(135deg, #3273dc, #1976d2) !important;
+    border: 2px solid #1565c0 !important;
+    box-shadow: 0 4px 15px rgba(50, 115, 220, 0.2);
+}
+
+.game-stats-box .heading {
+    color: #e3f2fd !important;
+    font-weight: 600;
+}
+
+.game-stats-box .title.has-text-white {
+    color: white !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
 .event-box:hover {
     transform: translateY(-2px);
     border-color: #3273dc;
