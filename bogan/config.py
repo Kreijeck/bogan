@@ -80,6 +80,16 @@ TAG2LIST_PLAY = "player"
 ### Pathinformation ###
 EVENT_YAML = "bogan/events.yaml"
 
+### Ignored Players ###
+IGNORED_PLAYERS = ["Bot",
+                   "Christian",
+                   "Felix",
+                   "Jörn",
+                   "Katka",
+                   "Louis",
+                   "Markus",
+                   "Quinn",
+                   ]
 
 ### LOGGING ###
 @dataclass
