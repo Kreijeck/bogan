@@ -39,18 +39,16 @@
                     </div>
                 </div>
                 <!-- Zusätzliche Reiter -->
-                <div class="navbar-item has-dropdown is-hoverable">
+                <div class="navbar-item has dropdown is-hoverable">
                     <a href="#" class="navbar-link">Events</a>
                     <div class="navbar-dropdown">
                         {% for event in events %}
-                        <a href="{{ url_for('main.show_event', event=event.name)}}" class="navbar-item"> {{ event.name }}</a>
+                        <a href="{{ url_for('main.show_event', event=event)}}" class="navbar-item"> {{ event }}</a>
                         {% endfor %}
 
                     </div>
                 </div>
                 <a href="{{ url_for('main.show_all_boardgames') }}" class="navbar-item">Brettspiele</a>
-                <a href="{{ url_for('main.show_all_players') }}" class="navbar-item">Player</a>
-                <a href="{{ url_for('main.show_all_games') }}" class="navbar-item">Partien</a>
                 <a href="{{ url_for('main.profile') }}" class="navbar-item">Noch nix</a>
 
             </div>
@@ -78,12 +76,12 @@
     <!-- FOOTER -->
     <footer class="footer">
         <div class="content has-text-right">
-            <p><strong>Bogan </strong> powered by Kreijeck.</p>
+            <p> <strong>Bogan </strong> powered by Kreijeck. </p>
             <p>Version: <a href="https://github.com/Kreijeck/bogan/blob/master/changelog.md">{{ config['VERSION'] }}</a></p>
         </div>
     </footer>
     <!-- Scripte -->
-    <script src="{{url_for('static', filename='js/bogan-lib.js') }}"></script>
+    <script src="{{url_for('static', filename='js/index.js') }}"></script>
     {% block scripts %}
     {% endblock %}
 </body>

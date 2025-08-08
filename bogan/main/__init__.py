@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 from bogan.main.lib.event_analysis import prepare_all_rankings
 from bogan.main.lib.fetch_db import get_boardgame_by, get_games_by, get_all_boardgames, engine
 from bogan.main.lib.boardgame_ranking import calculate_player_ranking, get_boardgame_stats
+from bogan.main.lib.player_stats import get_player_stats, get_all_players
 from bogan.db.models import Game, Boardgame, Location
 from bogan.utils import load_yaml
 import bogan.config as cfg
@@ -127,7 +128,24 @@ def show_all_boardgames():
         boardgames = get_all_boardgames(session)
 
         return render_template("boardgames_overview.html", boardgames=boardgames)
-    
+
+
+@main.route("/players", methods=["GET"])
+def show_all_players():
+    with Session(engine) as session:
+        players = get_all_players(session)
+        return render_template("players_overview.html", players=players)
+
+
+@main.route("/player/<path:player_name>", methods=["GET"])
+def show_player(player_name: str):
+    with Session(engine) as session:
+        player_data = get_player_stats(player_name, session)
+        return render_template("player_detail.html", 
+                             player_name=player_name, 
+                             player_data=player_data)
+
+
 @main.route("/game", methods=["GET"])
 def show_game():
     return render_template("game_detail.html")

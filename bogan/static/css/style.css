@@ -225,6 +225,97 @@
     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
 }
 
+/* Player Statistics Overview */
+.player-stats-overview {
+    background: linear-gradient(135deg, #667eea, #764ba2) !important;
+    border: 2px solid #5a67d8 !important;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.player-stats-overview .heading {
+    color: #e3f2fd !important;
+    font-weight: 600;
+}
+
+.player-stats-overview .title.has-text-white {
+    color: white !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Best Game Boxes */
+.best-game-box {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 2px solid transparent;
+    height: 100%;
+}
+
+.best-game-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border-color: #3273dc;
+}
+
+.best-game-rank {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #3273dc, #1976d2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Game History Boxes */
+.game-history-box {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 2px solid #000000;
+    height: 100%;
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+.game-history-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    border-color: #000000;
+}
+
+.game-history-box.game-won {
+    border: 2px solid #000000;
+    border-left: 4px solid #48c774;
+    background-color: #000000 !important;
+}
+
+.game-history-box .title,
+.game-history-box .subtitle,
+.game-history-box .heading {
+    color: #ffffff !important;
+}
+
+.game-history-box .level {
+    margin-bottom: 0.75rem;
+}
+
+/* Players Overview */
+.player-overview-box {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 2px solid transparent;
+    height: 100%;
+}
+
+.player-overview-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(50, 115, 220, 0.15);
+    border-color: #3273dc;
+}
+
+.player-avatar {
+    margin-bottom: 1rem;
+}
+
 .event-box:hover {
     transform: translateY(-2px);
     border-color: #3273dc;
@@ -328,4 +419,128 @@
       width: 100% !important;
       margin: 0.2rem auto;
     }
+  }
+  
+  /* Player ranking game boxes */
+  .player-ranking-box {
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    border-radius: 15px !important;
+    background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
+    box-shadow: 0 4px 15px rgba(72, 95, 199, 0.08) !important;
+  }
+  
+  .player-ranking-box:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(72, 95, 199, 0.15) !important;
+    border-color: var(--primary-color);
+  }
+  
+  /* Collapsible sections styling */
+  .collapsible-header {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .collapsible-header:hover {
+    background-color: rgba(72, 95, 199, 0.1) !important;
+    transform: translateY(-1px);
+  }
+  
+  .collapsible-content {
+    transition: all 0.3s ease;
+  }
+  
+  .collapse-icon {
+    transition: transform 0.3s ease;
+    margin-left: auto;
+  }
+  
+  /* Position color coding for game history */
+  .position-tag {
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 0.875rem;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+  }
+  
+  /* Platz 1: Gelb */
+  .position-1 {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #1a1a1a;
+    border-color: #f1c40f;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Platz 2: Grau */
+  .position-2 {
+    background: linear-gradient(135deg, #c0c0c0 0%, #e6e6e6 100%);
+    color: #2a2a2a;
+    border-color: #a0a0a0;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  }
+  
+  /* Platz 3: Braun */
+  .position-3 {
+    background: linear-gradient(135deg, #cd7f32 0%, #d4941e 100%);
+    color: #ffffff;
+    border-color: #b8691e;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Platz 4 und schlechter: Weiß */
+  .position-tag:not(.position-1):not(.position-2):not(.position-3) {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    color: #495057;
+    border-color: #dee2e6;
+    text-shadow: none;
+  }
+  
+  /* Hover effects for position tags */
+  .position-tag:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .position-1:hover {
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
+  }
+  
+  .position-2:hover {
+    box-shadow: 0 4px 12px rgba(192, 192, 192, 0.4);
+  }
+  
+  .position-3:hover {
+    box-shadow: 0 4px 12px rgba(205, 127, 50, 0.4);
+  }
+  
+  /* Month section styling */
+  .month-section {
+    border-bottom: 2px solid #e8ecff;
+    padding-bottom: 2rem;
+  }
+  
+  .month-section:last-child {
+    border-bottom: none;
+  }
+  
+  .month-section h3 {
+    position: relative;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .month-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   }

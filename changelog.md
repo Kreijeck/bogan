@@ -2,31 +2,11 @@
 
 ## Current Version
 
-## 0.7.6
-
-- bugfixes auf "mobile devices"
-
-## 0.7.5
-
-- Ranking table jetzt als Tabs zu sehen
-- Ranking auch in Brettspielen verfügbar
-- neue Berechnung Ranking/playtime ohne Zeitangabe: default Time aus Beschreibung des Brettspiels
-
-## 0.7.0
-
-- Registrierung nur mit Passwort möglich
-- Profilseite kann mit Spieler verknüpft werden
-- farbliche Style Anpassungen, inkl. Optimierung bright-dark-mode
-- Kurzübersicht über alle Spieler
-
 ## 0.6.0
 
-- **KI Unterstützung**
 - Landing Page mit Leben gefüllt
 - Mehr Details bei den Brettspielen
 - Statistiken für Spieler
-- einzelne Partien können angezeigt werden
-- Verlinkungen zwischen Partien, Brettspielen und Spielern möglich
 
 ## 0.5.0
 

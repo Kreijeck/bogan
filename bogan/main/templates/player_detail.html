@@ -45,10 +45,7 @@
           </div>
           <div class="column has-text-centered">
             <p class="heading">Ø Position</p>
-            <p class="title is-3 has-text-white">
-              {{ player_data.avg_position }}
-              <small class="has-text-grey-light">/{{ player_data.avg_player_count }}</small>
-            </p>
+            <p class="title is-3 has-text-white">{{ player_data.avg_position }}</p>
           </div>
         </div>
       </div>
@@ -110,10 +107,7 @@
                 <div class="column is-half">
                   <div class="has-text-centered">
                     <p class="heading">Ø Position</p>
-                    <p class="title is-6 has-text-info">
-                      {{ game.avg_position }}
-                      <small class="has-text-grey-light">/{{ game.avg_player_count }}</small>
-                    </p>
+                    <p class="title is-6 has-text-info">{{ game.avg_position }}</p>
                   </div>
                 </div>
                 <div class="column is-half">
@@ -158,16 +152,6 @@
       Alle gespielten Partien von {{ player_name }} chronologisch sortiert
     </p>
 
-    <!-- Suchfeld für Spielhistorie -->
-    <div class="field mb-5">
-      <label class="label">Suche in Spielhistorie</label>
-      <div class="control">
-        <input id="gameHistorySearch" class="input" type="text" 
-               placeholder="Nach Brettspiel, Datum oder Ort suchen...">
-      </div>
-      <p class="help">Suche nach Brettspiel-Namen, Datum (z.B. "2025", "März") oder Ort</p>
-    </div>
-
     <div id="game-history-section" class="collapsible-content">
       {% if player_data.games_by_month %}
         {% for month_key in player_data.games_by_month.keys() | sort | reverse %}
@@ -183,20 +167,15 @@
               </span>
             </h3>
             
-            <div class="columns is-multiline" id="monthGamesGrid-{{ loop.index }}">
+            <div class="columns is-multiline">
               {% for game in month_games %}
-              <div class="column is-half-tablet is-one-third-desktop game-history-item" 
-                   data-searchable="{{ game.boardgame_name|lower }} {{ game.date_fmt }} {{ game.location|lower }} {{ month_games[0].month_display|lower }}">
+              <div class="column is-half-tablet is-one-third-desktop">
                 <div class="box game-history-box {% if game.won %}game-won{% endif %}">
                   <div class="level is-mobile">
                     <div class="level-left">
                       <div class="level-item">
                         <div>
-                          <p class="title is-6 has-text-primary">
-                            <a href="{{ url_for('main.show_game', game_id=game.game_id) }}" class="has-text-primary game-link">
-                              {{ game.boardgame_name }}
-                            </a>
-                          </p>
+                          <p class="title is-6 has-text-primary">{{ game.boardgame_name }}</p>
                           <p class="subtitle is-7 has-text-grey">{{ game.date_fmt }}</p>
                         </div>
                       </div>
@@ -250,10 +229,9 @@
         {% endfor %}
       {% else %}
         <!-- Fallback falls Monatsgruppierung nicht funktioniert -->
-        <div class="columns is-multiline" id="fallbackGamesGrid">
+        <div class="columns is-multiline">
           {% for game in player_data.recent_games %}
-          <div class="column is-half-tablet is-one-third-desktop game-history-item" 
-               data-searchable="{{ game.boardgame_name|lower }} {{ game.date_fmt }} {{ game.location|lower }}">
+          <div class="column is-half-tablet is-one-third-desktop">
             <div class="box game-history-box {% if game.won %}game-won{% endif %}">
               <div class="level is-mobile">
                 <div class="level-left">
@@ -330,217 +308,3 @@
 {% endif %}
 
 {% endblock %}
-
-{% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialisiere Player Detail Search mit Konfiguration
-    initializePlayerDetailSearch({
-        searchInputId: 'gameHistorySearch'
-    });
-});
-</script>
-{% endblock %}
-    margin-bottom: 0.25rem !important; /* Weniger Abstand zwischen Überschrift und Wert */
-    font-size: 0.7rem; /* Kleinere Überschrift */
-}
-
-.best-game-box .title.is-6 {
-    margin-bottom: 0.75rem !important; /* Mehr Abstand nach dem Wert */
-}
-
-/* Besseres Spacing in der Spielhistorie */
-.game-history-box .level .level-item {
-    margin-bottom: 0.5rem;
-}
-
-.game-history-box .heading {
-    margin-bottom: 0.25rem !important; /* Weniger Abstand zwischen Überschrift und Wert */
-    font-size: 0.7rem; /* Kleinere Überschrift */
-}
-
-.game-history-box .title.is-6, 
-.game-history-box .title.is-7 {
-    margin-bottom: 0.75rem !important; /* Mehr Abstand nach dem Wert */
-}
-
-/* Bessere Gruppierung der Statistik-Bereiche */
-.has-text-centered > div {
-    margin-bottom: 0.75rem; /* Mehr Abstand zwischen Statistik-Gruppen */
-}
-
-.has-text-centered:last-child > div {
-    margin-bottom: 0; /* Kein Abstand beim letzten Element */
-}
-
-/* Mobile Responsive Verbesserungen */
-@media screen and (max-width: 768px) {
-    
-    /* Spieler-Statistiken für Mobile optimieren */
-    .player-stats-overview .columns.is-mobile {
-        display: block !important;
-    }
-    
-    .player-stats-overview .column {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        padding: 0.75rem 1rem !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
-        text-align: left !important;
-    }
-    
-    .player-stats-overview .column:last-child {
-        border-bottom: none !important;
-    }
-    
-    .player-stats-overview .heading {
-        font-size: 0.9rem !important;
-        margin-bottom: 0 !important;
-        font-weight: 600 !important;
-    }
-    
-    .player-stats-overview .title.is-3 {
-        font-size: 1.25rem !important;
-        margin-bottom: 0 !important;
-    }
-    
-    /* Beste Spiele Boxen für Mobile */
-    .best-game-box {
-        padding: 0.75rem !important;
-    }
-    
-    .best-game-box .media-content .title.is-5 {
-        font-size: 1rem !important;
-        line-height: 1.2 !important;
-        word-break: break-word !important;
-    }
-    
-    .best-game-box .columns.is-gapless.is-multiline {
-        margin: 0 !important;
-    }
-    
-    .best-game-box .columns.is-gapless .column.is-half {
-        width: 50% !important;
-        padding: 0.25rem !important;
-        text-align: center !important;
-    }
-    
-    .best-game-box .heading {
-        font-size: 0.65rem !important;
-        margin-bottom: 0.1rem !important;
-    }
-    
-    .best-game-box .title.is-6 {
-        font-size: 0.8rem !important;
-        margin-bottom: 0.25rem !important;
-    }
-    
-    /* Spielhistorie für Mobile */
-    .game-history-box {
-        padding: 0.75rem !important;
-        margin-bottom: 0.75rem !important;
-    }
-    
-    .game-history-box .level.is-mobile {
-        display: block !important;
-        margin-bottom: 0.5rem !important;
-    }
-    
-    .game-history-box .level-left .level-item {
-        margin-bottom: 0.25rem !important;
-    }
-    
-    .game-history-box .level-right .level-item {
-        margin-bottom: 0.5rem !important;
-    }
-    
-    .game-history-box .title.is-6 {
-        font-size: 0.9rem !important;
-        line-height: 1.2 !important;
-        word-break: break-word !important;
-        margin-bottom: 0.1rem !important;
-    }
-    
-    .game-history-box .subtitle.is-7 {
-        font-size: 0.75rem !important;
-        margin-bottom: 0.25rem !important;
-    }
-    
-    .game-history-box .content .level.is-mobile {
-        display: flex !important;
-        justify-content: space-around !important;
-        text-align: center !important;
-    }
-    
-    .game-history-box .content .level-item {
-        flex: 1 !important;
-        margin-bottom: 0 !important;
-    }
-    
-    .game-history-box .content .heading {
-        font-size: 0.65rem !important;
-        margin-bottom: 0.1rem !important;
-    }
-    
-    .game-history-box .content .title.is-6,
-    .game-history-box .content .title.is-7 {
-        font-size: 0.75rem !important;
-        margin-bottom: 0 !important;
-        word-break: break-word !important;
-    }
-    
-    /* Monatssektionen */
-    .month-section h3.title.is-4 {
-        font-size: 1rem !important;
-        text-align: left !important;
-        margin-bottom: 1rem !important;
-    }
-    
-    /* Position Tags */
-    .position-tag {
-        font-size: 0.7rem !important;
-        padding: 0.2rem 0.4rem !important;
-        border-radius: 0.25rem !important;
-        white-space: nowrap !important;
-    }
-    
-    /* Tag Verbesserungen */
-    .tag.is-success, .tag.is-warning, .tag.is-info, .tag.is-light {
-        font-size: 0.7rem !important;
-        padding: 0.2rem 0.4rem !important;
-        margin: 0.1rem !important;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    
-    .player-stats-overview .column {
-        padding: 0.5rem 0.75rem !important;
-    }
-    
-    .player-stats-overview .heading {
-        font-size: 0.8rem !important;
-    }
-    
-    .player-stats-overview .title.is-3 {
-        font-size: 1.1rem !important;
-    }
-    
-    .best-game-box {
-        padding: 0.5rem !important;
-    }
-    
-    .game-history-box {
-        padding: 0.5rem !important;
-    }
-    
-    .game-history-box .title.is-6 {
-        font-size: 0.8rem !important;
-    }
-    
-    .month-section h3.title.is-4 {
-        font-size: 0.9rem !important;
-    }
-}
-</style>
