@@ -116,6 +116,7 @@ def get_player_stats(player_name: str, session: Session) -> Dict[str, Any]:
             
             # Recent games data
             recent_games_data.append({
+                'game_id': game.id,  # Hinzugefügte Game ID
                 'boardgame_name': game.boardgame.name,
                 'boardgame_id': game.boardgame.bgg_id,
                 'date': game.datum,

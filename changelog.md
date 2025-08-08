@@ -4,9 +4,12 @@
 
 ## 0.6.0
 
+- **KI Unterstützung**
 - Landing Page mit Leben gefüllt
 - Mehr Details bei den Brettspielen
 - Statistiken für Spieler
+- einzelne Partien können angezeigt werden
+- Verlinkungen zwischen Partien, Brettspielen und Spielern möglich
 
 ## 0.5.0
 
