@@ -3,30 +3,74 @@
 {% block content %}
 <section class="section">
   <div class="container">
-    <h1 class="title">Brettspiele</h1>
+    <h1 class="title has-text-primary collapsible-header" data-target="boardgames-list">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-dice"></i>
+        </span>
+        <span>Brettspiele</span>
+        <span class="icon collapse-icon">
+          <i class="fas fa-chevron-up"></i>
+        </span>
+      </span>
+    </h1>
 
-    <!-- Suchfeld -->
-    <div class="field">
-      <label class="label">Suche</label>
-      <div class="control search-control">
-        <input id="searchInput" class="input" type="text" placeholder="Nach einem Spiel suchen...">
+    <div id="boardgames-list" class="collapsible-content">
+      <!-- Suchfeld -->
+      <div class="field mb-5">
+        <label class="label">Suche</label>
+        <div class="control search-control">
+          <input id="searchInput" class="input" type="text" placeholder="Nach einem Spiel suchen...">
+        </div>
       </div>
-    </div>
 
-    <!-- Liste der Brettspiele -->
-    <div class="box responsive-box">
-      <ul id="gameList" class="list">
+      <!-- Matrix-Layout für Brettspiele -->
+      <div id="gameGrid" class="columns is-multiline">
         {% for boardgame in boardgames %}
-        <li class="list-item">
-          <a href="{{ url_for('main.show_boardgame', boardgame_id=boardgame.bgg_id) }}">
-            <p class="has-text-weight-bold game-title">{{ boardgame.name }}</p>
-            <figure class="image boardgame-figure">
-              <img src="{{ boardgame.img_small }}" alt="Bild nicht verfügbar">
-            </figure>
-          </a>
-        </li>
+        <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen game-item">
+          <div class="box boardgame-card">
+            <a href="{{ url_for('main.show_boardgame', boardgame_id=boardgame.bgg_id) }}" class="boardgame-link">
+              <figure class="image is-square mb-4">
+                <img src="{{ boardgame.img_small }}" alt="{{ boardgame.name }}" class="boardgame-image">
+              </figure>
+              <h3 class="title is-6 has-text-primary has-text-centered game-title">
+                {{ boardgame.name }}
+              </h3>
+              
+              <!-- Optionale Zusatzinformationen -->
+              <div class="content has-text-centered">
+                <p class="is-size-7 has-text-grey">
+                  <span class="icon-text">
+                    <span class="icon">
+                      <i class="fas fa-users"></i>
+                    </span>
+                    <span>{{ boardgame.minplayers }}-{{ boardgame.maxplayers }} Spieler</span>
+                  </span>
+                </p>
+                <p class="is-size-7 has-text-grey">
+                  <span class="icon-text">
+                    <span class="icon">
+                      <i class="fas fa-clock"></i>
+                    </span>
+                    <span>ca. {{ boardgame.playtime }} min</span>
+                  </span>
+                </p>
+                {% if boardgame.weight %}
+                <p class="is-size-7 has-text-grey">
+                  <span class="icon-text">
+                    <span class="icon">
+                      <i class="fas fa-star"></i>
+                    </span>
+                    <span>{{ boardgame.weight }}/5</span>
+                  </span>
+                </p>
+                {% endif %}
+              </div>
+            </a>
+          </div>
+        </div>
         {% endfor %}
-      </ul>
+      </div>
     </div>
   </div>
 </section>
@@ -34,7 +78,28 @@
 <!-- Initialisiere die Live-Suche -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    initLiveSearch('searchInput', 'gameList', '.list-item');
+    // Angepasste Suche für das neue Grid-Layout
+    const searchInput = document.getElementById('searchInput');
+    const gameGrid = document.getElementById('gameGrid');
+    const gameItems = gameGrid.querySelectorAll('.game-item');
+
+    if (searchInput) {
+      searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        
+        gameItems.forEach(function(item) {
+          const gameTitle = item.querySelector('.game-title');
+          if (gameTitle) {
+            const titleText = gameTitle.textContent.toLowerCase();
+            if (titleText.includes(searchTerm)) {
+              item.style.display = '';
+            } else {
+              item.style.display = 'none';
+            }
+          }
+        });
+      });
+    }
   });
 </script>
 {% endblock %}

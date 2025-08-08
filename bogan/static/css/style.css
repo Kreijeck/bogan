@@ -8,6 +8,43 @@
     overflow-y: scroll;
 }
 
+/* Navigation Bar Styling */
+.navbar-dropdown .navbar-item {
+    font-size: 1rem !important;
+    padding: 0.75rem 1rem !important;
+    min-height: 3rem !important;
+    line-height: 1.5 !important;
+    white-space: nowrap !important;
+}
+
+.navbar-dropdown {
+    min-width: 200px !important;
+    font-size: 1rem !important;
+}
+
+/* Korrekte Farben für Navigation - dunkelblaue Schrift auf blauem Hintergrund */
+.navbar-item.has-dropdown > .navbar-link {
+    color: #003366 !important; /* Dunkelblau für besseren Kontrast */
+    background-color: transparent !important;
+}
+
+.navbar-item.has-dropdown:hover > .navbar-link,
+.navbar-item.has-dropdown.is-active > .navbar-link,
+.navbar-item.has-dropdown > .navbar-link:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    color: #003366 !important; /* Dunkelblau bleibt beim Hover */
+}
+
+/* Normale Navbar-Items (wie Brettspiele) - auch dunkelblaue Schrift */
+.navbar-start > .navbar-item:not(.has-dropdown) {
+    color: #003366 !important; /* Dunkelblau statt weiß */
+}
+
+.navbar-start > .navbar-item:not(.has-dropdown):hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    color: #003366 !important; /* Dunkelblau bleibt beim Hover */
+}
+
 /* Homepage Hero Section */
 .hero-gradient {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -543,4 +580,121 @@
     width: 100px;
     height: 2px;
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  }
+  
+  /* Game Detail Styling */
+  .game-info-overview {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(72, 95, 199, 0.2);
+  }
+  
+  .player-result-box {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+  
+  .player-result-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  .winner-box {
+    border-left: 4px solid #48c774;
+    border-top: 2px solid #48c774;
+  }
+  
+  .position-badge {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .position-badge.position-1 {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #1a1a1a;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+  }
+  
+  .position-badge.position-2 {
+    background: linear-gradient(135deg, #c0c0c0 0%, #e6e6e6 100%);
+    color: #2a2a2a;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+  }
+  
+  .position-badge.position-3 {
+    background: linear-gradient(135deg, #cd7f32 0%, #d4941e 100%);
+  }
+  
+  .position-badge:not(.position-1):not(.position-2):not(.position-3) {
+    background: linear-gradient(135deg, #666666 0%, #888888 100%);
+  }
+  
+  .player-link {
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .player-link:hover {
+    color: var(--secondary-color) !important;
+    text-decoration: underline;
+  }
+  
+  /* Game Link Styling */
+  .game-link {
+    transition: color 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .game-link:hover {
+    color: var(--secondary-color) !important;
+    text-decoration: underline;
+  }
+  
+  /* Boardgame Cards Styling */
+  .boardgame-card {
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .boardgame-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  .boardgame-link {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .boardgame-link:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .boardgame-image {
+    border-radius: 8px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .boardgame-card:hover .boardgame-image {
+    transform: scale(1.05);
+  }
+  
+  .boardgame-card .content {
+    margin-top: auto;
   }

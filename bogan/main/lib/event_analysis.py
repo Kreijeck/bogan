@@ -29,6 +29,7 @@ def get_game_list(event_name: str, mode: str) -> list[dict]:
         spiele_list = []
         for match in match_games:
             spiel_dict = {}
+            spiel_dict["id"] = match.id  # Hinzugefügte Game ID
             spiel_dict["datum"] = match.datum
             spiel_dict["datum_fmt"] = match.datum.strftime("%d.%b %Y")
             spiel_dict["boardgame"] = match.boardgame.name
