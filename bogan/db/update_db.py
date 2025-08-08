@@ -61,9 +61,15 @@ def get_boardgames(my_games: list[dict]) -> dict[int, Boardgame]:
 def get_location(json_file: dict) -> Location:
     """
     Erstelle oder finde eine Location anhand der JSON-Daten.
+    Falls keine Location in den JSON-Daten vorhanden ist, wird "Unbekannt" verwendet.
     
     """
     name = json_file.get("@location")
+    
+    # Fallback für fehlende oder leere Location
+    if not name or name.strip() == "":
+        name = "Unbekannt"
+        logger.warning(f"Location ist leer oder fehlt, verwende Fallback: {name}")
 
     location = session.query(Location).filter_by(name=name).first()
     if not location:
@@ -181,6 +187,16 @@ def update_or_create_game(my_game: dict, boardgame_obj: Boardgame, location_obj:
     datum = datetime.strptime(datum_str, "%Y-%m-%d").date() if datum_str else None
     playtime = nested_get(my_game, ["@length"], int)
 
+    # Sicherstellen, dass location_obj eine gültige ID hat
+    if location_obj is None:
+        logger.error(f"Location-Objekt ist None für game_bgg_id={game_bgg_id}")
+        raise ValueError("Location-Objekt darf nicht None sein")
+        
+    # Falls location_obj noch keine ID hat, flushen wir die Session
+    if location_obj.id is None:
+        session.flush()
+        logger.debug(f"Location-Objekt geflusht, ID: {location_obj.id}")
+
     current_game = Game(
         game_bgg_id=game_bgg_id,
         datum=datum,
@@ -198,7 +214,8 @@ def update_or_create_game(my_game: dict, boardgame_obj: Boardgame, location_obj:
         session.flush()
         logger.info(
             f"[Game] neu erstellt: game_bgg_id={db_game.game_bgg_id}, "
-            f"datum={db_game.datum}, boardgame={db_game.boardgame.name if db_game.boardgame else 'None'}"
+            f"datum={db_game.datum}, boardgame={db_game.boardgame.name if db_game.boardgame else 'None'}, "
+            f"location={db_game.location.name if db_game.location else 'None'}"
         )
     else:
         # Updates vergleichen
@@ -206,12 +223,14 @@ def update_or_create_game(my_game: dict, boardgame_obj: Boardgame, location_obj:
         if changed:
             logger.info(
                 f"[Game] aktualisiert: game_bgg_id={game_bgg_id}, "
-                f"datum={db_game.datum}, boardgame={db_game.boardgame.name if db_game.boardgame else 'None'}"
+                f"datum={db_game.datum}, boardgame={db_game.boardgame.name if db_game.boardgame else 'None'}, "
+                f"location={db_game.location.name if db_game.location else 'None'}"
             )
         else:
             logger.debug(
                 f"[Game] unverändert: game_bgg_id={game_bgg_id}, "
-                f"datum={db_game.datum}, boardgame={db_game.boardgame.name if db_game.boardgame else 'None'}"
+                f"datum={db_game.datum}, boardgame={db_game.boardgame.name if db_game.boardgame else 'None'}, "
+                f"location={db_game.location.name if db_game.location else 'None'}"
             )
 
     # Kein commit hier
@@ -241,6 +260,8 @@ def update_db(from_api: bool, save_file=False):
             logger.info("Empfange Spiele aus lokaler JSON-Datei...")
             my_games = json.load(file)
 
+    logger.info(f"Verarbeite {len(my_games)} Spiele aus der JSON-Datei")
+    
     # 2) Boardgames aktualisieren/erstellen
     boardgames_dict = get_boardgames(my_games)
 
@@ -262,16 +283,40 @@ def update_db(from_api: bool, save_file=False):
             session.delete(db_game)
 
     # 4) Alle Spiele aus der JSON -> anlegen oder updaten
+    # Zuerst alle Locations sammeln und committen
+    locations_to_commit = set()
     for my_game in my_games:
+        location_obj = get_location(my_game)
+        locations_to_commit.add(location_obj)
+    
+    # Locations committen, damit sie gültige IDs haben
+    session.flush()
+    logger.debug(f"Locations geflusht: {len(locations_to_commit)} Locations")
+    
+    # Dann die Games verarbeiten
+    for i, my_game in enumerate(my_games):
+        logger.debug(f"Verarbeite Spiel {i+1}/{len(my_games)}: {my_game.get('@id', 'No ID')}")
+        
         # Boardgame-Objekt holen
         bgg_id = nested_get(my_game, ["item", "@objectid"], int)
         boardgame_obj = boardgames_dict.get(bgg_id)
+        
+        if not boardgame_obj:
+            logger.warning(f"Kein Boardgame gefunden für bgg_id={bgg_id} in Spiel {my_game.get('@id', 'No ID')}")
+            continue
 
-        # Location aus JSON holen
+        # Location aus JSON holen (bereits committet)
         location_obj = get_location(my_game)
+        
+        logger.debug(f"Location für Spiel {my_game.get('@id', 'No ID')}: {location_obj.name if location_obj else 'None'}")
 
         # Game anlegen / updaten
-        db_game = update_or_create_game(my_game, boardgame_obj, location_obj)
+        try:
+            db_game = update_or_create_game(my_game, boardgame_obj, location_obj)
+        except Exception as e:
+            logger.error(f"Fehler beim Erstellen/Updaten von Spiel {my_game.get('@id', 'No ID')}: {e}")
+            logger.debug(f"Spiel-Daten: {my_game}")
+            raise
 
         # PlayerPos aktualisieren
         players_json = nested_get(my_game, ["players", "player"]) or []
