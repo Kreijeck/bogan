@@ -19,7 +19,7 @@
         <span>🎯</span>
       </div>
       
-      <h2 class="subtitle is-3 index-subtitle">
+      <h2 class="subtitle is-3" style="margin-top: 1.5rem;">
         Deine Plattform für Brettspiel-Statistiken und -Management
       </h2>
       <div class="buttons is-centered">
@@ -52,264 +52,241 @@
 <!-- Statistik-Sektion mit letzten Spielen -->
 <section class="section">
   <div class="container">
-    <h1 class="title is-2 has-text-centered collapsible-header" data-target="latest-games-section">
+    <h1 class="title is-2 has-text-centered">
       <span class="icon-text">
         <span class="icon has-text-primary">
           <i class="fas fa-chart-line"></i>
         </span>
         <span>Letzte Spiele</span>
-        <span class="icon collapse-icon">
-          <i class="fas fa-chevron-up"></i>
-        </span>
       </span>
     </h1>
     <p class="subtitle has-text-centered mb-6">
       Die letzten 10 gespielten Brettspiele auf einen Blick
     </p>
 
-    <div id="latest-games-section" class="collapsible-content">
-      {% if latest_games %}
-      <div class="columns is-multiline">
-        {% for game in latest_games %}
-        <div class="column is-one-fifth-desktop is-half-tablet">
-          <div class="card game-card">
-            <div class="card-image">
-              {% if game.img_small %}
-              <figure class="image is-square">
-                <img src="{{ game.img_small }}" alt="{{ game.boardgame_name }}" loading="lazy">
-              </figure>
-              {% else %}
-              <figure class="image is-square has-background-grey-lighter">
-                <div class="has-text-centered index-empty-state">
-                  <span class="icon is-large has-text-grey bounce-on-hover">
-                    <i class="fas fa-dice fa-3x"></i>
-                  </span>
-                </div>
-              </figure>
-              {% endif %}
+    {% if latest_games %}
+    <div class="columns is-multiline">
+      {% for game in latest_games %}
+      <div class="column is-one-fifth-desktop is-half-tablet">
+        <div class="card game-card">
+          <div class="card-image">
+            {% if game.img_small %}
+            <figure class="image is-square">
+              <img src="{{ game.img_small }}" alt="{{ game.boardgame_name }}" loading="lazy">
+            </figure>
+            {% else %}
+            <figure class="image is-square has-background-grey-lighter">
+              <div class="has-text-centered" style="padding: 3rem;">
+                <span class="icon is-large has-text-grey bounce-on-hover">
+                  <i class="fas fa-dice fa-3x"></i>
+                </span>
+              </div>
+            </figure>
+            {% endif %}
+          </div>
+          <div class="card-content">
+            <div class="media">
+              <div class="media-content">
+                <p class="title is-6">{{ game.boardgame_name }}</p>
+                <p class="subtitle is-7 has-text-grey">{{ game.datum_fmt }}</p>
+              </div>
             </div>
-            <div class="card-content">
-              <div class="media">
-                <div class="media-content">
-                  <p class="title is-6">{{ game.boardgame_name }}</p>
-                  <p class="subtitle is-7 has-text-grey">{{ game.datum_fmt }}</p>
-                </div>
-              </div>
 
-              <div class="content">
-                <div class="tags are-small">
-                  <span class="tag winner-tag">
-                    <span class="icon">
-                      <i class="fas fa-trophy"></i>
-                    </span>
-                    <span>{{ game.winner }}</span>
-                  </span>
-                  <span class="tag is-info">
-                    <span class="icon">
-                      <i class="fas fa-users"></i>
-                    </span>
-                    <span>{{ game.player_count }} Spieler</span>
-                  </span>
-                  {% if game.playtime %}
-                  <span class="tag is-light">
-                    <span class="icon">
-                      <i class="fas fa-clock"></i>
-                    </span>
-                    <span>{{ game.playtime }} min</span>
-                  </span>
-                  {% endif %}
-                </div>
-                
-                <p class="is-size-7 has-text-grey">
+            <div class="content">
+              <div class="tags are-small">
+                <span class="tag winner-tag">
                   <span class="icon">
-                    <i class="fas fa-map-marker-alt"></i>
+                    <i class="fas fa-trophy"></i>
                   </span>
-                  {{ game.location }}
-                </p>
-                
-                <a href="{{ url_for('main.show_boardgame', boardgame_id=game.boardgame_id) }}" 
-                   class="button is-small is-fullwidth is-primary is-outlined mt-3">
-                  Details anzeigen
-                </a>
+                  <span>{{ game.winner }}</span>
+                </span>
+                <span class="tag is-info">
+                  <span class="icon">
+                    <i class="fas fa-users"></i>
+                  </span>
+                  <span>{{ game.player_count }} Spieler</span>
+                </span>
+                {% if game.playtime %}
+                <span class="tag is-light">
+                  <span class="icon">
+                    <i class="fas fa-clock"></i>
+                  </span>
+                  <span>{{ game.playtime }} min</span>
+                </span>
+                {% endif %}
               </div>
+              
+              <p class="is-size-7 has-text-grey">
+                <span class="icon">
+                  <i class="fas fa-map-marker-alt"></i>
+                </span>
+                {{ game.location }}
+              </p>
+              
+              <a href="{{ url_for('main.show_boardgame', boardgame_id=game.boardgame_id) }}" 
+                 class="button is-small is-fullwidth is-primary is-outlined mt-3">
+                Details anzeigen
+              </a>
             </div>
           </div>
         </div>
-        {% endfor %}
       </div>
-      
-      <div class="has-text-centered mt-5">
-        <a href="{{ url_for('main.show_all_boardgames') }}" class="button is-primary is-medium">
-          <span class="icon">
-            <i class="fas fa-list"></i>
-          </span>
-          <span>Alle Brettspiele anzeigen</span>
-        </a>
-      </div>
-      
-      {% else %}
-      <div class="notification is-warning has-text-centered">
-        <span class="icon">
-          <i class="fas fa-exclamation-triangle"></i>
-        </span>
-        <strong>Keine Spiele gefunden</strong><br>
-        Es wurden noch keine Spiele in die Datenbank eingetragen.
-      </div>
-      {% endif %}
+      {% endfor %}
     </div>
+    
+    <div class="has-text-centered mt-5">
+      <a href="{{ url_for('main.show_all_boardgames') }}" class="button is-primary is-medium">
+        <span class="icon">
+          <i class="fas fa-list"></i>
+        </span>
+        <span>Alle Brettspiele anzeigen</span>
+      </a>
+    </div>
+    
+    {% else %}
+    <div class="notification is-warning has-text-centered">
+      <span class="icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </span>
+      <strong>Keine Spiele gefunden</strong><br>
+      Es wurden noch keine Spiele in die Datenbank eingetragen.
+    </div>
+    {% endif %}
   </div>
 </section>
 
 <!-- Events Section -->
 <section class="section">
   <div class="container">
-    <h1 class="title is-2 has-text-centered has-text-primary collapsible-header" data-target="events-section">
+    <h1 class="title is-2 has-text-centered has-text-primary">
       <span class="icon-text">
         <span class="icon has-text-primary">
           <i class="fas fa-calendar-alt"></i>
         </span>
         <span>Events</span>
-        <span class="icon collapse-icon">
-          <i class="fas fa-chevron-up"></i>
-        </span>
       </span>
     </h1>
     <p class="subtitle has-text-centered mb-6 has-text-secondary">
       Alle Spieleevents und Turniere
     </p>
 
-    <div id="events-section" class="collapsible-content">
-      {% if events %}
-      <div class="columns is-multiline">
-        {% for event in events %}
-        <div class="column is-half">
-          <div class="box event-box event-box-blue">
-            <div class="content">
-              <div class="level">
-                <div class="level-left">
-                  <div class="level-item">
-                    <div>
-                      <p class="title is-5 has-text-primary">{{ event.name }}</p>
-                      <p class="subtitle is-6 has-text-grey-dark">
-                        <span class="icon-text">
-                          <span class="icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                          </span>
-                          <span>{{ event.location }}</span>
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="level-right">
-                  <div class="level-item">
-                    {% if event.is_current %}
-                      <span class="tag is-success is-medium">
+    {% if events %}
+    <div class="columns is-multiline">
+      {% for event in events %}
+      <div class="column is-half">
+        <div class="box event-box event-box-blue">
+          <div class="content">
+            <div class="level">
+              <div class="level-left">
+                <div class="level-item">
+                  <div>
+                    <p class="title is-5 has-text-primary">{{ event.name }}</p>
+                    <p class="subtitle is-6 has-text-grey-dark">
+                      <span class="icon-text">
                         <span class="icon">
-                          <i class="fas fa-play"></i>
+                          <i class="fas fa-map-marker-alt"></i>
                         </span>
-                        <span>Läuft gerade</span>
+                        <span>{{ event.location }}</span>
                       </span>
-                    {% elif event.is_future %}
-                      <span class="tag is-info is-medium">
-                        <span class="icon">
-                          <i class="fas fa-clock"></i>
-                        </span>
-                        <span>Geplant</span>
-                      </span>
-                    {% else %}
-                      <span class="tag is-light is-medium">
-                        <span class="icon">
-                          <i class="fas fa-check"></i>
-                        </span>
-                        <span>Beendet</span>
-                      </span>
-                    {% endif %}
+                    </p>
                   </div>
                 </div>
               </div>
-              
-              <div class="content">
-                <p class="has-text-grey-dark">
-                  <span class="icon-text">
-                    <span class="icon">
-                      <i class="fas fa-calendar"></i>
+              <div class="level-right">
+                <div class="level-item">
+                  {% if event.is_current %}
+                    <span class="tag is-success is-medium">
+                      <span class="icon">
+                        <i class="fas fa-play"></i>
+                      </span>
+                      <span>Läuft gerade</span>
                     </span>
-                    <span>
-                      {% if event.start_date_fmt == event.end_date_fmt %}
-                        {{ event.start_date_fmt }}
-                      {% else %}
-                        {{ event.start_date_fmt }} - {{ event.end_date_fmt }}
-                      {% endif %}
+                  {% elif event.is_future %}
+                    <span class="tag is-info is-medium">
+                      <span class="icon">
+                        <i class="fas fa-clock"></i>
+                      </span>
+                      <span>Geplant</span>
                     </span>
-                  </span>
-                </p>
-                
-                <div class="buttons">
-                  <a href="{{ url_for('main.show_event', event=event.name) }}" class="button is-primary is-small">
-                    <span class="icon">
-                      <i class="fas fa-eye"></i>
+                  {% else %}
+                    <span class="tag is-light is-medium">
+                      <span class="icon">
+                        <i class="fas fa-check"></i>
+                      </span>
+                      <span>Beendet</span>
                     </span>
-                    <span>Details anzeigen</span>
-                  </a>
+                  {% endif %}
                 </div>
+              </div>
+            </div>
+            
+            <div class="content">
+              <p class="has-text-grey-dark">
+                <span class="icon-text">
+                  <span class="icon">
+                    <i class="fas fa-calendar"></i>
+                  </span>
+                  <span>
+                    {% if event.start_date_fmt == event.end_date_fmt %}
+                      {{ event.start_date_fmt }}
+                    {% else %}
+                      {{ event.start_date_fmt }} - {{ event.end_date_fmt }}
+                    {% endif %}
+                  </span>
+                </span>
+              </p>
+              
+              <div class="buttons">
+                <a href="{{ url_for('main.show_event', event=event.name) }}" class="button is-primary is-small">
+                  <span class="icon">
+                    <i class="fas fa-eye"></i>
+                  </span>
+                  <span>Details anzeigen</span>
+                </a>
               </div>
             </div>
           </div>
         </div>
-        {% endfor %}
       </div>
-      {% else %}
-      <div class="notification is-info has-text-centered">
-        <span class="icon">
-          <i class="fas fa-calendar-times"></i>
-        </span>
-        <strong>Keine Events gefunden</strong><br>
-        Es sind aktuell keine Events in der Datenbank eingetragen.
-      </div>
-      {% endif %}
+      {% endfor %}
     </div>
+    {% else %}
+    <div class="notification is-info has-text-centered">
+      <span class="icon">
+        <i class="fas fa-calendar-times"></i>
+      </span>
+      <strong>Keine Events gefunden</strong><br>
+      Es sind aktuell keine Events in der Datenbank eingetragen.
+    </div>
+    {% endif %}
   </div>
 </section>
 
 <!-- Features Section -->
 <section class="section">
   <div class="container">
-    <h2 class="title is-3 has-text-primary collapsible-header" data-target="features-section">
-      <span class="icon-text">
-        <span class="icon has-text-primary">
-          <i class="fas fa-star"></i>
-        </span>
-        <span>🎯 Deine Brettspiele im Überblick</span>
-        <span class="icon collapse-icon">
-          <i class="fas fa-chevron-up"></i>
-        </span>
-      </span>
-    </h2>
-    
-    <div id="features-section" class="collapsible-content">
-      <div class="columns is-vcentered">
-        <div class="column">
-          <div class="content is-medium">
-            <ul>
-              <li><strong>Brettspiele ansehen:</strong> Alle bisher gespielten Spiele können hier angeschaut werden</li>
-              <li><strong>Statistiken verfolgen:</strong> Sieh wer wie oft gewonnen hat und welche Spiele am beliebtesten sind</li>
-              <li><strong>Rankings verfolgen:</strong> Schaue nach in welchen Spielen du am stärksten bist</li>
-              <li><strong>Events verfolgen:</strong> Vordefinierte Events verfolgen und das aktuelle Ranking betrachten</li>
-            </ul>
-          </div>
+    <div class="columns is-vcentered">
+      <div class="column">
+        <h2 class="title is-3">🎯 Deine Brettspiele im Überblick</h2>
+        <div class="content is-medium">
+          <ul>
+            <li><strong>Spiele verwalten:</strong> Halte alle deine Brettspiele und Spielrunden organisiert</li>
+            <li><strong>Statistiken verfolgen:</strong> Sieh wer wie oft gewonnen hat und welche Spiele am beliebtesten sind</li>
+            <li><strong>Rankings erstellen:</strong> Erstelle Ranglisten basierend auf verschiedenen Kriterien</li>
+            <li><strong>Events organisieren:</strong> Verwalte Spieleabende und Turniere</li>
+          </ul>
         </div>
-        <div class="column">
-          {% if latest_games and latest_games|length > 0 %}
-          <figure class="image">
-            <img src="{{ latest_games[0].img_small }}" alt="Neuestes Spiel" class="is-rounded">
-          </figure>
-          {% else %}
-          <figure class="image">
-            <img src="{{ url_for('static', filename='img/kaktus.svg') }}" alt="Bogan Logo" class="is-rounded">
-          </figure>
-          {% endif %}
-        </div>
+      </div>
+      <div class="column">
+        {% if latest_games and latest_games|length > 0 %}
+        <figure class="image">
+          <img src="{{ latest_games[0].img_small }}" alt="Neuestes Spiel" class="is-rounded">
+        </figure>
+        {% else %}
+        <figure class="image">
+          <img src="{{ url_for('static', filename='img/kaktus.svg') }}" alt="Bogan Logo" class="is-rounded">
+        </figure>
+        {% endif %}
       </div>
     </div>
   </div>
