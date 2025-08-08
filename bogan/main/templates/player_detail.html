@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- Spieler Header -->
+<section class="section">
+  <div class="container">
+    <h1 class="title is-1 has-text-centered has-text-primary">
+      <span class="icon-text">
+        <span class="icon">
+          <i class="fas fa-user"></i>
+        </span>
+        <span>{{ player_name }}</span>
+      </span>
+    </h1>
+    
+    <!-- Spieler-Statistiken Übersicht -->
+    {% if player_data.total_games > 0 %}
+    <h2 class="title is-3 has-text-centered has-text-primary collapsible-header mt-5" data-target="player-stats-section">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-chart-bar"></i>
+        </span>
+        <span>Spieler-Statistiken</span>
+        <span class="icon collapse-icon">
+          <i class="fas fa-chevron-up"></i>
+        </span>
+      </span>
+    </h2>
+    
+    <div id="player-stats-section" class="collapsible-content">
+      <div class="box player-stats-overview">
+        <div class="columns is-mobile">
+          <div class="column has-text-centered">
+            <p class="heading">Gespielte Partien</p>
+            <p class="title is-3 has-text-white">{{ player_data.total_games }}</p>
+          </div>
+          <div class="column has-text-centered">
+            <p class="heading">Siege</p>
+            <p class="title is-3 has-text-white">{{ player_data.wins }}</p>
+          </div>
+          <div class="column has-text-centered">
+            <p class="heading">Siegquote</p>
+            <p class="title is-3 has-text-white">{{ player_data.win_rate }}%</p>
+          </div>
+          <div class="column has-text-centered">
+            <p class="heading">Ø Position</p>
+            <p class="title is-3 has-text-white">{{ player_data.avg_position }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<!-- Beste Brettspiele -->
+{% if player_data.best_games %}
+<section class="section">
+  <div class="container">
+    <h2 class="title is-2 has-text-centered has-text-primary collapsible-header" data-target="best-games-section">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-trophy"></i>
+        </span>
+        <span>Beste Brettspiele</span>
+        <span class="icon collapse-icon">
+          <i class="fas fa-chevron-up"></i>
+        </span>
+      </span>
+    </h2>
+    <p class="subtitle has-text-centered mb-6 has-text-grey-dark">
+      Die Spiele, in denen {{ player_name }} am erfolgreichsten ist
+    </p>
+
+    <div id="best-games-section" class="collapsible-content">
+      <div class="columns is-multiline">
+        {% for game in player_data.best_games %}
+        <div class="column is-half-tablet is-one-third-desktop">
+          <div class="box best-game-box">
+            <div class="media">
+              <div class="media-left">
+                <div class="best-game-rank">
+                  {% if loop.index <= 3 %}
+                    {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% else %}🥉{% endif %}
+                  {% else %}
+                    {{ loop.index }}
+                  {% endif %}
+                </div>
+              </div>
+              <div class="media-content">
+                <p class="title is-5 has-text-primary">{{ game.name }}</p>
+                <p class="subtitle is-6 has-text-grey">
+                  {{ game.games_played }} Spiel{{ 'e' if game.games_played != 1 else '' }}
+                </p>
+              </div>
+            </div>
+            
+            <div class="content">
+              <div class="columns is-gapless is-multiline">
+                <div class="column is-half">
+                  <div class="has-text-centered">
+                    <p class="heading">Siegquote</p>
+                    <p class="title is-6 has-text-success">{{ game.win_rate }}%</p>
+                  </div>
+                </div>
+                <div class="column is-half">
+                  <div class="has-text-centered">
+                    <p class="heading">Ø Position</p>
+                    <p class="title is-6 has-text-info">{{ game.avg_position }}</p>
+                  </div>
+                </div>
+                <div class="column is-half">
+                  <div class="has-text-centered">
+                    <p class="heading">Siege</p>
+                    <p class="title is-6 has-text-warning">{{ game.wins }}</p>
+                  </div>
+                </div>
+                <div class="column is-half">
+                  <div class="has-text-centered">
+                    <p class="heading">Ø Punkte</p>
+                    <p class="title is-6 has-text-primary">{{ game.avg_points }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Spielhistorie -->
+{% if player_data.recent_games %}
+<section class="section">
+  <div class="container">
+    <h2 class="title is-2 has-text-centered has-text-primary collapsible-header" data-target="game-history-section">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-history"></i>
+        </span>
+        <span>Spielhistorie</span>
+        <span class="icon collapse-icon">
+          <i class="fas fa-chevron-up"></i>
+        </span>
+      </span>
+    </h2>
+    <p class="subtitle has-text-centered mb-6 has-text-grey-dark">
+      Alle gespielten Partien von {{ player_name }} chronologisch sortiert
+    </p>
+
+    <div id="game-history-section" class="collapsible-content">
+      {% if player_data.games_by_month %}
+        {% for month_key in player_data.games_by_month.keys() | sort | reverse %}
+          {% set month_games = player_data.games_by_month[month_key] %}
+          {% if month_games %}
+          <div class="month-section mb-6">
+            <h3 class="title is-4 has-text-centered has-text-grey-dark mb-4">
+              <span class="icon-text">
+                <span class="icon">
+                  <i class="fas fa-calendar-alt"></i>
+                </span>
+                <span>{{ month_games[0].month_display }}</span>
+              </span>
+            </h3>
+            
+            <div class="columns is-multiline">
+              {% for game in month_games %}
+              <div class="column is-half-tablet is-one-third-desktop">
+                <div class="box game-history-box {% if game.won %}game-won{% endif %}">
+                  <div class="level is-mobile">
+                    <div class="level-left">
+                      <div class="level-item">
+                        <div>
+                          <p class="title is-6 has-text-primary">{{ game.boardgame_name }}</p>
+                          <p class="subtitle is-7 has-text-grey">{{ game.date_fmt }}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="level-right">
+                      <div class="level-item">
+                        {% if game.won %}
+                          <span class="tag is-success">
+                            <span class="icon">
+                              <i class="fas fa-trophy"></i>
+                            </span>
+                            <span>Sieg!</span>
+                          </span>
+                        {% else %}
+                          <span class="position-tag position-{{ game.position }}">
+                            Platz {{ game.position }}
+                          </span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="content">
+                    <div class="level is-mobile">
+                      <div class="level-item has-text-centered">
+                        <div>
+                          <p class="heading">Punkte</p>
+                          <p class="title is-6">{{ game.points }}</p>
+                        </div>
+                      </div>
+                      <div class="level-item has-text-centered">
+                        <div>
+                          <p class="heading">Spieler</p>
+                          <p class="title is-6">{{ game.total_players }}</p>
+                        </div>
+                      </div>
+                      <div class="level-item has-text-centered">
+                        <div>
+                          <p class="heading">Ort</p>
+                          <p class="title is-7">{{ game.location }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <!-- Fallback falls Monatsgruppierung nicht funktioniert -->
+        <div class="columns is-multiline">
+          {% for game in player_data.recent_games %}
+          <div class="column is-half-tablet is-one-third-desktop">
+            <div class="box game-history-box {% if game.won %}game-won{% endif %}">
+              <div class="level is-mobile">
+                <div class="level-left">
+                  <div class="level-item">
+                    <div>
+                      <p class="title is-6 has-text-primary">{{ game.boardgame_name }}</p>
+                      <p class="subtitle is-7 has-text-grey">{{ game.date_fmt }}</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="level-right">
+                  <div class="level-item">
+                    {% if game.won %}
+                      <span class="tag is-success">
+                        <span class="icon">
+                          <i class="fas fa-trophy"></i>
+                        </span>
+                        <span>Sieg!</span>
+                      </span>
+                    {% else %}
+                      <span class="position-tag position-{{ game.position }}">
+                        Platz {{ game.position }}
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              
+              <div class="content">
+                <div class="level is-mobile">
+                  <div class="level-item has-text-centered">
+                    <div>
+                      <p class="heading">Punkte</p>
+                      <p class="title is-6">{{ game.points }}</p>
+                    </div>
+                  </div>
+                  <div class="level-item has-text-centered">
+                    <div>
+                      <p class="heading">Spieler</p>
+                      <p class="title is-6">{{ game.total_players }}</p>
+                    </div>
+                  </div>
+                  <div class="level-item has-text-centered">
+                    <div>
+                      <p class="heading">Ort</p>
+                      <p class="title is-7">{{ game.location }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- Fallback falls keine Daten -->
+{% if player_data.total_games == 0 %}
+<section class="section">
+  <div class="container">
+    <div class="notification is-info has-text-centered">
+      <span class="icon">
+        <i class="fas fa-info-circle"></i>
+      </span>
+      <strong>Keine Daten gefunden</strong><br>
+      Für {{ player_name }} wurden noch keine Spiele in der Datenbank gefunden.
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

@@ -6,15 +6,61 @@ burgerIcon.addEventListener('click', () => {
     navbarMenu.classList.toggle('is-active');
 })
 
-// toggle visibility of tables
-function toggleVisibility(id) {
-  const table = document.getElementById(id);
-  if (table.style.display === "none") {
-      table.style.display = "block";
-  } else {
-      table.style.display = "none";
-  }
+// Modern collapsible sections functionality - global version
+function initializeCollapsibleSections() {
+    const collapsibleHeaders = document.querySelectorAll('.collapsible-header');
+    
+    collapsibleHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const targetSection = document.getElementById(targetId);
+            const chevron = this.querySelector('.collapse-icon i');
+            
+            if (targetSection) {
+                // Toggle visibility
+                if (targetSection.style.display === 'none') {
+                    targetSection.style.display = 'block';
+                    if (chevron) {
+                        chevron.classList.remove('fa-chevron-down');
+                        chevron.classList.add('fa-chevron-up');
+                    }
+                } else {
+                    targetSection.style.display = 'none';
+                    if (chevron) {
+                        chevron.classList.remove('fa-chevron-up');
+                        chevron.classList.add('fa-chevron-down');
+                    }
+                }
+            }
+        });
+        
+        // Add hover effect
+        header.style.cursor = 'pointer';
+        header.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'rgba(72, 95, 199, 0.1)';
+        });
+        header.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = 'transparent';
+        });
+    });
 }
+
+// Simple toggle function for detail buttons and other elements
+function toggleElement(id) {
+    const element = document.getElementById(id);
+    if (element) {
+        if (element.style.display === 'none') {
+            element.style.display = 'block';
+        } else {
+            element.style.display = 'none';
+        }
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCollapsibleSections();
+});
 
 // show markdown
 async function loadMarkdown(file, targetId) {

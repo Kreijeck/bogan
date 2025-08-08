@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="section">
+  <div class="container">
+    <h1 class="title is-1 has-text-centered has-text-primary">
+      <span class="icon-text">
+        <span class="icon">
+          <i class="fas fa-users"></i>
+        </span>
+        <span>Alle Spieler</span>
+      </span>
+    </h1>
+    <p class="subtitle has-text-centered mb-6 has-text-grey-dark">
+      Übersicht aller Spieler in der Datenbank
+    </p>
+
+    {% if players %}
+    <div class="columns is-multiline">
+      {% for player in players %}
+      <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen">
+        <div class="box player-overview-box has-text-centered">
+          <div class="player-avatar">
+            <span class="icon is-large has-text-primary">
+              <i class="fas fa-user-circle fa-3x"></i>
+            </span>
+          </div>
+          <h3 class="title is-5 has-text-primary mt-3">{{ player }}</h3>
+          <div class="buttons is-centered mt-4">
+            <a href="{{ url_for('main.show_player', player_name=player) }}" 
+               class="button is-primary">
+              <span class="icon">
+                <i class="fas fa-chart-line"></i>
+              </span>
+              <span>Statistiken</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="notification is-info has-text-centered">
+      <span class="icon">
+        <i class="fas fa-users"></i>
+      </span>
+      <strong>Keine Spieler gefunden</strong><br>
+      Es sind noch keine Spieler in der Datenbank eingetragen.
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}
