@@ -61,7 +61,7 @@ DB_PORT = env("DB_PORT")
 DB_NAME = env("DB_NAME")
 DB_MIGRATE_DIR = env("DB_MIGRATE_DIR")
 # DEBUG Database
-DB_LOKAL = f"sqlite:///{os.path.join(INSTANCE_PATH, 'debug.db')}"
+DB_LOKAL = f"sqlite:///{os.path.join(INSTANCE_PATH, f'{DB_NAME}.db')}"
 #TODO Make this cleaner, maybe with a method
 if DB_PORT:
     DB_SERVER = f"mysql+pymysql://{DB_USER}:{DB_PW}@{DB_URL}:{DB_PORT}/{DB_NAME}"
