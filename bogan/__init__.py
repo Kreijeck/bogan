@@ -14,7 +14,7 @@ def create_app():
     print(app.instance_path)
 
     # add migrate
-    migrate = Migrate(app, db, directory=cfg.DB_MIGRATE_DIR)
+    migrate = Migrate(app, db, directory=cfg.DB_MIGRATE_DIR) #noqa var needed for database migrations
 
     app.config["SECRET_KEY"] = cfg.FLASK_SECRET_KEY
     app.config["SQLALCHEMY_DATABASE_URI"] = cfg.DB2USE
