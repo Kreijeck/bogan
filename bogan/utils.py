@@ -56,6 +56,11 @@ def nested_get(nested_input: Union[dict, list], keys: list, cast_type: Optional[
 def get_db_engine():
     import bogan.config as cfg
 
+    # wenn lokale datenbank verwendet wird, erstelle Ordnerstruktur
+    if cfg.DB2USE.startswith("sqlite:///"):
+        path = os.path.dirname(cfg.DB2USE.replace("sqlite:///", ""))
+        make_dir(path)
+
     return create_engine(cfg.DB2USE)
 
 
