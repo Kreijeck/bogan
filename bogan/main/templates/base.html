@@ -49,6 +49,7 @@
                     </div>
                 </div>
                 <a href="{{ url_for('main.show_all_boardgames') }}" class="navbar-item">Brettspiele</a>
+                <a href="{{ url_for('main.show_all_players') }}" class="navbar-item">Player</a>
                 <a href="{{ url_for('main.profile') }}" class="navbar-item">Noch nix</a>
 
             </div>
@@ -76,7 +77,7 @@
     <!-- FOOTER -->
     <footer class="footer">
         <div class="content has-text-right">
-            <p> <strong>Bogan </strong> powered by Kreijeck. </p>
+            <p><strong>Bogan </strong> powered by Kreijeck.</p>
             <p>Version: <a href="https://github.com/Kreijeck/bogan/blob/master/changelog.md">{{ config['VERSION'] }}</a></p>
         </div>
     </footer>
