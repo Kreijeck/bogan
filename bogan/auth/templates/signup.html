@@ -4,6 +4,19 @@
 <div class="columns is-centered">
     <div class="column is-one-third">
         <h3 class="title">Sign Up</h3>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="notification {% if category == 'error' %}is-danger{% elif category == 'success' %}is-success{% else %}is-info{% endif %}">
+                        <button class="delete" onclick="this.parentElement.style.display='none';"></button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
         <!-- LOGIN SCREEN -->
         <div class="box">
             <form method="POST" action=" {{ url_for('auth.signup_post') }}">
@@ -22,6 +35,12 @@
                 <div class="field">
                     <div class="control">
                         <input class="input is-large" type="email" name="email" placeholder="Deine Email Adresse (optional)">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <input class="input is-large" type="password" name="signup_secret" placeholder="Sign-Up Code" required>
                     </div>
                 </div>
 
