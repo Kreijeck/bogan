@@ -22,7 +22,7 @@
             
             {% if current_player %}
                 <!-- Bereits verknüpft -->
-                <div class="notification is-dark">
+                <div class="notification is-info">
                     <h3 class="title is-5">🎯 Du bist verknüpft mit:</h3>
                     <p class="subtitle is-6">
                         <strong>{{ current_player.name }}</strong>
@@ -31,13 +31,13 @@
                         {% endif %}
                     </p>
                     <div class="buttons">
-                        <a href="{{ url_for('main.show_player', player_name=current_player.name) }}" class="button is-link is-light">
+                        <a href="{{ url_for('main.show_player', player_name=current_player.name) }}" class="button is-primary">
                             <span class="icon">
                                 <i class="fas fa-user"></i>
                             </span>
                             <span>Zu meiner Spielerseite</span>
                         </a>
-                        <form method="POST" action="{{ url_for('main.unlink_player') }}" class="profile-unlink-form">
+                        <form method="POST" action="{{ url_for('main.unlink_player') }}" style="display: inline;">
                             <button type="submit" class="button is-danger is-outlined" 
                                     onclick="return confirm('Möchtest du die Verknüpfung wirklich entfernen?')">
                                 <span class="icon">
@@ -50,7 +50,7 @@
                 </div>
             {% else %}
                 <!-- Noch nicht verknüpft -->
-                <div class="notification is-primary is-dark">
+                <div class="notification is-warning">
                     <h3 class="title is-5">⚠️ Nicht mit einem Spieler verknüpft</h3>
                     <p>Du bist noch nicht mit einem Spieler verknüpft. Wähle einen Spieler aus der Liste unten aus, um deine Spielstatistiken zu sehen.</p>
                 </div>
