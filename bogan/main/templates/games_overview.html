@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container games-overview">
+<div class="container">
     <h1 class="title is-2 has-text-primary">
         <span class="icon-text">
             <span class="icon">
@@ -10,17 +10,7 @@
             <span>Alle Partien</span>
         </span>
     </h1>
-    <p class="subtitle">Übersicht aller gespielten Partien (<span id="totalCount">{{ games|length }}</span> Partien total)</p>
-
-    <!-- Suchfeld -->
-    <div class="field mb-5">
-        <label class="label">Live-Suche</label>
-        <div class="control">
-            <input id="searchInput" class="input" type="text" 
-                   placeholder="Nach Brettspiel, Spieler, Ort oder Datum suchen...">
-        </div>
-        <p class="help">Suche nach Brettspiel-Namen, Spieler-Namen, Orten oder Datum (z.B. "2025" oder "Januar")</p>
-    </div>
+    <p class="subtitle">Übersicht aller gespielten Partien ({{ games|length }} Partien total)</p>
 
     {% if games %}
     <div class="table-container">
@@ -35,14 +25,14 @@
                     <th>Details</th>
                 </tr>
             </thead>
-            <tbody id="gamesTableBody">
+            <tbody>
                 {% for game in games %}
-                <tr class="game-row" data-searchable="{{ game.boardgame_name|lower }} {{ game.location|lower }} {{ game.datum_fmt }} {% for player in game.players %}{{ player.name|lower }} {% endfor %}">
+                <tr>
                     <td>
                         <strong>{{ game.datum_fmt }}</strong>
                     </td>
                     <td>
-                        <a href="{{ url_for('main.show_boardgame', boardgame_id=game.boardgame_bgg_id) }}" 
+                        <a href="{{ url_for('main.show_boardgame', boardgame_id=game.boardgame_id) }}" 
                            class="has-text-primary">
                             {{ game.boardgame_name }}
                         </a>
@@ -96,18 +86,39 @@
     {% endif %}
 </div>
 
-{% endblock %}
+<style>
+/* Zusätzliche Styles für bessere Lesbarkeit */
+.players-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
 
-{% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialisiere Games Table Search mit Konfiguration
-    initializeGamesTableSearch({
-        searchInputId: 'searchInput',
-        tableBodySelector: '#gamesTableBody',
-        rowSelector: '.game-row',
-        totalCountSelector: '#totalCount'
-    });
-});
-</script>
+.players-list .tag {
+    white-space: nowrap;
+}
+
+.players-list .tag a {
+    text-decoration: none;
+}
+
+.players-list .tag a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Verhalten für mobile Geräte */
+@media screen and (max-width: 768px) {
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    .players-list {
+        max-width: 200px;
+    }
+    
+    .players-list .tag {
+        font-size: 0.7rem;
+    }
+}
+</style>
 {% endblock %}
