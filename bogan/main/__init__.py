@@ -224,7 +224,7 @@ def show_all_games():
                 'datum': game.datum,
                 'datum_fmt': game.datum.strftime('%d.%m.%Y') if game.datum else 'Unbekannt',
                 'boardgame_name': game.boardgame.name,
-                'boardgame_id': game.boardgame.id,
+                'boardgame_bgg_id': game.boardgame.bgg_id,  # Verwende bgg_id für die Route
                 'players': sorted_players,  # Bereits sortiert nach Position
                 'playtime': game.playtime,
                 'playtime_fmt': f"{game.playtime} min" if game.playtime else "Unbekannt",
