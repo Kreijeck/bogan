@@ -13,20 +13,32 @@
       </span>
     </h1>
     <p class="subtitle has-text-centered mb-6 has-text-grey-dark">
-      Übersicht aller Spieler in der Datenbank
+      Übersicht aller Spieler in der Datenbank (<span id="totalCount">{{ players|length }}</span> Spieler total)
     </p>
 
+    <!-- Suchfeld -->
     {% if players %}
-    <div class="columns is-multiline">
+    <div class="field mb-5">
+      <label class="label">Live-Suche</label>
+      <div class="control">
+        <input id="searchInput" class="input" type="text" 
+               placeholder="Nach Spieler-Namen suchen...">
+      </div>
+      <p class="help">Suche nach Spieler-Namen (z.B. "Max", "Anna")</p>
+    </div>
+    {% endif %}
+
+    {% if players %}
+    <div id="playersGrid" class="columns is-multiline">
       {% for player in players %}
-      <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen">
+      <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen player-item" data-searchable="{{ player|lower }}">
         <div class="box player-overview-box has-text-centered">
           <div class="player-avatar">
             <span class="icon is-large has-text-primary">
               <i class="fas fa-user-circle fa-3x"></i>
             </span>
           </div>
-          <h3 class="title is-5 has-text-primary mt-3">{{ player }}</h3>
+          <h3 class="title is-5 has-text-primary mt-3 player-name">{{ player }}</h3>
           <div class="buttons is-centered mt-4">
             <a href="{{ url_for('main.show_player', player_name=player) }}" 
                class="button is-primary">
@@ -40,6 +52,15 @@
       </div>
       {% endfor %}
     </div>
+    
+    <!-- "Keine Ergebnisse" Nachricht (wird dynamisch angezeigt) -->
+    <div id="noResults" class="notification is-warning has-text-centered" style="display: none;">
+      <span class="icon">
+        <i class="fas fa-search"></i>
+      </span>
+      <strong>Keine Spieler gefunden</strong><br>
+      <span id="noResultsText">Es wurden keine Spieler für den Suchbegriff gefunden.</span>
+    </div>
     {% else %}
     <div class="notification is-info has-text-centered">
       <span class="icon">
@@ -51,5 +72,55 @@
     {% endif %}
   </div>
 </section>
+
+<!-- Live-Suche JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const playersGrid = document.getElementById('playersGrid');
+    const noResults = document.getElementById('noResults');
+    const noResultsText = document.getElementById('noResultsText');
+    const totalCountSpan = document.getElementById('totalCount');
+    
+    if (searchInput && playersGrid) {
+        const playerItems = playersGrid.querySelectorAll('.player-item');
+        const totalPlayers = playerItems.length;
+
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            let visibleCount = 0;
+            
+            playerItems.forEach(function(item) {
+                const searchableText = item.getAttribute('data-searchable');
+                
+                if (searchableText && searchableText.includes(searchTerm)) {
+                    item.style.display = '';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Update counter
+            totalCountSpan.textContent = visibleCount;
+            
+            // Show/hide "no results" message
+            if (visibleCount === 0 && searchTerm !== '') {
+                noResultsText.textContent = `Es wurden keine Spieler für "${searchTerm}" gefunden.`;
+                noResults.style.display = '';
+                playersGrid.style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                playersGrid.style.display = '';
+            }
+            
+            // Reset counter when search is cleared
+            if (searchTerm === '') {
+                totalCountSpan.textContent = totalPlayers;
+            }
+        });
+    }
+});
+</script>
 
 {% endblock %}
