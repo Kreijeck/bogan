@@ -200,6 +200,40 @@ def show_boardgame(boardgame_id: str):
                              player_ranking=ranking_data,
                              game_stats=game_stats)
 
+@main.route("/games", methods=["GET"])
+def show_all_games():
+    """Zeigt eine Übersicht aller gespielten Partien."""
+    with Session(engine) as session:
+        # Hole alle Spiele mit den nötigen Joins
+        games = (
+            session.query(Game)
+            .join(Boardgame)
+            .join(Location)
+            .order_by(Game.datum.desc())  # Neueste zuerst
+            .all()
+        )
+        
+        # Konvertiere zu Dictionary für Template
+        games_data = []
+        for game in games:
+            # Hole die sortierten Spieler
+            sorted_players = game.get_sorted_players()
+            
+            games_data.append({
+                'id': game.id,
+                'datum': game.datum,
+                'datum_fmt': game.datum.strftime('%d.%m.%Y') if game.datum else 'Unbekannt',
+                'boardgame_name': game.boardgame.name,
+                'boardgame_id': game.boardgame.id,
+                'players': sorted_players,  # Bereits sortiert nach Position
+                'playtime': game.playtime,
+                'playtime_fmt': f"{game.playtime} min" if game.playtime else "Unbekannt",
+                'location': game.location.name
+            })
+    
+    return render_template("games_overview.html", games=games_data)
+
+
 @main.route("/boardgames", methods=["GET"])    
 def show_all_boardgames():
     with Session(engine) as session:

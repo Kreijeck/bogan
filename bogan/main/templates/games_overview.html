@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1 class="title is-2 has-text-primary">
+        <span class="icon-text">
+            <span class="icon">
+                <i class="fas fa-gamepad"></i>
+            </span>
+            <span>Alle Partien</span>
+        </span>
+    </h1>
+    <p class="subtitle">Übersicht aller gespielten Partien ({{ games|length }} Partien total)</p>
+
+    {% if games %}
+    <div class="table-container">
+        <table class="table is-fullwidth is-striped is-hoverable">
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Brettspiel</th>
+                    <th>Spieler (nach Position)</th>
+                    <th>Spieldauer</th>
+                    <th>Ort</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for game in games %}
+                <tr>
+                    <td>
+                        <strong>{{ game.datum_fmt }}</strong>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('main.show_boardgame', boardgame_id=game.boardgame_id) }}" 
+                           class="has-text-primary">
+                            {{ game.boardgame_name }}
+                        </a>
+                    </td>
+                    <td>
+                        <div class="players-list">
+                            {% for player in game.players %}
+                            <span class="tag {% if player.position == 1 %}is-success{% elif player.position == 2 %}is-warning{% elif player.position == 3 %}is-info{% else %}is-light{% endif %} mr-1 mb-1">
+                                <strong>{{ player.position }}.</strong>
+                                <a href="{{ url_for('main.show_player', player_name=player.name) }}" 
+                                   class="has-text-inherit ml-1">
+                                    {{ player.name }}
+                                </a>
+                                {% if player.punkte is not none %}
+                                <span class="ml-1">({{ player.punkte }})</span>
+                                {% endif %}
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </td>
+                    <td>
+                        {{ game.playtime_fmt }}
+                    </td>
+                    <td>
+                        <span class="tag is-primary is-light">
+                            <span class="icon is-small">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </span>
+                            <span>{{ game.location }}</span>
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('main.show_game', game_id=game.id) }}" 
+                           class="button is-small is-primary is-outlined">
+                            <span class="icon is-small">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                            <span>Details</span>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="notification is-warning">
+        <h3 class="title is-4">Keine Partien gefunden</h3>
+        <p>Es wurden noch keine Partien gespielt oder sie sind noch nicht in der Datenbank erfasst.</p>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+/* Zusätzliche Styles für bessere Lesbarkeit */
+.players-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.players-list .tag {
+    white-space: nowrap;
+}
+
+.players-list .tag a {
+    text-decoration: none;
+}
+
+.players-list .tag a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Verhalten für mobile Geräte */
+@media screen and (max-width: 768px) {
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    .players-list {
+        max-width: 200px;
+    }
+    
+    .players-list .tag {
+        font-size: 0.7rem;
+    }
+}
+</style>
+{% endblock %}
