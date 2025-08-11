@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 from sqlalchemy.orm import Session
 
@@ -7,7 +7,7 @@ from bogan.main.lib.fetch_db import get_boardgame_by, get_games_by, get_all_boar
 from bogan.main.lib.boardgame_ranking import calculate_player_ranking, get_boardgame_stats
 from bogan.main.lib.player_stats import get_player_stats, get_all_players
 from bogan.main.lib.game_detail import get_game_detail_data
-from bogan.db.models import Game, Boardgame, Location
+from bogan.db.models import Game, Boardgame, Location, User, Player
 from bogan.utils import load_yaml
 import bogan.config as cfg
 from datetime import datetime
@@ -82,7 +82,81 @@ def index():
 @main.route("/profile")
 @login_required
 def profile():
-    return render_template("profile.html", name=current_user.name)
+    with Session(engine) as session:
+        # Lade alle verfügbaren Spieler für die Auswahl
+        all_players = session.query(Player).all()
+        # Filtere Spieler, die bereits mit einem User verknüpft sind
+        available_players = [p for p in all_players if p.user is None]
+        
+        return render_template("profile.html", 
+                             name=current_user.name, 
+                             current_player=current_user.player,
+                             available_players=available_players)
+
+
+@main.route("/profile/link_player", methods=["POST"])
+@login_required
+def link_player():
+    player_id = request.form.get("player_id")
+    
+    if not player_id:
+        flash("Bitte wähle einen Spieler aus.", "error")
+        return redirect(url_for("main.profile"))
+    
+    with Session(engine) as session:
+        try:
+            player = session.query(Player).filter(Player.id == int(player_id)).first()
+            
+            if not player:
+                flash("Spieler nicht gefunden.", "error")
+                return redirect(url_for("main.profile"))
+            
+            # Überprüfe, ob der Spieler bereits verknüpft ist
+            if player.user is not None:
+                flash(f"Der Spieler '{player.name}' ist bereits mit einem anderen Account verknüpft.", "error")
+                return redirect(url_for("main.profile"))
+            
+            # Überprüfe, ob der aktuelle User bereits einen Spieler hat
+            current_user_db = session.query(User).filter(User.id == current_user.id).first()
+            if current_user_db.player_id is not None:
+                flash("Du bist bereits mit einem Spieler verknüpft. Entferne diese Verknüpfung zuerst.", "error")
+                return redirect(url_for("main.profile"))
+            
+            # Verknüpfe User mit Spieler
+            current_user_db.player_id = player.id
+            session.commit()
+            
+            flash(f"Du bist jetzt mit dem Spieler '{player.name}' verknüpft!", "success")
+            
+        except Exception:
+            session.rollback()
+            flash("Ein Fehler ist aufgetreten. Bitte versuche es erneut.", "error")
+    
+    return redirect(url_for("main.profile"))
+
+
+@main.route("/profile/unlink_player", methods=["POST"])
+@login_required
+def unlink_player():
+    with Session(engine) as session:
+        try:
+            current_user_db = session.query(User).filter(User.id == current_user.id).first()
+            
+            if current_user_db.player_id is None:
+                flash("Du bist nicht mit einem Spieler verknüpft.", "error")
+                return redirect(url_for("main.profile"))
+            
+            player_name = current_user_db.player.name
+            current_user_db.player_id = None
+            session.commit()
+            
+            flash(f"Die Verknüpfung mit dem Spieler '{player_name}' wurde entfernt.", "success")
+            
+        except Exception:
+            session.rollback()
+            flash("Ein Fehler ist aufgetreten. Bitte versuche es erneut.", "error")
+    
+    return redirect(url_for("main.profile"))
 
 
 @main.route("/search")

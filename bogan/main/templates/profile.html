@@ -1,7 +1,99 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="columns is-centered">
+    <div class="column is-two-thirds">
+        <h1 class="title">Profil von {{ name }}</h1>
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="notification {% if category == 'error' %}is-danger{% elif category == 'success' %}is-success{% else %}is-info{% endif %}">
+                        <button class="delete" onclick="this.parentElement.style.display='none';"></button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-<h1 class="title"> Hallo {{ name }}</h1>
+        <div class="box">
+            <h2 class="subtitle">Spieler-Verknüpfung</h2>
+            
+            {% if current_player %}
+                <!-- Bereits verknüpft -->
+                <div class="notification is-info">
+                    <h3 class="title is-5">🎯 Du bist verknüpft mit:</h3>
+                    <p class="subtitle is-6">
+                        <strong>{{ current_player.name }}</strong>
+                        {% if current_player.bgg_name %}
+                            (BGG: {{ current_player.bgg_name }})
+                        {% endif %}
+                    </p>
+                    <div class="buttons">
+                        <a href="{{ url_for('main.show_player', player_name=current_player.name) }}" class="button is-primary">
+                            <span class="icon">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <span>Zu meiner Spielerseite</span>
+                        </a>
+                        <form method="POST" action="{{ url_for('main.unlink_player') }}" style="display: inline;">
+                            <button type="submit" class="button is-danger is-outlined" 
+                                    onclick="return confirm('Möchtest du die Verknüpfung wirklich entfernen?')">
+                                <span class="icon">
+                                    <i class="fas fa-unlink"></i>
+                                </span>
+                                <span>Verknüpfung entfernen</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% else %}
+                <!-- Noch nicht verknüpft -->
+                <div class="notification is-warning">
+                    <h3 class="title is-5">⚠️ Nicht mit einem Spieler verknüpft</h3>
+                    <p>Du bist noch nicht mit einem Spieler verknüpft. Wähle einen Spieler aus der Liste unten aus, um deine Spielstatistiken zu sehen.</p>
+                </div>
+                
+                {% if available_players %}
+                    <form method="POST" action="{{ url_for('main.link_player') }}">
+                        <div class="field">
+                            <label class="label">Verfügbare Spieler:</label>
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select name="player_id" required>
+                                        <option value="">Wähle einen Spieler...</option>
+                                        {% for player in available_players %}
+                                            <option value="{{ player.id }}">
+                                                {{ player.name }}
+                                                {% if player.bgg_name %}
+                                                    (BGG: {{ player.bgg_name }})
+                                                {% endif %}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="control">
+                                <button type="submit" class="button is-info">
+                                    <span class="icon">
+                                        <i class="fas fa-link"></i>
+                                    </span>
+                                    <span>Mit Spieler verknüpfen</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                {% else %}
+                    <div class="notification is-info">
+                        <p>Alle Spieler sind bereits mit anderen Accounts verknüpft oder es sind keine Spieler verfügbar.</p>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
     
 {% endblock %}
