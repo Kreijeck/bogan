@@ -10,7 +10,17 @@
             <span>Alle Partien</span>
         </span>
     </h1>
-    <p class="subtitle">Übersicht aller gespielten Partien ({{ games|length }} Partien total)</p>
+    <p class="subtitle">Übersicht aller gespielten Partien (<span id="totalCount">{{ games|length }}</span> Partien total)</p>
+
+    <!-- Suchfeld -->
+    <div class="field mb-5">
+        <label class="label">Live-Suche</label>
+        <div class="control">
+            <input id="searchInput" class="input" type="text" 
+                   placeholder="Nach Brettspiel, Spieler, Ort oder Datum suchen...">
+        </div>
+        <p class="help">Suche nach Brettspiel-Namen, Spieler-Namen, Orten oder Datum (z.B. "2025" oder "Januar")</p>
+    </div>
 
     {% if games %}
     <div class="table-container">
@@ -25,9 +35,9 @@
                     <th>Details</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="gamesTableBody">
                 {% for game in games %}
-                <tr>
+                <tr class="game-row" data-searchable="{{ game.boardgame_name|lower }} {{ game.location|lower }} {{ game.datum_fmt }} {% for player in game.players %}{{ player.name|lower }} {% endfor %}">
                     <td>
                         <strong>{{ game.datum_fmt }}</strong>
                     </td>
@@ -121,4 +131,55 @@
     }
 }
 </style>
+
+<!-- Live-Suche JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const tableBody = document.getElementById('gamesTableBody');
+    const gameRows = tableBody.querySelectorAll('.game-row');
+    const totalCountSpan = document.getElementById('totalCount');
+    const totalGames = gameRows.length;
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            let visibleCount = 0;
+            
+            gameRows.forEach(function(row) {
+                const searchableText = row.getAttribute('data-searchable');
+                
+                if (searchableText && searchableText.includes(searchTerm)) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // Update counter
+            totalCountSpan.textContent = visibleCount;
+            
+            // Show/hide "no results" message
+            let noResultsRow = document.getElementById('noResultsRow');
+            if (visibleCount === 0 && searchTerm !== '') {
+                if (!noResultsRow) {
+                    noResultsRow = document.createElement('tr');
+                    noResultsRow.id = 'noResultsRow';
+                    noResultsRow.innerHTML = '<td colspan="6" class="has-text-centered has-text-grey"><em>Keine Partien gefunden für "' + searchTerm + '"</em></td>';
+                    tableBody.appendChild(noResultsRow);
+                }
+                noResultsRow.style.display = '';
+            } else if (noResultsRow) {
+                noResultsRow.style.display = 'none';
+            }
+            
+            // Reset counter when search is cleared
+            if (searchTerm === '') {
+                totalCountSpan.textContent = totalGames;
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
