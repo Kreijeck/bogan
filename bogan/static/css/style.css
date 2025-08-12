@@ -1292,3 +1292,402 @@
     color: inherit !important;
     font-weight: 700 !important;
 }
+
+/* ========================================
+   GAMES OVERVIEW SPECIFIC STYLES
+   ======================================== */
+
+/* Players-list Styles für Games Overview */
+.players-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.players-list .tag {
+    white-space: nowrap;
+}
+
+.players-list .tag a {
+    text-decoration: none;
+}
+
+.players-list .tag a:hover {
+    text-decoration: underline;
+}
+
+/* Games Overview Mobile Styles */
+@media screen and (max-width: 768px) {
+    /* Games Overview Tabelle */
+    .games-overview .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .games-overview .table {
+        min-width: 800px;
+    }
+    
+    .games-overview .players-list {
+        max-width: 150px !important;
+        flex-direction: column !important;
+    }
+    
+    .games-overview .players-list .tag {
+        font-size: 0.65rem !important;
+        margin: 0.05rem 0 !important;
+        padding: 0.2rem 0.4rem !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        line-height: 1.1 !important;
+        max-width: 100% !important;
+    }
+    
+    /* Games Overview Tabellen-Zellen */
+    .games-overview .table td:nth-child(1) { /* Datum */
+        min-width: 80px;
+        font-size: 0.75rem;
+    }
+    
+    .games-overview .table td:nth-child(2) { /* Brettspiel */
+        min-width: 120px;
+        font-size: 0.75rem;
+    }
+    
+    .games-overview .table td:nth-child(3) { /* Spieler */
+        min-width: 150px;
+    }
+    
+    .games-overview .table td:nth-child(4) { /* Spieldauer */
+        min-width: 80px;
+        font-size: 0.75rem;
+    }
+    
+    .games-overview .table td:nth-child(5) { /* Ort */
+        min-width: 80px;
+    }
+    
+    .games-overview .table td:nth-child(6) { /* Details */
+        min-width: 70px;
+    }
+    
+    .games-overview .tag.is-primary.is-light {
+        font-size: 0.65rem !important;
+        padding: 0.15rem 0.3rem !important;
+    }
+    
+    .games-overview .button.is-small {
+        font-size: 0.65rem !important;
+        padding: 0.2rem 0.4rem !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .games-overview .table {
+        min-width: 900px;
+        font-size: 0.65rem !important;
+    }
+    
+    .games-overview .players-list .tag {
+        font-size: 0.6rem !important;
+        padding: 0.15rem 0.3rem !important;
+    }
+}
+
+/* ========================================
+   PLAYER DETAIL SPECIFIC STYLES
+   ======================================== */
+
+/* Player Detail Spacing Verbesserungen */
+.player-stats-overview .column {
+    padding: 1rem;
+}
+
+.player-stats-overview .heading {
+    margin-bottom: 0.25rem !important;
+}
+
+.player-stats-overview .title {
+    margin-bottom: 1rem !important;
+}
+
+/* Beste Spiele Boxen */
+.best-game-box .columns.is-gapless .column {
+    padding: 0.5rem 0.25rem;
+}
+
+.best-game-box .heading {
+    margin-bottom: 0.25rem !important;
+    font-size: 0.7rem;
+}
+
+.best-game-box .title.is-6 {
+    margin-bottom: 0.75rem !important;
+}
+
+/* Spielhistorie Boxen */
+.game-history-box .level .level-item {
+    margin-bottom: 0.5rem;
+}
+
+.game-history-box .heading {
+    margin-bottom: 0.25rem !important;
+    font-size: 0.7rem;
+}
+
+.game-history-box .title.is-6, 
+.game-history-box .title.is-7 {
+    margin-bottom: 0.75rem !important;
+}
+
+/* Statistik-Bereiche Gruppierung */
+.has-text-centered > div {
+    margin-bottom: 0.75rem;
+}
+
+.has-text-centered:last-child > div {
+    margin-bottom: 0;
+}
+
+/* Player Detail Mobile Styles */
+@media screen and (max-width: 768px) {
+    /* Player Statistiken für Mobile */
+    .player-stats-overview .columns.is-mobile {
+        display: block !important;
+    }
+    
+    .player-stats-overview .column {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 0.75rem 1rem !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        text-align: left !important;
+    }
+    
+    .player-stats-overview .column:last-child {
+        border-bottom: none !important;
+    }
+    
+    .player-stats-overview .heading {
+        font-size: 0.9rem !important;
+        margin-bottom: 0 !important;
+        font-weight: 600 !important;
+    }
+    
+    .player-stats-overview .title.is-3 {
+        font-size: 1.25rem !important;
+        margin-bottom: 0 !important;
+    }
+    
+    /* Beste Spiele für Mobile */
+    .best-game-box {
+        padding: 0.75rem !important;
+    }
+    
+    .best-game-box .media-content .title.is-5 {
+        font-size: 1rem !important;
+        line-height: 1.2 !important;
+        word-break: break-word !important;
+    }
+    
+    .best-game-box .columns.is-gapless.is-multiline {
+        margin: 0 !important;
+    }
+    
+    .best-game-box .columns.is-gapless .column.is-half {
+        width: 50% !important;
+        padding: 0.25rem !important;
+        text-align: center !important;
+    }
+    
+    .best-game-box .heading {
+        font-size: 0.65rem !important;
+        margin-bottom: 0.1rem !important;
+    }
+    
+    .best-game-box .title.is-6 {
+        font-size: 0.8rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    /* Spielhistorie für Mobile */
+    .game-history-box {
+        padding: 0.75rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    
+    .game-history-box .level.is-mobile {
+        display: block !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .game-history-box .level-left .level-item {
+        margin-bottom: 0.25rem !important;
+    }
+    
+    .game-history-box .level-right .level-item {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .game-history-box .title.is-6 {
+        font-size: 0.9rem !important;
+        line-height: 1.2 !important;
+        word-break: break-word !important;
+        margin-bottom: 0.1rem !important;
+    }
+    
+    .game-history-box .subtitle.is-7 {
+        font-size: 0.75rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    .game-history-box .content .level.is-mobile {
+        display: flex !important;
+        justify-content: space-around !important;
+        text-align: center !important;
+    }
+    
+    .game-history-box .content .level-item {
+        flex: 1 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .game-history-box .content .heading {
+        font-size: 0.65rem !important;
+        margin-bottom: 0.1rem !important;
+    }
+    
+    .game-history-box .content .title.is-6,
+    .game-history-box .content .title.is-7 {
+        font-size: 0.75rem !important;
+        margin-bottom: 0 !important;
+        word-break: break-word !important;
+    }
+    
+    /* Monatssektionen */
+    .month-section h3.title.is-4 {
+        font-size: 1rem !important;
+        text-align: left !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    /* Position Tags */
+    .position-tag {
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.4rem !important;
+        border-radius: 0.25rem !important;
+        white-space: nowrap !important;
+    }
+    
+    /* Tag Verbesserungen */
+    .tag.is-success, .tag.is-warning, .tag.is-info, .tag.is-light {
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.4rem !important;
+        margin: 0.1rem !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .player-stats-overview .column {
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    .player-stats-overview .heading {
+        font-size: 0.8rem !important;
+    }
+    
+    .player-stats-overview .title.is-3 {
+        font-size: 1.1rem !important;
+    }
+    
+    .best-game-box {
+        padding: 0.5rem !important;
+    }
+    
+    .game-history-box {
+        padding: 0.5rem !important;
+    }
+    
+    .game-history-box .title.is-6 {
+        font-size: 0.8rem !important;
+    }
+    
+    .month-section h3.title.is-4 {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* ========================================
+   INDEX PAGE STYLES
+   ======================================== */
+
+.index-subtitle {
+    margin-top: 1.5rem;
+}
+
+.index-empty-state {
+    padding: 3rem;
+}
+
+/* ========================================
+   PROFILE PAGE STYLES
+   ======================================== */
+
+.profile-unlink-form {
+    display: inline;
+}
+
+/* ========================================
+   EVENT PAGE STYLES
+   ======================================== */
+
+.event-table-container {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow-x: auto;
+}
+
+.event-table th {
+    min-width: 80px;
+}
+
+.event-table th.player-name {
+    min-width: 150px;
+}
+
+.event-table th.points {
+    min-width: 120px;
+}
+
+.event-table th.details {
+    min-width: 200px;
+}
+
+.event-details {
+    display: none;
+    margin-top: 10px;
+}
+
+.event-details-list {
+    list-style-type: none;
+    padding-left: 1.5rem;
+    text-align: left;
+}
+
+.event-game-image {
+    width: 75px;
+    height: auto;
+    border-radius: 8px;
+}
+
+.markdown-content {
+    display: none;
+}
+
+/* ========================================
+   PLAYERS OVERVIEW STYLES
+   ======================================== */
+
+.players-no-results {
+    display: none;
+}
