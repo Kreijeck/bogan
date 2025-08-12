@@ -45,7 +45,10 @@
           </div>
           <div class="column has-text-centered">
             <p class="heading">Ø Position</p>
-            <p class="title is-3 has-text-white">{{ player_data.avg_position }}</p>
+            <p class="title is-3 has-text-white">
+              {{ player_data.avg_position }}
+              <small class="has-text-grey-light">/{{ player_data.avg_player_count }}</small>
+            </p>
           </div>
         </div>
       </div>
@@ -107,7 +110,10 @@
                 <div class="column is-half">
                   <div class="has-text-centered">
                     <p class="heading">Ø Position</p>
-                    <p class="title is-6 has-text-info">{{ game.avg_position }}</p>
+                    <p class="title is-6 has-text-info">
+                      {{ game.avg_position }}
+                      <small class="has-text-grey-light">/{{ game.avg_player_count }}</small>
+                    </p>
                   </div>
                 </div>
                 <div class="column is-half">
