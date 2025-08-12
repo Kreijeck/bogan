@@ -698,3 +698,597 @@
   .boardgame-card .content {
     margin-top: auto;
   }
+
+/* ========================================
+   MOBILE RESPONSIVE IMPROVEMENTS
+   ======================================== */
+
+/* Basis Mobile Styles für alle Geräte unter 768px */
+@media screen and (max-width: 768px) {
+    
+    /* Allgemeine Mobile-Verbesserungen */
+    .container {
+        padding: 0 0.5rem !important;
+    }
+    
+    .section {
+        padding: 1rem 0.5rem !important;
+    }
+    
+    /* Titel und Überschriften */
+    .title.is-1, .title.is-2 {
+        font-size: 1.5rem !important;
+        line-height: 1.3 !important;
+        word-break: break-word;
+        hyphens: auto;
+    }
+    
+    .title.is-3 {
+        font-size: 1.25rem !important;
+        line-height: 1.3 !important;
+    }
+    
+    .subtitle {
+        font-size: 1rem !important;
+        line-height: 1.4 !important;
+        word-break: break-word;
+    }
+    
+    /* Box-Verbesserungen für Mobile */
+    .box {
+        padding: 1rem 0.75rem !important;
+        margin-bottom: 1rem !important;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* Tabellen-Verbesserungen */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .table {
+        font-size: 0.8rem !important;
+        white-space: nowrap;
+    }
+    
+    .table td, .table th {
+        padding: 0.5rem 0.25rem !important;
+        vertical-align: top !important;
+    }
+    
+    /* Tag-Verbesserungen für Spielerlisten */
+    .players-list {
+        max-width: 100% !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+    
+    .players-list .tag {
+        font-size: 0.7rem !important;
+        margin: 0.1rem 0 !important;
+        max-width: 100% !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* Button-Verbesserungen */
+    .button {
+        font-size: 0.8rem !important;
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    .button.is-small {
+        font-size: 0.7rem !important;
+        padding: 0.25rem 0.5rem !important;
+    }
+    
+    /* Columns-System Verbesserungen */
+    .columns {
+        margin: 0 !important;
+    }
+    
+    .column {
+        padding: 0.5rem !important;
+    }
+    
+    /* Level-System für Mobile */
+    .level {
+        display: block !important;
+    }
+    
+    .level-item {
+        justify-content: flex-start !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .level-left, .level-right {
+        margin-bottom: 0.75rem !important;
+    }
+    
+    /* Spieler-Statistiken */
+    .player-stats-overview .columns {
+        flex-direction: column !important;
+    }
+    
+    .player-stats-overview .column {
+        padding: 0.75rem 0.5rem !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .player-stats-overview .column:last-child {
+        border-bottom: none;
+    }
+    
+    /* Beste Spiele Boxen */
+    .best-game-box {
+        margin-bottom: 1rem !important;
+    }
+    
+    .best-game-box .columns.is-gapless {
+        margin: 0 !important;
+    }
+    
+    .best-game-box .column.is-half {
+        width: 50% !important;
+        padding: 0.25rem !important;
+    }
+    
+    /* Spielhistorie */
+    .game-history-box {
+        margin-bottom: 1rem !important;
+    }
+    
+    .game-history-box .level {
+        display: block !important;
+    }
+    
+    .game-history-box .level-left,
+    .game-history-box .level-right {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Navigation Dropdown */
+    .navbar-dropdown {
+        position: static !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+    
+    .navbar-dropdown .navbar-item {
+        font-size: 0.9rem !important;
+        padding: 0.5rem 1rem !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+    }
+    
+    /* Formular-Verbesserungen */
+    .field .help {
+        font-size: 0.8rem !important;
+    }
+    
+    .input, .textarea {
+        font-size: 0.9rem !important;
+    }
+    
+    /* Icon-Text Verbesserungen */
+    .icon-text {
+        flex-wrap: wrap !important;
+        align-items: center !important;
+    }
+    
+    .icon-text .icon {
+        flex-shrink: 0 !important;
+    }
+    
+    /* Notification Verbesserungen */
+    .notification {
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+    }
+    
+    /* Monatssektionen in Spielhistorie */
+    .month-section h3 {
+        font-size: 1.1rem !important;
+        text-align: left !important;
+        margin-bottom: 0.75rem !important;
+    }
+}
+
+/* Extra kleine Geräte (unter 480px) */
+@media screen and (max-width: 480px) {
+    
+    .container {
+        padding: 0 0.25rem !important;
+    }
+    
+    .section {
+        padding: 0.75rem 0.25rem !important;
+    }
+    
+    .title.is-1, .title.is-2 {
+        font-size: 1.25rem !important;
+    }
+    
+    .box {
+        padding: 0.75rem 0.5rem !important;
+    }
+    
+    .table {
+        font-size: 0.7rem !important;
+    }
+    
+    .table td, .table th {
+        padding: 0.25rem 0.1rem !important;
+    }
+    
+    .players-list .tag {
+        font-size: 0.65rem !important;
+    }
+    
+    .button {
+        font-size: 0.7rem !important;
+        padding: 0.4rem 0.6rem !important;
+    }
+    
+    .navbar-dropdown .navbar-item {
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.8rem !important;
+    }
+}
+
+/* ========================================
+   DARK/LIGHT MODE CONTRAST FIXES
+   ======================================== */
+
+/* Dark Mode Support (wenn das System Dark Mode verwendet) */
+@media (prefers-color-scheme: dark) {
+    
+    /* Event-Boxen im Dark Mode */
+    .event-box .title.has-text-primary {
+        color: #64b5f6 !important; /* Helles Blau für Dark Mode */
+    }
+    
+    .event-box .subtitle {
+        color: #e3f2fd !important; /* Helles Grau-Blau */
+    }
+    
+    .box.event-box.event-box-blue {
+        background-color: #1e3a5f !important; /* Dunklerer Blau-Hintergrund */
+        border: 2px solid #64b5f6 !important;
+    }
+    
+    /* Allgemeine Titel-Verbesserungen für Dark Mode */
+    .title.has-text-primary {
+        color: #64b5f6 !important;
+    }
+    
+    .subtitle.has-text-secondary {
+        color: #90caf9 !important;
+    }
+    
+    /* Haupt-Section Anpassungen */
+    .section.has-background-info-30 {
+        background-color: #0d1b2a !important; /* Dunklerer Hintergrund */
+    }
+    
+    .has-text-info-30-invert {
+        color: #e3f2fd !important; /* Heller Text */
+    }
+}
+
+/* Light Mode (Standard und explizit) */
+@media (prefers-color-scheme: light), (prefers-color-scheme: no-preference) {
+    
+    /* Event-Boxen im Light Mode */
+    .event-box .title.has-text-primary {
+        color: #0d47a1 !important; /* Sehr dunkles Blau für Light Mode */
+        font-weight: 600 !important;
+    }
+    
+    .event-box .subtitle {
+        color: #424242 !important; /* Dunkles Grau */
+    }
+    
+    .box.event-box.event-box-blue {
+        background-color: #e3f2fd !important; /* Sehr helles Blau */
+        border: 2px solid #1976d2 !important;
+    }
+    
+    /* Allgemeine Titel-Verbesserungen für Light Mode */
+    .title.has-text-primary {
+        color: #0d47a1 !important; /* Sehr dunkles Blau */
+        font-weight: 600 !important;
+    }
+    
+    .subtitle.has-text-secondary {
+        color: #424242 !important; /* Dunkles Grau */
+    }
+    
+    /* Sicherstellen dass Texte auf hellem Hintergrund dunkel sind */
+    .section.has-background-info-30 {
+        background-color: #e8f4f8 !important; /* Sehr helles Blau */
+    }
+    
+    .has-text-info-30-invert {
+        color: #1a1a1a !important; /* Sehr dunkler Text */
+    }
+    
+    /* Bessere Kontraste für verschiedene Text-Klassen */
+    .has-text-grey-dark {
+        color: #212121 !important;
+    }
+    
+    .has-text-grey {
+        color: #424242 !important;
+    }
+}
+
+/* Fallback für Browser ohne prefers-color-scheme Support */
+.title.has-text-primary {
+    color: #0d47a1 !important; /* Standardmäßig dunkles Blau */
+    font-weight: 600 !important;
+}
+
+.subtitle.has-text-secondary {
+    color: #424242 !important; /* Standardmäßig dunkles Grau */
+}
+
+/* Event-Box Hover-Effekte für beide Modi */
+.event-box:hover .title.has-text-primary {
+    text-decoration: underline;
+}
+
+/* Zusätzliche Kontrast-Verbesserungen */
+.box {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+    .box {
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background-color: #263238;
+    }
+}
+
+/* ========================================
+   TABLE HEADER CONTRAST FIXES
+   ======================================== */
+
+/* Tabellen-Header für beide Modi sicherstellen */
+.table thead.has-background-primary-dark {
+    background-color: #1565c0 !important; /* Immer dunkles Blau */
+}
+
+.table thead.has-background-primary-dark.has-text-white th,
+.table thead.has-background-primary-dark.has-text-white td {
+    color: #ffffff !important; /* Immer weiße Schrift */
+    background-color: #1565c0 !important; /* Immer dunkles Blau */
+    font-weight: 600 !important;
+}
+
+/* Dark Mode spezifische Tabellen-Verbesserungen */
+@media (prefers-color-scheme: dark) {
+    .table thead.has-background-primary-dark {
+        background-color: #0d47a1 !important; /* Noch dunkleres Blau für Dark Mode */
+        border-bottom: 2px solid #64b5f6;
+    }
+    
+    .table thead.has-background-primary-dark.has-text-white th,
+    .table thead.has-background-primary-dark.has-text-white td {
+        background-color: #0d47a1 !important;
+        color: #ffffff !important;
+        border-color: #64b5f6 !important;
+    }
+    
+    /* Tabellen-Body für Dark Mode */
+    .table tbody tr {
+        background-color: #1a1a1a !important;
+        color: #e3f2fd !important;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #2d2d2d !important;
+    }
+    
+    .table td, .table th {
+        border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+}
+
+/* Light Mode spezifische Tabellen-Verbesserungen */
+@media (prefers-color-scheme: light), (prefers-color-scheme: no-preference) {
+    .table thead.has-background-primary-dark {
+        background-color: #0d47a1 !important; /* Sehr dunkles Blau */
+        border-bottom: 2px solid #1976d2;
+    }
+    
+    .table thead.has-background-primary-dark.has-text-white th,
+    .table thead.has-background-primary-dark.has-text-white td {
+        background-color: #0d47a1 !important;
+        color: #ffffff !important;
+        border-color: #1976d2 !important;
+    }
+    
+    /* Tabellen-Body für Light Mode */
+    .table tbody tr {
+        background-color: #ffffff !important;
+        color: #1a1a1a !important;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #f5f5f5 !important;
+    }
+    
+    .table td, .table th {
+        border-color: rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    /* Links in Tabellen für Light Mode */
+    .table .has-text-link {
+        color: #1976d2 !important;
+    }
+    
+    .table .has-text-primary {
+        color: #0d47a1 !important;
+    }
+}
+
+/* Fallback für alle Browser - Tabellen-Header */
+.table thead.has-background-primary-dark {
+    background-color: #0d47a1 !important;
+}
+
+.table thead.has-background-primary-dark.has-text-white th,
+.table thead.has-background-primary-dark.has-text-white td {
+    background-color: #0d47a1 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* Zusätzliche Tabellen-Verbesserungen */
+.table.is-hoverable tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    .table.is-hoverable tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+    }
+}
+
+/* ========================================
+   EVENT PAGE SPECIFIC FIXES
+   ======================================== */
+
+/* Event-Seiten Titel und Überschriften */
+.title.has-text-primary {
+    color: #0d47a1 !important;
+    font-weight: 600 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    .title.has-text-primary {
+        color: #64b5f6 !important;
+    }
+}
+
+/* Player-Links in Tabellen */
+.player-link.has-text-primary {
+    color: #1976d2 !important;
+    font-weight: 500 !important;
+    text-decoration: none;
+}
+
+.player-link.has-text-primary:hover {
+    color: #0d47a1 !important;
+    text-decoration: underline;
+}
+
+@media (prefers-color-scheme: dark) {
+    .player-link.has-text-primary {
+        color: #64b5f6 !important;
+    }
+    
+    .player-link.has-text-primary:hover {
+        color: #90caf9 !important;
+    }
+}
+
+/* Collapsible Header Verbesserungen */
+.collapsible-header {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.collapsible-header:hover {
+    opacity: 0.8;
+}
+
+.collapsible-header .icon.has-text-primary {
+    color: #0d47a1 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    .collapsible-header .icon.has-text-primary {
+        color: #64b5f6 !important;
+    }
+}
+
+/* Box-Container für Tabellen */
+.table-container.box {
+    background-color: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+    .table-container.box {
+        background-color: #1a1a1a !important;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* Button-Verbesserungen in Event-Seiten */
+.button.is-primary {
+    background-color: #1976d2 !important;
+    border-color: #1976d2 !important;
+    color: #ffffff !important;
+}
+
+.button.is-primary:hover {
+    background-color: #0d47a1 !important;
+    border-color: #0d47a1 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    .button.is-primary {
+        background-color: #64b5f6 !important;
+        border-color: #64b5f6 !important;
+        color: #000000 !important;
+    }
+    
+    .button.is-primary:hover {
+        background-color: #42a5f5 !important;
+        border-color: #42a5f5 !important;
+    }
+}
+
+/* Info-Notifications */
+.notification.is-info {
+    background-color: #e3f2fd !important;
+    color: #0d47a1 !important;
+    border: 1px solid #1976d2;
+}
+
+@media (prefers-color-scheme: dark) {
+    .notification.is-info {
+        background-color: #1565c0 !important;
+        color: #e3f2fd !important;
+        border: 1px solid #64b5f6;
+    }
+}
+
+/* Details-Content Verbesserungen */
+.details-content {
+    background-color: #f8f9fa !important;
+    padding: 1rem;
+    border-radius: 0.375rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+    .details-content {
+        background-color: #2d2d2d !important;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #e3f2fd !important;
+    }
+}
+
+/* has-text-weight-bold Klasse */
+.has-text-weight-bold {
+    color: inherit !important;
+    font-weight: 700 !important;
+}
