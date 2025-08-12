@@ -2,6 +2,13 @@
 
 ## Current Version
 
+## 0.7.0
+
+- Registrierung nur mit Passwort möglich
+- Profilseite kann mit Spieler verknüpft werden
+- farbliche Style Anpassungen, inkl. Optimierung bright-dark-mode
+- Kurzübersicht über alle Spieler
+
 ## 0.6.0
 
 - **KI Unterstützung**
