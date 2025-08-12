@@ -455,6 +455,177 @@ document.addEventListener('DOMContentLoaded', function() {
 .has-text-centered:last-child > div {
     margin-bottom: 0; /* Kein Abstand beim letzten Element */
 }
+
+/* Mobile Responsive Verbesserungen */
+@media screen and (max-width: 768px) {
+    
+    /* Spieler-Statistiken für Mobile optimieren */
+    .player-stats-overview .columns.is-mobile {
+        display: block !important;
+    }
+    
+    .player-stats-overview .column {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 0.75rem 1rem !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        text-align: left !important;
+    }
+    
+    .player-stats-overview .column:last-child {
+        border-bottom: none !important;
+    }
+    
+    .player-stats-overview .heading {
+        font-size: 0.9rem !important;
+        margin-bottom: 0 !important;
+        font-weight: 600 !important;
+    }
+    
+    .player-stats-overview .title.is-3 {
+        font-size: 1.25rem !important;
+        margin-bottom: 0 !important;
+    }
+    
+    /* Beste Spiele Boxen für Mobile */
+    .best-game-box {
+        padding: 0.75rem !important;
+    }
+    
+    .best-game-box .media-content .title.is-5 {
+        font-size: 1rem !important;
+        line-height: 1.2 !important;
+        word-break: break-word !important;
+    }
+    
+    .best-game-box .columns.is-gapless.is-multiline {
+        margin: 0 !important;
+    }
+    
+    .best-game-box .columns.is-gapless .column.is-half {
+        width: 50% !important;
+        padding: 0.25rem !important;
+        text-align: center !important;
+    }
+    
+    .best-game-box .heading {
+        font-size: 0.65rem !important;
+        margin-bottom: 0.1rem !important;
+    }
+    
+    .best-game-box .title.is-6 {
+        font-size: 0.8rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    /* Spielhistorie für Mobile */
+    .game-history-box {
+        padding: 0.75rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    
+    .game-history-box .level.is-mobile {
+        display: block !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .game-history-box .level-left .level-item {
+        margin-bottom: 0.25rem !important;
+    }
+    
+    .game-history-box .level-right .level-item {
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .game-history-box .title.is-6 {
+        font-size: 0.9rem !important;
+        line-height: 1.2 !important;
+        word-break: break-word !important;
+        margin-bottom: 0.1rem !important;
+    }
+    
+    .game-history-box .subtitle.is-7 {
+        font-size: 0.75rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    .game-history-box .content .level.is-mobile {
+        display: flex !important;
+        justify-content: space-around !important;
+        text-align: center !important;
+    }
+    
+    .game-history-box .content .level-item {
+        flex: 1 !important;
+        margin-bottom: 0 !important;
+    }
+    
+    .game-history-box .content .heading {
+        font-size: 0.65rem !important;
+        margin-bottom: 0.1rem !important;
+    }
+    
+    .game-history-box .content .title.is-6,
+    .game-history-box .content .title.is-7 {
+        font-size: 0.75rem !important;
+        margin-bottom: 0 !important;
+        word-break: break-word !important;
+    }
+    
+    /* Monatssektionen */
+    .month-section h3.title.is-4 {
+        font-size: 1rem !important;
+        text-align: left !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    /* Position Tags */
+    .position-tag {
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.4rem !important;
+        border-radius: 0.25rem !important;
+        white-space: nowrap !important;
+    }
+    
+    /* Tag Verbesserungen */
+    .tag.is-success, .tag.is-warning, .tag.is-info, .tag.is-light {
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.4rem !important;
+        margin: 0.1rem !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    
+    .player-stats-overview .column {
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    .player-stats-overview .heading {
+        font-size: 0.8rem !important;
+    }
+    
+    .player-stats-overview .title.is-3 {
+        font-size: 1.1rem !important;
+    }
+    
+    .best-game-box {
+        padding: 0.5rem !important;
+    }
+    
+    .game-history-box {
+        padding: 0.5rem !important;
+    }
+    
+    .game-history-box .title.is-6 {
+        font-size: 0.8rem !important;
+    }
+    
+    .month-section h3.title.is-4 {
+        font-size: 0.9rem !important;
+    }
+}
 </style>
 
 {% endblock %}
