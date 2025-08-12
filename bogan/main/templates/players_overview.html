@@ -13,11 +13,11 @@
       </span>
     </h1>
     <p class="subtitle has-text-centered mb-6 has-text-grey-dark">
-      Übersicht aller Spieler in der Datenbank (<span id="totalCount">{{ players|length }}</span> Spieler total)
+      Übersicht aller Spieler in der Datenbank (<span id="totalCount">{{ players_stats|length }}</span> Spieler total)
     </p>
 
     <!-- Suchfeld -->
-    {% if players %}
+    {% if players_stats %}
     <div class="field mb-5">
       <label class="label">Live-Suche</label>
       <div class="control">
@@ -28,24 +28,47 @@
     </div>
     {% endif %}
 
-    {% if players %}
+    {% if players_stats %}
     <div id="playersGrid" class="columns is-multiline">
-      {% for player in players %}
-      <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen player-item" data-searchable="{{ player|lower }}">
+      {% for player in players_stats %}
+      <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen player-item" data-searchable="{{ player.name|lower }}">
         <div class="box player-overview-box has-text-centered">
           <div class="player-avatar">
             <span class="icon is-large has-text-primary">
               <i class="fas fa-user-circle fa-3x"></i>
             </span>
           </div>
-          <h3 class="title is-5 has-text-primary mt-3 player-name">{{ player }}</h3>
+          <h3 class="title is-5 has-text-primary mt-3 player-name">{{ player.name }}</h3>
+          
+          <!-- Spieler-Statistiken -->
+          <div class="player-stats mt-4">
+            <div class="columns is-mobile is-multiline has-text-centered">
+              <div class="column is-6">
+                <p class="heading">Spiele</p>
+                <p class="title is-6 has-text-info">{{ player.total_games }}</p>
+              </div>
+              <div class="column is-6">
+                <p class="heading">Siege</p>
+                <p class="title is-6 has-text-success">{{ player.wins }}</p>
+              </div>
+              <div class="column is-6">
+                <p class="heading">Siegrate</p>
+                <p class="title is-6 has-text-warning">{{ player.win_rate }}%</p>
+              </div>
+              <div class="column is-6">
+                <p class="heading">Ø Position</p>
+                <p class="title is-6 has-text-danger">{{ player.avg_position }}</p>
+              </div>
+            </div>
+          </div>
+          
           <div class="buttons is-centered mt-4">
-            <a href="{{ url_for('main.show_player', player_name=player) }}" 
+            <a href="{{ url_for('main.show_player', player_name=player.name) }}" 
                class="button is-primary">
               <span class="icon">
                 <i class="fas fa-chart-line"></i>
               </span>
-              <span>Statistiken</span>
+              <span>Details</span>
             </a>
           </div>
         </div>
