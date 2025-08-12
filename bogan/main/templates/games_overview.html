@@ -120,14 +120,76 @@
 @media screen and (max-width: 768px) {
     .table-container {
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .table {
+        min-width: 800px; /* Stelle sicher, dass die Tabelle eine Mindestbreite hat */
     }
     
     .players-list {
-        max-width: 200px;
+        max-width: 150px !important;
+        flex-direction: column !important;
     }
     
     .players-list .tag {
-        font-size: 0.7rem;
+        font-size: 0.65rem !important;
+        margin: 0.05rem 0 !important;
+        padding: 0.2rem 0.4rem !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        line-height: 1.1 !important;
+        max-width: 100% !important;
+    }
+    
+    /* Tabellen-Zellen spezifische Anpassungen */
+    .table td:nth-child(1) { /* Datum */
+        min-width: 80px;
+        font-size: 0.75rem;
+    }
+    
+    .table td:nth-child(2) { /* Brettspiel */
+        min-width: 120px;
+        font-size: 0.75rem;
+    }
+    
+    .table td:nth-child(3) { /* Spieler */
+        min-width: 150px;
+    }
+    
+    .table td:nth-child(4) { /* Spieldauer */
+        min-width: 80px;
+        font-size: 0.75rem;
+    }
+    
+    .table td:nth-child(5) { /* Ort */
+        min-width: 80px;
+    }
+    
+    .table td:nth-child(6) { /* Details */
+        min-width: 70px;
+    }
+    
+    .tag.is-primary.is-light {
+        font-size: 0.65rem !important;
+        padding: 0.15rem 0.3rem !important;
+    }
+    
+    .button.is-small {
+        font-size: 0.65rem !important;
+        padding: 0.2rem 0.4rem !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .table {
+        min-width: 900px; /* Noch breiter für sehr kleine Screens */
+        font-size: 0.65rem !important;
+    }
+    
+    .players-list .tag {
+        font-size: 0.6rem !important;
+        padding: 0.15rem 0.3rem !important;
     }
 }
 </style>
