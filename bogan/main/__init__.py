@@ -246,7 +246,21 @@ def show_all_boardgames():
 def show_all_players():
     with Session(engine) as session:
         players = get_all_players(session)
-        return render_template("players_overview.html", players=players)
+        
+        # Lade Statistiken für jeden Spieler
+        players_stats = []
+        for player_name in players:
+            player_data = get_player_stats(player_name, session)
+            players_stats.append({
+                'name': player_name,
+                'total_games': player_data['total_games'],
+                'wins': player_data['wins'],
+                'win_rate': round(player_data['win_rate'], 1) if player_data['win_rate'] else 0,
+                'avg_position': round(player_data['avg_position'], 1) if player_data['avg_position'] else 0,
+                'different_games': len(player_data.get('boardgame_stats', {}))
+            })
+        
+        return render_template("players_overview.html", players_stats=players_stats)
 
 
 @main.route("/player/<path:player_name>", methods=["GET"])
