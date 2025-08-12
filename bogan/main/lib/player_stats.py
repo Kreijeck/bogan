@@ -83,6 +83,7 @@ def get_player_stats(player_name: str, session: Session) -> Dict[str, Any]:
     total_games = len(player_games)
     wins = 0
     positions = []
+    player_counts = []  # Für durchschnittliche Spieleranzahl
     boardgame_performance = defaultdict(list)
     recent_games_data = []
     
@@ -100,6 +101,7 @@ def get_player_stats(player_name: str, session: Session) -> Dict[str, Any]:
         
         if player_position:
             positions.append(player_position)
+            player_counts.append(len(sorted_players))  # Spieleranzahl für dieses Spiel
             
             if player_position == 1:
                 wins += 1
@@ -131,6 +133,7 @@ def get_player_stats(player_name: str, session: Session) -> Dict[str, Any]:
     
     # Berechne Durchschnittswerte
     avg_position = sum(positions) / len(positions) if positions else 0
+    avg_player_count = sum(player_counts) / len(player_counts) if player_counts else 0
     win_rate = (wins / total_games) * 100 if total_games > 0 else 0
     
     # Beste Brettspiele ermitteln
@@ -138,6 +141,7 @@ def get_player_stats(player_name: str, session: Session) -> Dict[str, Any]:
     for boardgame_name, games_data in boardgame_performance.items():
         game_count = len(games_data)
         avg_pos = sum(g['position'] for g in games_data) / game_count
+        avg_players = sum(g['total_players'] for g in games_data) / game_count
         wins_in_game = sum(1 for g in games_data if g['position'] == 1)
         win_rate_game = (wins_in_game / game_count) * 100
         avg_points = sum(g['points'] for g in games_data) / game_count
@@ -146,6 +150,7 @@ def get_player_stats(player_name: str, session: Session) -> Dict[str, Any]:
             'name': boardgame_name,
             'games_played': game_count,
             'avg_position': round(avg_pos, 2),
+            'avg_player_count': round(avg_players, 1),
             'wins': wins_in_game,
             'win_rate': round(win_rate_game, 1),
             'avg_points': round(avg_points, 1)
@@ -162,6 +167,7 @@ def get_player_stats(player_name: str, session: Session) -> Dict[str, Any]:
         'wins': wins,
         'win_rate': round(win_rate, 1),
         'avg_position': round(avg_position, 2),
+        'avg_player_count': round(avg_player_count, 1),
         'best_games': best_games[:10],  # Top 10
         'recent_games': recent_games_data,
         'games_by_month': games_by_month,
