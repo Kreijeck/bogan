@@ -37,7 +37,7 @@
                             </span>
                             <span>Zu meiner Spielerseite</span>
                         </a>
-                        <form method="POST" action="{{ url_for('main.unlink_player') }}" style="display: inline;">
+                        <form method="POST" action="{{ url_for('main.unlink_player') }}" class="profile-unlink-form">
                             <button type="submit" class="button is-danger is-outlined" 
                                     onclick="return confirm('Möchtest du die Verknüpfung wirklich entfernen?')">
                                 <span class="icon">
