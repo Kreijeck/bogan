@@ -57,7 +57,10 @@
               </div>
               <div class="column is-6">
                 <p class="heading">Ø Position</p>
-                <p class="title is-6 has-text-danger">{{ player.avg_position }}</p>
+                <p class="title is-6 has-text-danger">
+                  {{ player.avg_position }}
+                  <small class="has-text-grey-light">/{{ player.avg_player_count }}</small>
+                </p>
               </div>
             </div>
           </div>

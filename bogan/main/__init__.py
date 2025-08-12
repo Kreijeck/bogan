@@ -257,6 +257,7 @@ def show_all_players():
                 'wins': player_data['wins'],
                 'win_rate': round(player_data['win_rate'], 1) if player_data['win_rate'] else 0,
                 'avg_position': round(player_data['avg_position'], 1) if player_data['avg_position'] else 0,
+                'avg_player_count': round(player_data['avg_player_count'], 1) if player_data['avg_player_count'] else 0,
                 'different_games': len(player_data.get('boardgame_stats', {}))
             })
         

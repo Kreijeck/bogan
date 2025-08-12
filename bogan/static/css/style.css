@@ -1294,6 +1294,31 @@
 }
 
 /* ========================================
+   PLAYER STATISTICS STYLES
+   ======================================== */
+
+/* Durchschnittliche Spieleranzahl - kleine Anzeige */
+.title small {
+    font-size: 0.6em;
+    font-weight: 400;
+    opacity: 0.7;
+}
+
+/* Dark mode support für kleine Zahlen */
+@media (prefers-color-scheme: dark) {
+    .title small.has-text-grey-light {
+        color: #b0b0b0 !important;
+    }
+}
+
+/* Mobile responsive für kleine Zahlen */
+@media screen and (max-width: 768px) {
+    .title small {
+        font-size: 0.55em;
+    }
+}
+
+/* ========================================
    GAMES OVERVIEW SPECIFIC STYLES
    ======================================== */
 
