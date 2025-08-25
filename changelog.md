@@ -2,6 +2,8 @@
 
 ## Current Version
 
+- Ranking table jetzt als Tabs zu sehen
+
 ## 0.7.0
 
 - Registrierung nur mit Passwort möglich
