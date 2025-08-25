@@ -2,6 +2,10 @@
 
 ## Current Version
 
+## 0.7.6
+
+- bugfixes auf "mobile devices"
+
 ## 0.7.5
 
 - Ranking table jetzt als Tabs zu sehen
