@@ -1,6 +1,6 @@
 [project]
 name = "bogan"
-version = "0.7.5"
+version = "0.7.6"
 description = "Website with tools and stats all around boardgames played and managed in BGG"
 readme = "README.md"
 requires-python = ">=3.10"
