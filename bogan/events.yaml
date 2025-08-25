@@ -1,69 +1,63 @@
 Spielewochenende 2025/1:
-  location: "Spielewochenende"
-  datum_start: "31.01.2025"
-  datum_ende: "02.02.2025"
+  location: Spielewochenende
+  datum_start: 31.01.2025
+  datum_ende: 02.02.2025
   ignored_player: None
-
 Spielewochenende 2024/1:
-  location: "Spielewochenende"
-  datum_start: "27.06.2024"
-  datum_ende: "30.06.2024"
+  location: Spielewochenende
+  datum_start: 27.06.2024
+  datum_ende: 30.06.2024
   ignored_player: None
-
 Spielewochenende 2023/2:
-  location: "Spielewochenende"
-  datum_start: "01.12.2023"
-  datum_ende: "04.12.2023"
+  location: Spielewochenende
+  datum_start: 01.12.2023
+  datum_ende: 04.12.2023
   ignored_player: None
-
 Spielewochenende 2023/1:
-  location: "Spielewochenende"
-  datum_start: "18.05.2023"
-  datum_ende: "20.05.2023"
+  location: Spielewochenende
+  datum_start: 18.05.2023
+  datum_ende: 20.05.2023
   ignored_player: None
-
 Spielewochenende 2022/2:
-  location: "Spielewochenende"
-  datum_start: "25.11.2022"
-  datum_ende: "27.11.2022"
+  location: Spielewochenende
+  datum_start: 25.11.2022
+  datum_ende: 27.11.2022
   ignored_player: None
-
 Mittwochsrunde 2025:
-  location: "Mittwochsrunde"
-  datum_start: "01.01.2025"
-  datum_ende: "31.12.2025"
+  location: Mittwochsrunde
+  datum_start: 01.01.2025
+  datum_ende: 31.12.2025
   ignored_player: None
-
 Mittwochsrunde 2024:
-  location: "Mittwochsrunde"
-  datum_start: "01.01.2024"
-  datum_ende: "31.12.2024"
+  location: Mittwochsrunde
+  datum_start: 01.01.2024
+  datum_ende: 31.12.2024
   ignored_player: None
-
 Mittwochsrunde 2023:
-  location: "Mittwochsrunde"
-  datum_start: "01.01.2023"
-  datum_ende: "31.12.2023"
+  location: Mittwochsrunde
+  datum_start: 01.01.2023
+  datum_ende: 31.12.2023
   ignored_player: None
-
 Mittwochsrunde 2022:
-  location: "Mittwochsrunde"
-  datum_start: "01.01.2022"
-  datum_ende: "31.12.2022"
+  location: Mittwochsrunde
+  datum_start: 01.01.2022
+  datum_ende: 31.12.2022
   ignored_player: None
-  
-
 Online Runde (BGA):
-  location: "BoardGameArena"
-  datum_start: "01.01.2022"
-  datum_ende: "31.12.2099"
+  location: BoardGameArena
+  datum_start: 01.01.2022
+  datum_ende: 31.12.2099
   ignored_player: None
-
 Island 2025:
-  location: "Sonstige"
-  datum_start: "01.11.2024"
-  datum_ende: "10.11.2024"
+  location: Sonstige
+  datum_start: 01.11.2024
+  datum_ende: 10.11.2024
   ignored_player:
-    - "Christian"
-    - "Felix"
-    - "Louis"
+  - Christian
+  - Felix
+  - Louis
+Schweiz 2025:
+  location: Sonstige
+  datum_start: 30.08.2025
+  datum_ende: 06.09.2025
+  ignored_player: null

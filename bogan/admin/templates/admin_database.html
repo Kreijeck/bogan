@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+<div class="container">
+    <nav class="breadcrumb admin-breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li><a href="{{ url_for('admin.admin_dashboard') }}">Admin</a></li>
+            <li class="is-active"><a href="#" aria-current="page">Datenbank</a></li>
+        </ul>
+    </nav>
+
+    <h1 class="title is-2 has-text-primary">
+        <span class="icon-text">
+            <span class="icon admin-icon-large admin-icon-primary">
+                <i class="fas fa-database"></i>
+            </span>
+            <span>Datenbank-Verwaltung</span>
+        </span>
+    </h1>
+
+    <!-- Benutzer -->
+    <div class="box admin-form-container">
+        <h2 class="title is-4 collapsible-header" data-target="users-table">
+            <span class="icon-text">
+                <span class="icon admin-icon-primary">
+                    <i class="fas fa-users"></i>
+                </span>
+                <span>Benutzer ({{ tables.users|length }})</span>
+                <span class="icon collapse-icon">
+                    <i class="fas fa-chevron-down"></i>
+                </span>
+            </span>
+        </h2>
+        <div id="users-table" class="collapsible-content" style="display: none;">
+            {% if tables.users %}
+                <div class="table-container">
+                    <table class="table admin-table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Rolle</th>
+                                <th>Verknüpfter Spieler</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in tables.users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td><strong>{{ user.name }}</strong></td>
+                                <td>{{ user.email or '-' }}</td>
+                                <td>
+                                    {% if user.role == 'admin' %}
+                                        <span class="admin-tag-admin">{{ user.role }}</span>
+                                    {% else %}
+                                        <span class="admin-tag-user">{{ user.role }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user.player.name if user.player else '-' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="notification admin-notification-info">Keine Benutzer vorhanden.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Spieler -->
+    <div class="box admin-form-container">
+        <h2 class="title is-4 collapsible-header" data-target="players-table">
+            <span class="icon-text">
+                <span class="icon admin-icon-primary">
+                    <i class="fas fa-user-friends"></i>
+                </span>
+                <span>Spieler ({{ tables.players|length }})</span>
+                <span class="icon collapse-icon">
+                    <i class="fas fa-chevron-down"></i>
+                </span>
+            </span>
+        </h2>
+        <div id="players-table" class="collapsible-content" style="display: none;">
+            {% if tables.players %}
+                <div class="table-container">
+                    <table class="table admin-table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>BGG Name</th>
+                                <th>Verknüpfter Benutzer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for player in tables.players %}
+                            <tr>
+                                <td>{{ player.id }}</td>
+                                <td>
+                                    <strong>
+                                        <a href="{{ url_for('main.show_player', player_name=player.name) }}" class="has-text-primary">
+                                            {{ player.name }}
+                                        </a>
+                                    </strong>
+                                </td>
+                                <td>{{ player.bgg_name or '-' }}</td>
+                                <td>{{ player.user.name if player.user else '-' }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="notification admin-notification-info">Keine Spieler vorhanden.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Brettspiele -->
+    <div class="box admin-form-container">
+        <h2 class="title is-4 collapsible-header" data-target="boardgames-table">
+            <span class="icon-text">
+                <span class="icon admin-icon-warning">
+                    <i class="fas fa-chess"></i>
+                </span>
+                <span>Brettspiele ({{ tables.boardgames|length }})</span>
+                <span class="icon collapse-icon">
+                    <i class="fas fa-chevron-down"></i>
+                </span>
+            </span>
+        </h2>
+        <div id="boardgames-table" class="collapsible-content" style="display: none;">
+            {% if tables.boardgames %}
+                <div class="table-container">
+                    <table class="table admin-table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>BGG ID</th>
+                                <th>Jahr</th>
+                                <th>Spieler</th>
+                                <th>Spieldauer</th>
+                                <th>Bewertung</th>
+                                <th>Komplexität</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for boardgame in tables.boardgames %}
+                            <tr>
+                                <td>{{ boardgame.id }}</td>
+                                <td>
+                                    <strong>
+                                        <a href="{{ url_for('main.show_boardgame', boardgame_id=boardgame.bgg_id) }}" class="has-text-primary">
+                                            {{ boardgame.name_primary }}
+                                        </a>
+                                    </strong>
+                                </td>
+                                <td>{{ boardgame.bgg_id }}</td>
+                                <td>{{ boardgame.yearpublished }}</td>
+                                <td>{{ boardgame.minplayers }}-{{ boardgame.maxplayers }}</td>
+                                <td>{{ boardgame.playtime }} min</td>
+                                <td>
+                                    <span class="admin-tag-user">
+                                        {{ "%.1f"|format(boardgame.rating) }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="admin-tag-warning">
+                                        {{ "%.1f"|format(boardgame.weight) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="notification admin-notification-info">Keine Brettspiele vorhanden.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Locations -->
+    <div class="box admin-form-container">
+        <h2 class="title is-4 collapsible-header" data-target="locations-table">
+            <span class="icon-text">
+                <span class="icon admin-icon-success">
+                    <i class="fas fa-map-marker-alt"></i>
+                </span>
+                <span>Spielorte ({{ tables.locations|length }})</span>
+                <span class="icon collapse-icon">
+                    <i class="fas fa-chevron-down"></i>
+                </span>
+            </span>
+        </h2>
+        <div id="locations-table" class="collapsible-content" style="display: none;">
+            {% if tables.locations %}
+                <div class="table-container">
+                    <table class="table admin-table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Anzahl Spiele</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for location in tables.locations %}
+                            <tr>
+                                <td>{{ location.id }}</td>
+                                <td><strong>{{ location.name }}</strong></td>
+                                <td>{{ location.games_count }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="notification admin-notification-info">Keine Spielorte vorhanden.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Letzte Spiele -->
+    <div class="box admin-form-container">
+        <h2 class="title is-4 collapsible-header" data-target="games-table">
+            <span class="icon-text">
+                <span class="icon admin-icon-success">
+                    <i class="fas fa-gamepad"></i>
+                </span>
+                <span>Letzte Spiele (Top 100)</span>
+                <span class="icon collapse-icon">
+                    <i class="fas fa-chevron-down"></i>
+                </span>
+            </span>
+        </h2>
+        <div id="games-table" class="collapsible-content" style="display: none;">
+            {% if tables.games %}
+                <div class="table-container">
+                    <table class="table admin-table is-fullwidth">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Datum</th>
+                                <th>Brettspiel</th>
+                                <th>Spielort</th>
+                                <th>Spieler</th>
+                                <th>Spieldauer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for game in tables.games %}
+                            <tr>
+                                <td>{{ game.id }}</td>
+                                <td>{{ game.datum.strftime('%d.%m.%Y') if game.datum else '-' }}</td>
+                                <td>
+                                    <strong>
+                                        <a href="{{ url_for('main.show_boardgame', boardgame_id=game.boardgame.bgg_id) }}" class="has-text-primary">
+                                            {{ game.boardgame.name_primary }}
+                                        </a>
+                                    </strong>
+                                </td>
+                                <td>{{ game.location.name }}</td>
+                                <td><span class="admin-tag-user">{{ game.player_pos|length }}</span></td>
+                                <td>{{ game.playtime }} min</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="notification admin-notification-info">Keine Spiele vorhanden.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Collapsible sections functionality already initialized via bogan-lib.js
+});
+</script>
+{% endblock %}
