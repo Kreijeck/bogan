@@ -57,7 +57,7 @@ tmp/*
 data/scretch_small_model.py
 data/tmo.db
 bogan.egg-info/*
-
+.vscode/*
 # Logging
 *.log
 

@@ -101,6 +101,17 @@
                                                 </button>
                                             </form>
                                         {% endif %}
+                                        
+                                        <!-- Löschen Button -->
+                                        <button class="button admin-btn-danger is-small delete-user-btn" 
+                                                data-user-id="{{ user.id }}" 
+                                                data-user-name="{{ user.name }}" 
+                                                data-user-role="{{ user.role }}">
+                                            <span class="icon">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
+                                            <span>Löschen</span>
+                                        </button>
                                     </div>
                                 {% else %}
                                     <span class="has-text-grey-light">
@@ -175,8 +186,75 @@
                     Wichtiger Hinweis:
                 </p>
                 <p>Sie können Ihre eigene Rolle nicht ändern. Seien Sie vorsichtig beim Vergeben von Admin-Rechten!</p>
+                <p class="has-text-danger has-text-weight-bold mt-3">
+                    <span class="icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                    Das Löschen von Benutzern kann nicht rückgängig gemacht werden!
+                </p>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Delete User Modal -->
+<div class="modal" id="delete-user-modal">
+    <div class="modal-background" onclick="closeDeleteUserModal()"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Benutzer löschen</p>
+            <button class="delete" aria-label="close" onclick="closeDeleteUserModal()"></button>
+        </header>
+        <section class="modal-card-body">
+            <div class="notification is-danger">
+                <p class="has-text-weight-bold">
+                    <span class="icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </span>
+                    Warnung: Diese Aktion kann nicht rückgängig gemacht werden!
+                </p>
+            </div>
+            <p>Sind Sie sicher, dass Sie den Benutzer <strong id="delete-user-name"></strong> (<span id="delete-user-role"></span>) löschen möchten?</p>
+            <p class="has-text-danger">Alle Daten dieses Benutzers werden permanent entfernt!</p>
+        </section>
+        <footer class="modal-card-foot">
+            <form id="delete-user-form" method="POST">
+                <button class="button admin-btn-danger" type="submit">
+                    <span class="icon">
+                        <i class="fas fa-trash"></i>
+                    </span>
+                    <span>Ja, Benutzer löschen</span>
+                </button>
+            </form>
+            <button class="button admin-btn-primary" onclick="closeDeleteUserModal()">Abbrechen</button>
+        </footer>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Event listener für alle Löschen-Buttons
+    document.querySelectorAll('.delete-user-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            const userName = this.getAttribute('data-user-name');
+            const userRole = this.getAttribute('data-user-role');
+            deleteUser(userId, userName, userRole);
+        });
+    });
+});
+
+function deleteUser(userId, userName, userRole) {
+    document.getElementById('delete-user-name').textContent = userName;
+    document.getElementById('delete-user-role').textContent = userRole;
+    document.getElementById('delete-user-form').action = `/admin/users/delete/${userId}`;
+    document.getElementById('delete-user-modal').classList.add('is-active');
+}
+
+function closeDeleteUserModal() {
+    document.getElementById('delete-user-modal').classList.remove('is-active');
+}
+</script>
 {% endblock %}

@@ -53,7 +53,24 @@
                     <div class="field">
                         <label class="label admin-form-label">Location</label>
                         <div class="control has-icons-left">
-                            <input class="input admin-form-input" type="text" name="location" placeholder="z.B. Spielewochenende" required>
+                            <div class="dropdown is-fullwidth" id="location-dropdown">
+                                <div class="dropdown-trigger">
+                                    <button class="button admin-form-input is-fullwidth" type="button" aria-haspopup="true" aria-controls="dropdown-menu" id="location-button">
+                                        <span id="location-text">-- Location auswählen --</span>
+                                        <span class="icon is-small is-right">
+                                            <i class="fas fa-angle-down"></i>
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                    <div class="dropdown-content">
+                                        {% for location in locations %}
+                                        <a href="#" class="dropdown-item" data-value="{{ location.name }}">{{ location.name }}</a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="location" id="location-input" required>
                             <span class="icon is-small is-left">
                                 <i class="fas fa-map-marker-alt"></i>
                             </span>
@@ -174,7 +191,24 @@
                 <div class="field">
                     <label class="label">Location</label>
                     <div class="control has-icons-left">
-                        <input class="input" type="text" name="location" id="edit-location" required>
+                        <div class="dropdown is-fullwidth" id="edit-location-dropdown">
+                            <div class="dropdown-trigger">
+                                <button class="button admin-form-input is-fullwidth" type="button" aria-haspopup="true" aria-controls="edit-dropdown-menu" id="edit-location-button">
+                                    <span id="edit-location-text">-- Location auswählen --</span>
+                                    <span class="icon is-small is-right">
+                                        <i class="fas fa-angle-down"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="dropdown-menu" id="edit-dropdown-menu" role="menu">
+                                <div class="dropdown-content">
+                                    {% for location in locations %}
+                                    <a href="#" class="dropdown-item" data-value="{{ location.name }}">{{ location.name }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="location" id="edit-location-input" required>
                         <span class="icon is-small is-left">
                             <i class="fas fa-map-marker-alt"></i>
                         </span>
@@ -258,7 +292,11 @@ function editEvent(eventName, location, startDate, endDate) {
     }
     
     document.getElementById('edit-event-name').value = eventName;
-    document.getElementById('edit-location').value = location;
+    
+    // Location im Dropdown setzen
+    document.getElementById('edit-location-text').textContent = location;
+    document.getElementById('edit-location-input').value = location;
+    
     document.getElementById('edit-start-date').value = convertDate(startDate);
     document.getElementById('edit-end-date').value = convertDate(endDate);
     
@@ -279,5 +317,68 @@ function deleteEvent(eventName) {
 function closeDeleteModal() {
     document.getElementById('delete-modal').classList.remove('is-active');
 }
+
+// Location Dropdown Funktionalität
+document.addEventListener('DOMContentLoaded', function() {
+    // Main form dropdown
+    const dropdown = document.getElementById('location-dropdown');
+    const button = document.getElementById('location-button');
+    const text = document.getElementById('location-text');
+    const input = document.getElementById('location-input');
+    const items = dropdown.querySelectorAll('.dropdown-item');
+
+    // Dropdown toggle
+    button.addEventListener('click', function() {
+        dropdown.classList.toggle('is-active');
+    });
+
+    // Item selection
+    items.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const value = this.getAttribute('data-value');
+            text.textContent = value;
+            input.value = value;
+            dropdown.classList.remove('is-active');
+        });
+    });
+
+    // Close on outside click
+    document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('is-active');
+        }
+    });
+
+    // Edit modal dropdown
+    const editDropdown = document.getElementById('edit-location-dropdown');
+    const editButton = document.getElementById('edit-location-button');
+    const editText = document.getElementById('edit-location-text');
+    const editInput = document.getElementById('edit-location-input');
+    const editItems = editDropdown.querySelectorAll('.dropdown-item');
+
+    // Edit dropdown toggle
+    editButton.addEventListener('click', function() {
+        editDropdown.classList.toggle('is-active');
+    });
+
+    // Edit item selection
+    editItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const value = this.getAttribute('data-value');
+            editText.textContent = value;
+            editInput.value = value;
+            editDropdown.classList.remove('is-active');
+        });
+    });
+
+    // Close edit dropdown on outside click
+    document.addEventListener('click', function(e) {
+        if (!editDropdown.contains(e.target)) {
+            editDropdown.classList.remove('is-active');
+        }
+    });
+});
 </script>
 {% endblock %}

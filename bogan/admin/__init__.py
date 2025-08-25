@@ -62,7 +62,12 @@ def admin_dashboard():
 def manage_events():
     """Event-Verwaltung"""
     events = load_yaml(cfg.EVENT_YAML) or {}
-    return render_template("admin_events.html", events=events)
+    
+    # Lade verfügbare Locations aus der Datenbank
+    with Session(get_db_engine()) as session:
+        locations = session.query(Location).order_by(Location.name).all()
+    
+    return render_template("admin_events.html", events=events, locations=locations)
 
 @admin.route("/events/add", methods=["POST"])
 @login_required
@@ -261,5 +266,43 @@ def change_user_role(user_id):
     except Exception as e:
         flash(f"Fehler beim Ändern der Benutzerrolle: {str(e)}", "error")
         logger.error(f"Fehler beim Ändern der Benutzerrolle: {str(e)}")
+    
+    return redirect(url_for("admin.manage_users"))
+
+@admin.route("/users/delete/<int:user_id>", methods=["POST"])
+@login_required
+@admin_required
+def delete_user(user_id):
+    """Benutzer löschen"""
+    try:
+        with Session(get_db_engine()) as session:
+            user = session.query(User).filter(User.id == user_id).first()
+            
+            if not user:
+                flash("Benutzer nicht gefunden.", "error")
+                return redirect(url_for("admin.manage_users"))
+            
+            # Verhindere, dass sich der Admin selbst löscht
+            if user.id == current_user.id:
+                flash("Sie können sich nicht selbst löschen.", "error")
+                return redirect(url_for("admin.manage_users"))
+            
+            # Verhindere das Löschen des letzten Admin-Benutzers
+            admin_count = session.query(User).filter(User.role == 'admin').count()
+            if user.role == 'admin' and admin_count <= 1:
+                flash("Der letzte Admin-Benutzer kann nicht gelöscht werden.", "error")
+                return redirect(url_for("admin.manage_users"))
+            
+            username = user.name
+            user_role = user.role
+            session.delete(user)
+            session.commit()
+            
+            flash(f"Benutzer '{username}' wurde erfolgreich gelöscht.", "success")
+            logger.info(f"Benutzer gelöscht: {username} ({user_role}) von {current_user.name}")
+            
+    except Exception as e:
+        flash(f"Fehler beim Löschen des Benutzers: {str(e)}", "error")
+        logger.error(f"Fehler beim Löschen des Benutzers: {str(e)}")
     
     return redirect(url_for("admin.manage_users"))
