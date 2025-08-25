@@ -1709,6 +1709,74 @@
     display: none;
 }
 
+/* Tab-Pane Styles */
+.tab-pane {
+    display: none;
+}
+
+.tab-pane.is-active {
+    display: block;
+}
+
+/* Tab Cursor */
+.tabs li a {
+    cursor: pointer;
+}
+
+/* Event-spezifische Responsive Styles */
+@media screen and (max-width: 768px) {
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+
+    th,
+    td {
+        padding: 0.5rem;
+    }
+
+    .button {
+        font-size: 0.8rem;
+    }
+    
+    /* Mobile Tab-Navigation */
+    .tabs.is-large {
+        font-size: 1rem;
+    }
+    
+    .tabs ul {
+        flex-wrap: wrap;
+    }
+    
+    .tabs li {
+        flex: 1;
+        min-width: 33%;
+    }
+    
+    .tabs li a {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.9rem;
+    }
+    
+    .tabs li a .icon {
+        margin-right: 0.25rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .tabs li a span:not(.icon) {
+        display: none;
+    }
+    
+    .tabs li a .icon {
+        margin-right: 0;
+    }
+}
+
 /* ========================================
    PLAYERS OVERVIEW STYLES
    ======================================== */

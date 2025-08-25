@@ -329,107 +329,18 @@
 </section>
 {% endif %}
 
-<!-- Live-Suche JavaScript -->
+{% endblock %}
+
+{% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Suche für Spielhistorie
-    const gameHistorySearch = document.getElementById('gameHistorySearch');
-    
-    if (gameHistorySearch) {
-        const gameHistoryItems = document.querySelectorAll('.game-history-item');
-        const monthSections = document.querySelectorAll('.month-section');
-        
-        gameHistorySearch.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase().trim();
-            let totalVisibleCount = 0;
-            
-            // Durch alle Monate gehen
-            monthSections.forEach(function(monthSection) {
-                const monthItems = monthSection.querySelectorAll('.game-history-item');
-                let monthVisibleCount = 0;
-                
-                monthItems.forEach(function(item) {
-                    const searchableText = item.getAttribute('data-searchable');
-                    
-                    if (searchableText && searchableText.includes(searchTerm)) {
-                        item.style.display = '';
-                        monthVisibleCount++;
-                        totalVisibleCount++;
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-                
-                // Verstecke den ganzen Monat wenn keine Spiele sichtbar sind
-                if (monthVisibleCount === 0 && searchTerm !== '') {
-                    monthSection.style.display = 'none';
-                } else {
-                    monthSection.style.display = '';
-                }
-            });
-            
-            // Auch fallback items durchsuchen
-            const fallbackItems = document.querySelectorAll('#fallbackGamesGrid .game-history-item');
-            fallbackItems.forEach(function(item) {
-                const searchableText = item.getAttribute('data-searchable');
-                
-                if (searchableText && searchableText.includes(searchTerm)) {
-                    item.style.display = '';
-                    totalVisibleCount++;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-            
-            // Show/hide "no results" message for game history
-            let noResultsHistory = document.getElementById('noResultsHistory');
-            if (totalVisibleCount === 0 && searchTerm !== '') {
-                if (!noResultsHistory) {
-                    noResultsHistory = document.createElement('div');
-                    noResultsHistory.id = 'noResultsHistory';
-                    noResultsHistory.className = 'notification is-warning has-text-centered';
-                    noResultsHistory.innerHTML = '<strong>Keine Partien gefunden</strong><br><span id="noResultsHistoryText">Es wurden keine Partien für den Suchbegriff gefunden.</span>';
-                    document.getElementById('game-history-section').appendChild(noResultsHistory);
-                }
-                noResultsHistory.querySelector('#noResultsHistoryText').textContent = `Es wurden keine Partien für "${searchTerm}" gefunden.`;
-                noResultsHistory.style.display = '';
-            } else {
-                if (noResultsHistory) noResultsHistory.style.display = 'none';
-            }
-            
-            // Reset visibility when search is cleared
-            if (searchTerm === '') {
-                monthSections.forEach(function(monthSection) {
-                    monthSection.style.display = '';
-                });
-            }
-        });
-    }
+    // Initialisiere Player Detail Search mit Konfiguration
+    initializePlayerDetailSearch({
+        searchInputId: 'gameHistorySearch'
+    });
 });
 </script>
-
-<!-- Custom CSS für besseres Spacing -->
-<style>
-/* Verbessertes Spacing für Statistik-Boxen */
-.player-stats-overview .column {
-    padding: 1rem; /* Mehr Platz zwischen den Spalten */
-}
-
-.player-stats-overview .heading {
-    margin-bottom: 0.25rem !important; /* Weniger Abstand zwischen Überschrift und Wert */
-}
-
-.player-stats-overview .title {
-    margin-bottom: 1rem !important; /* Mehr Abstand nach dem Wert */
-}
-
-/* Besseres Spacing in den besten Spielen Boxen */
-.best-game-box .columns.is-gapless .column {
-    padding: 0.5rem 0.25rem; /* Kompaktes Padding für die Spalten */
-}
-
-.best-game-box .heading {
+{% endblock %}
     margin-bottom: 0.25rem !important; /* Weniger Abstand zwischen Überschrift und Wert */
     font-size: 0.7rem; /* Kleinere Überschrift */
 }
@@ -633,5 +544,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 }
 </style>
-
-{% endblock %}
