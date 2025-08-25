@@ -6,9 +6,9 @@ Eine Flask-basierte Webanwendung zur Verwaltung und Analyse von Brettspielen und
 
 - 📊 **Spieler-Statistiken** - Verfolge Siege, Niederlagen und Spielverhalten
 - 🎮 **Spiel-Management** - Verwalte Brettspiele mit BGG-Integration
-- 📅 **Event-Verwaltung** - Organisiere Spieleabende und Turniere
+- 📅 **Event-Verwaltung** - Organisiere Spieleabende
 - 📱 **Mobile-optimiert** - Responsive Design für alle Geräte
-- 🔐 **Admin-Interface** - Umfassendes Verwaltungssystem
+- 🔐 **Admin-Interface** - Verwaltungssystem auf Webinterface
 
 ## 🚀 Installation
 
@@ -27,10 +27,27 @@ cd bogan
 # Dependencies installieren
 uv sync
 
-# Datenbank erstellen
-uv run python -c "from bogan.db.models import db; db.create_all()"
+# virtual environment aktivieren
+Windows: 
+```bash
+.venv\Scripts\activate
+```
 
-# Anwendung starten
+Linux
+
+```bash
+source .venv/bin/activate
+```
+
+### Datenbank erstellen
+
+```bash
+uv run ".\bogan\db\update_db.py"
+```
+
+### Anwendung starten
+
+```bash
 uv run flask run
 ```
 
@@ -39,16 +56,18 @@ uv run flask run
 ### Umgebungsvariablen
 
 ```bash
-# .env Datei erstellen
-FLASK_ENV=development
-FLASK_DEBUG=True
+# .env Datei aus .env_template erstellen
+FLASK_DEBUG=False
 SECRET_KEY=your-secret-key
-DATABASE_URL=sqlite:///instance/bogan_app.db
+# aktuell wird eine lokale DB verwendet, dann sind nur diese Felder nötig
+DB2USE='local'
+DB_URL=sqlite:///instance/bogan_app.db
+# servereitige DB bitte restl. Felder ausfüllen
 ```
 
 ### Admin-Benutzer erstellen
 
-Für den Zugriff auf das Admin-Interface:
+Für den Zugriff auf das Admin-Interface über ssh:
 
 ```bash
 # Interaktives Script ausführen
@@ -93,7 +112,7 @@ uv run python -c "from bogan.db.models import db; db.create_all()"
 
 ## 📁 Projektstruktur
 
-```
+```tree
 bogan/
 ├── bogan/                  # Hauptanwendung
 │   ├── admin/             # Admin-Interface
@@ -113,9 +132,9 @@ bogan/
 
 ### Web-Interface
 
-1. **Hauptseite**: `http://localhost:5000/`
-2. **Login**: `http://localhost:5000/auth/login`
-3. **Admin-Panel**: `http://localhost:5000/admin/`
+1. **Hauptseite**: `http://localhost:3181/`
+2. **Login**: `http://localhost:3181/auth/login`
+3. **Admin-Panel**: `http://localhost:3181/admin/`
 
 ### Admin-Features
 
@@ -137,23 +156,7 @@ Das Admin-Interface bietet:
 
 ### Tests ausführen
 
-```bash
-# Alle Tests
-uv run pytest
-
-# Spezifische Tests
-uv run pytest tests/test_admin.py
-```
-
-### Code-Qualität
-
-```bash
-# Linting
-uv run flake8 bogan/
-
-# Formatierung
-uv run black bogan/
-```
+- aktuell noch nicht implementiert
 
 ## 📦 Deployment
 
@@ -180,33 +183,11 @@ uv run black bogan/
 
    ```bash
    # Mit Gunicorn
-   uv run gunicorn -w 4 -b 0.0.0.0:8000 wsgi:app
+   uv run gunicorn -w 4 -b 0.0.0.0:<port> wsgi:app
 
    # Oder direkt mit Flask (nur für Entwicklung)
    uv run flask run --host=0.0.0.0 --port=8000
    ```
-
-### Docker (optional)
-
-```dockerfile
-FROM python:3.10-slim
-
-WORKDIR /app
-COPY . .
-
-RUN pip install uv
-RUN uv sync --only-prod
-
-EXPOSE 8000
-CMD ["uv", "run", "gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "wsgi:app"]
-```
-
-## 🤝 Beitragen
-
-1. Fork das Repository
-2. Erstelle einen Feature-Branch
-3. Committe deine Änderungen
-4. Erstelle einen Pull Request
 
 ## 📄 Lizenz
 
@@ -218,7 +199,3 @@ Bei Problemen oder Fragen:
 
 - 📝 Erstelle ein Issue im Repository
 - 📧 Kontaktiere den Entwickler
-
----
-
-Erstellt mit ❤️ für die Brettspiel-Community
