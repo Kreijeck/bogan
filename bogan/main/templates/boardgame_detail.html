@@ -69,6 +69,213 @@
   </div>
 </section>
 
+<!-- Spieler-Ranking -->
+{% if ranking_default %}
+<section class="section">
+  <div class="container">
+    <h2 class="title is-3 has-text-primary collapsible-header" data-target="player-ranking">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-trophy"></i>
+        </span>
+        <span>Spieler-Ranking für {{ boardgame.name }}</span>
+        <span class="icon collapse-icon">
+          <i class="fas fa-chevron-up"></i>
+        </span>
+      </span>
+    </h2>
+    <p class="subtitle has-text-centered mb-6 has-text-grey-dark">
+      Rangliste aller Spieler mit verschiedenen Bewertungsarten
+    </p>
+
+    <div id="player-ranking" class="collapsible-content">
+      <!-- Tab Navigation -->
+      <div class="tabs is-boxed is-large">
+        <ul>
+          <li class="is-active" data-tab="default">
+            <a>
+              <span class="icon is-small"><i class="fas fa-trophy"></i></span>
+              <span>Standard</span>
+            </a>
+          </li>
+          <li data-tab="playtime">
+            <a>
+              <span class="icon is-small"><i class="fas fa-clock"></i></span>
+              <span>Spielzeit</span>
+            </a>
+          </li>
+          <li data-tab="complexity">
+            <a>
+              <span class="icon is-small"><i class="fas fa-brain"></i></span>
+              <span>Komplexität</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tabs-content">
+        <!-- Default Ranking Tab -->
+        <div id="tab-default" class="tab-pane is-active">
+          <div class="box">
+            <!-- Info Button -->
+            {% set md_content = url_for('static', filename='document/ranking_default.md') %}
+            <button class="button is-info mb-3" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_default_bg')">
+              ℹ️ Info Standard-Ranking
+            </button>
+            <div id="markdown-content_default_bg" class="notification is-info mt-3 markdown-content"></div>
+
+            <!-- Ranking Table -->
+            <div class="table-container event-table-container">
+              <table class="table is-bordered is-hoverable is-fullwidth has-text-centered event-table">
+                <thead class="has-background-primary-dark has-text-white">
+                  <tr>
+                    <th class="event-table th">Position</th>
+                    <th class="event-table th player-name">Spieler</th>
+                    <th class="event-table th points">Gesamtpunkte</th>
+                    <th class="event-table th details">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for player, data in ranking_default %}
+                  <tr>
+                    <td><strong>{{ loop.index }}</strong></td>
+                    <td><strong>
+                      <a href="{{ url_for('main.show_player', player_name=player) }}" class="has-text-primary player-link">
+                        {{ player }}
+                      </a>
+                    </strong></td>
+                    <td><strong>{{ data.total|round(2) }}</strong></td>
+                    <td>
+                      <button class="button is-small is-primary"
+                          onclick="toggleElement('details-default-bg{{ loop.index }}')">Details</button>
+                      <div id="details-default-bg{{ loop.index }}" class="event-details">
+                        <ul class="event-details-list">
+                          {% for detail in data.details %}
+                          <li>{{ detail.datum }}: <span class="has-text-weight-bold"> {{ detail.game
+                                  }}:</span> Pos {{ detail.position }} (Pkte {{ detail.points|round(2) }})
+                          </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Playtime Ranking Tab -->
+        <div id="tab-playtime" class="tab-pane">
+          <div class="box">
+            <!-- Info Button -->
+            {% set md_content = url_for('static', filename='document/ranking_playtime.md') %}
+            <button class="button is-info mb-3" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_playtime_bg')">
+              ℹ️ Info Spielzeit-Ranking
+            </button>
+            <div id="markdown-content_playtime_bg" class="notification is-info mt-3 markdown-content"></div>
+
+            <!-- Ranking Table -->
+            <div class="table-container event-table-container">
+              <table class="table is-bordered is-hoverable is-fullwidth has-text-centered event-table">
+                <thead class="has-background-primary-dark has-text-white">
+                  <tr>
+                    <th class="event-table th">Position</th>
+                    <th class="event-table th player-name">Spieler</th>
+                    <th class="event-table th points">Gesamtpunkte</th>
+                    <th class="event-table th details">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for player, data in ranking_playtime %}
+                  <tr>
+                    <td><strong>{{ loop.index }}</strong></td>
+                    <td><strong>
+                      <a href="{{ url_for('main.show_player', player_name=player) }}" class="has-text-primary player-link">
+                        {{ player }}
+                      </a>
+                    </strong></td>
+                    <td><strong>{{ data.total|round(2) }}</strong></td>
+                    <td>
+                      <button class="button is-small is-primary"
+                          onclick="toggleElement('details-playtime-bg{{ loop.index }}')">Details</button>
+                      <div id="details-playtime-bg{{ loop.index }}" class="event-details">
+                        <ul class="event-details-list">
+                          {% for detail in data.details %}
+                          <li>{{ detail.datum }}: <span class="has-text-weight-bold"> {{ detail.game
+                                  }}:</span> Pos {{ detail.position }} (Pkte {{ detail.points|round(2) }})
+                          </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Complexity Ranking Tab -->
+        <div id="tab-complexity" class="tab-pane">
+          <div class="box">
+            <!-- Info Button -->
+            {% set md_content = url_for('static', filename='document/ranking_complexity.md') %}
+            <button class="button is-info mb-3" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_complexity_bg')">
+              ℹ️ Info Komplexitäts-Ranking
+            </button>
+            <div id="markdown-content_complexity_bg" class="notification is-info mt-3 markdown-content"></div>
+
+            <!-- Ranking Table -->
+            <div class="table-container event-table-container">
+              <table class="table is-bordered is-hoverable is-fullwidth has-text-centered event-table">
+                <thead class="has-background-primary-dark has-text-white">
+                  <tr>
+                    <th class="event-table th">Position</th>
+                    <th class="event-table th player-name">Spieler</th>
+                    <th class="event-table th points">Gesamtpunkte</th>
+                    <th class="event-table th details">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for player, data in ranking_complexity %}
+                  <tr>
+                    <td><strong>{{ loop.index }}</strong></td>
+                    <td><strong>
+                      <a href="{{ url_for('main.show_player', player_name=player) }}" class="has-text-primary player-link">
+                        {{ player }}
+                      </a>
+                    </strong></td>
+                    <td><strong>{{ data.total|round(2) }}</strong></td>
+                    <td>
+                      <button class="button is-small is-primary"
+                          onclick="toggleElement('details-complexity-bg{{ loop.index }}')">Details</button>
+                      <div id="details-complexity-bg{{ loop.index }}" class="event-details">
+                        <ul class="event-details-list">
+                          {% for detail in data.details %}
+                          <li>{{ detail.datum }}: <span class="has-text-weight-bold"> {{ detail.game
+                                  }}:</span> Pos {{ detail.position }} (Pkte {{ detail.points|round(2) }})
+                          </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 <!-- Gespielte Partien -->
 <section class="section">
   <div class="container">
@@ -124,109 +331,14 @@
   </div>
 </section>
 
-<!-- Spieler-Ranking für dieses Brettspiel -->
-{% if player_ranking %}
-<section class="section">
-  <div class="container">
-    <h2 class="title is-3 has-text-centered has-text-primary collapsible-header" data-target="player-ranking">
-      <span class="icon-text">
-        <span class="icon has-text-primary">
-          <i class="fas fa-trophy"></i>
-        </span>
-        <span>Spieler-Ranking für {{ boardgame.name }}</span>
-        <span class="icon collapse-icon">
-          <i class="fas fa-chevron-up"></i>
-        </span>
-      </span>
-    </h2>
-    <p class="subtitle has-text-centered mb-6 has-text-grey-dark">
-      Leistung aller Spieler in diesem Spiel
-    </p>
 
-    <div id="player-ranking" class="collapsible-content">
-      <div class="columns is-multiline">
-        {% for player in player_ranking %}
-        <div class="column is-half-tablet is-one-third-desktop">
-          <div class="box player-rank-box">
-            <div class="media">
-              <div class="media-left">
-                <div class="rank-badge rank-{{ loop.index }}">
-                  {% if loop.index == 1 %}
-                    <i class="fas fa-crown"></i>
-                  {% elif loop.index == 2 %}
-                    <i class="fas fa-medal"></i>
-                  {% elif loop.index == 3 %}
-                    <i class="fas fa-award"></i>
-                  {% else %}
-                    {{ loop.index }}
-                  {% endif %}
-                </div>
-              </div>
-              <div class="media-content">
-                <p class="title is-5">
-                  <a href="{{ url_for('main.show_player', player_name=player.name) }}" class="has-text-primary player-link">
-                    {{ player.name }}
-                  </a>
-                </p>
-                <p class="subtitle is-6 has-text-grey">
-                  {{ player.games_played }} Spiel{{ 'e' if player.games_played != 1 else '' }}
-                </p>
-              </div>
-            </div>
-            
-            <div class="content">
-              <div class="columns is-gapless is-multiline">
-                <div class="column is-half">
-                  <div class="has-text-centered">
-                    <p class="heading">Durchschnitt</p>
-                    <p class="title is-6 has-text-primary">{{ player.avg_points }} Pkt</p>
-                  </div>
-                </div>
-                <div class="column is-half">
-                  <div class="has-text-centered">
-                    <p class="heading">Ø Position</p>
-                    <p class="title is-6 has-text-info">{{ player.avg_position }}</p>
-                  </div>
-                </div>
-                <div class="column is-half">
-                  <div class="has-text-centered">
-                    <p class="heading">Siegquote</p>
-                    <p class="title is-6 has-text-success">{{ player.win_rate }}%</p>
-                  </div>
-                </div>
-                <div class="column is-half">
-                  <div class="has-text-centered">
-                    <p class="heading">Siege</p>
-                    <p class="title is-6 has-text-warning">{{ player.wins }}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <hr class="my-3">
-              
-              <div class="level is-mobile">
-                <div class="level-item has-text-centered">
-                  <div>
-                    <p class="heading">Bester Score</p>
-                    <p class="title is-6">{{ player.best_score }}</p>
-                  </div>
-                </div>
-                <div class="level-item has-text-centered">
-                  <div>
-                    <p class="heading">Schlechtester</p>
-                    <p class="title is-6">{{ player.worst_score }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-</section>
-{% endif %}
+{% endblock %}
 
-
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisiere Tabs
+    initializeTabs();
+});
+</script>
 {% endblock %}
