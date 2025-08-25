@@ -13,6 +13,48 @@ if (burgerIcon && navbarMenu) {
     });
 }
 
+// Mobile Dropdown Toggle - Nur auf Mobile, Desktop bleibt unverändert
+document.addEventListener('DOMContentLoaded', function() {
+    function handleMobileDropdowns() {
+        const dropdownLinks = document.querySelectorAll('.navbar-item.has-dropdown .navbar-link');
+        
+        dropdownLinks.forEach(link => {
+            // Remove any existing mobile click listeners
+            const newLink = link.cloneNode(true);
+            link.parentNode.replaceChild(newLink, link);
+            
+            // Nur auf Mobile (≤768px) Click-Handler hinzufügen
+            if (window.innerWidth <= 768) {
+                newLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const parentDropdown = this.closest('.has-dropdown');
+                    
+                    // Toggle current dropdown
+                    parentDropdown.classList.toggle('is-active');
+                    
+                    // Close other dropdowns
+                    document.querySelectorAll('.navbar-item.has-dropdown').forEach(otherDropdown => {
+                        if (otherDropdown !== parentDropdown) {
+                            otherDropdown.classList.remove('is-active');
+                        }
+                    });
+                });
+            }
+            // Auf Desktop: Keine Click-Handler, normale Hover-Funktionalität bleibt
+        });
+    }
+    
+    // Initialize on load
+    handleMobileDropdowns();
+    
+    // Reinitialize on window resize
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(handleMobileDropdowns, 250);
+    });
+});
+
 // Modern collapsible sections functionality - global version
 function initializeCollapsibleSections() {
     const collapsibleHeaders = document.querySelectorAll('.collapsible-header');

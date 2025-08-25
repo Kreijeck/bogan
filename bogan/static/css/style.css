@@ -2101,3 +2101,35 @@
     font-size: 1.3rem !important;
   }
 }
+
+/* ========================================
+   MOBILE DROPDOWN NAVIGATION FIXES
+   Nur Mobile: Ein-/Ausklapp-Funktionalität
+   Desktop: Normale Hover-Funktionalität bleibt unverändert
+   ======================================== */
+
+@media screen and (max-width: 768px) {
+  /* Nur auf Mobile: Dropdowns sind standardmäßig eingeklappt */
+  .navbar-item.has-dropdown .navbar-dropdown {
+    display: none !important;
+  }
+  
+  /* Nur auf Mobile: Dropdown ist ausgeklappt wenn aktiv */
+  .navbar-item.has-dropdown.is-active .navbar-dropdown {
+    display: block !important;
+  }
+  
+  /* Nur auf Mobile: Visueller Pfeil */
+  .navbar-item.has-dropdown .navbar-link::after {
+    content: ' ▼';
+    font-size: 0.8rem;
+    color: #ffffff;
+    transition: transform 0.2s ease;
+  }
+  
+  .navbar-item.has-dropdown.is-active .navbar-link::after {
+    transform: rotate(180deg);
+  }
+}
+
+/* Desktop bleibt komplett unverändert - normale Bulma Hover-Funktionalität */
