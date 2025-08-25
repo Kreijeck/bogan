@@ -14,7 +14,7 @@ def create_app():
     print(app.instance_path)
 
     # add migrate
-    migrate = Migrate(app, db, directory=cfg.DB_MIGRATE_DIR)
+    migrate = Migrate(app, db, directory=cfg.DB_MIGRATE_DIR) #noqa var needed for database migrations
 
     app.config["SECRET_KEY"] = cfg.FLASK_SECRET_KEY
     app.config["SQLALCHEMY_DATABASE_URI"] = cfg.DB2USE
@@ -39,8 +39,16 @@ def create_app():
     @app.context_processor
     def inject_nav_parameter():
         events = load_yaml(cfg.EVENT_YAML)
-        events = [event for event in events.keys()]
-        return dict(events=events)
+        # Erstelle konsistente Event-Struktur für Navigation
+        events_list = []
+        for event_name, event_info in events.items():
+            events_list.append({
+                'name': event_name,
+                'location': event_info.get('location', ''),
+            })
+        # Sortiere alphabetisch für konsistente Darstellung
+        events_list.sort(key=lambda x: x['name'])
+        return dict(events=events_list)
 
     # add all blueprints
     # Alle /templates Ordner aus Blueprints sind verfügbar. Bei gleichem Namen, wird der erste Import genommen

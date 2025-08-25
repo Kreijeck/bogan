@@ -5,98 +5,416 @@
 <!-- Oberer Bereich: Brettspiel-Details -->
 <section class="section">
   <div class="container">
-    <h1 class="title"> {{ boardgame.name }}</h1>
-    <div class="columns">
-      <!-- Spalte für das Bild -->
-      <div class="column is-one-third">
-        <figure class="image">
-          <!-- Hier ggf. eigenes Bild angeben -->
-          <img src="{{ boardgame.img }}" alt="Spielbox Terra Mystica" />
-        </figure>
+    <h1 class="title has-text-primary collapsible-header" data-target="boardgame-details">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-dice"></i>
+        </span>
+        <span>{{ boardgame.name }}</span>
+        <span class="icon collapse-icon">
+          <i class="fas fa-chevron-up"></i>
+        </span>
+      </span>
+    </h1>
+    
+    <div id="boardgame-details" class="collapsible-content">
+      <div class="columns">
+        <!-- Spalte für das Bild -->
+        <div class="column is-one-third">
+          <figure class="image">
+            <!-- Hier ggf. eigenes Bild angeben -->
+            <img src="{{ boardgame.img }}" alt="Spielbox {{ boardgame.name }}" />
+          </figure>
+        </div>
+        <!-- Spalte für die Spiel-Informationen -->
+        <div class="column">
+          <p><strong>Spieldauer:</strong> ca. {{ boardgame.playtime }} Minuten</p>
+          <p><strong>Komplexität:</strong> {{ boardgame.weight }} / 5</p>
+          <p><strong>Spieleranzahl:</strong> {{ boardgame.minplayers }} - {{ boardgame.maxplayers }}</p>
+          <p><strong>Erscheinungsjahr:</strong> {{ boardgame.yearpublished }}</p>
+          <p><strong>BGG ID</strong> {{ boardgame.bgg_id }}</p>
+        </div>
       </div>
-      <!-- Spalte für die Spiel-Informationen -->
-      <div class="column">
-        <p><strong>Spieldauer:</strong> ca. {{ boardgame.playtime }} Minuten</p>
-        <p><strong>Komplexität:</strong> {{ boardgame.weight }} / 5</p>
-        <p><strong>Spieleranzahl:</strong> {{ boardgame.minplayers }} - {{ boardgame.maxplayers }}</p>
-        <p><strong>Erscheinungsjahr:</strong> {{ boardgame.yearpublished }}</p>
-        <p><strong>BGG ID</strong> {{ boardgame.bgg_id }}</p>
+      
+      <!-- Allgemeine Spielstatistiken -->
+      {% if game_stats and game_stats.total_games > 0 %}
+      <div class="box game-stats-box mt-5">
+        <div class="columns is-mobile">
+          <div class="column has-text-centered">
+            <p class="heading">Gespielt</p>
+            <p class="title is-4 has-text-white">{{ game_stats.total_games }}</p>
+          </div>
+          <div class="column has-text-centered">
+            <p class="heading">Ø Punkte</p>
+            <p class="title is-4 has-text-white">{{ game_stats.avg_points }}</p>
+          </div>
+          <div class="column has-text-centered">
+            <p class="heading">Höchste</p>
+            <p class="title is-4 has-text-white">{{ game_stats.highest_score }}</p>
+          </div>
+          <div class="column has-text-centered">
+            <p class="heading">Niedrigste</p>
+            <p class="title is-4 has-text-white">{{ game_stats.lowest_score }}</p>
+          </div>
+          {% if game_stats.avg_playtime > 0 %}
+          <div class="column has-text-centered">
+            <p class="heading">Ø Spielzeit</p>
+            <p class="title is-4 has-text-white">{{ game_stats.avg_playtime }} min</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- Spieler-Ranking -->
+{% if ranking_default %}
+<section class="section">
+  <div class="container">
+    <h2 class="title is-3 has-text-primary collapsible-header" data-target="player-ranking">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-trophy"></i>
+        </span>
+        <span>Spieler-Ranking für {{ boardgame.name }}</span>
+        <span class="icon collapse-icon">
+          <i class="fas fa-chevron-up"></i>
+        </span>
+      </span>
+    </h2>
+    <p class="subtitle has-text-centered mb-6 has-text-grey-dark">
+      Rangliste aller Spieler mit verschiedenen Bewertungsarten
+    </p>
+
+    <div id="player-ranking" class="collapsible-content">
+      <!-- Standard Tab Navigation (Desktop) -->
+      <div class="tabs is-boxed is-large">
+        <ul>
+          <li class="is-active" data-tab="default">
+            <a>
+              <span class="icon is-small"><i class="fas fa-trophy"></i></span>
+              <span>Standard</span>
+            </a>
+          </li>
+          <li data-tab="playtime">
+            <a>
+              <span class="icon is-small"><i class="fas fa-clock"></i></span>
+              <span>Spielzeit</span>
+            </a>
+          </li>
+          <li data-tab="complexity">
+            <a>
+              <span class="icon is-small"><i class="fas fa-brain"></i></span>
+              <span>Komplexität</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Custom Mobile Tab System -->
+      <div class="mobile-tab-system">
+        <button class="mobile-tab-button active" data-tab="default">
+          <span class="icon"><i class="fas fa-trophy"></i></span>
+          <span>Standard</span>
+        </button>
+        <button class="mobile-tab-button" data-tab="playtime">
+          <span class="icon"><i class="fas fa-clock"></i></span>
+          <span>Spielzeit</span>
+        </button>
+        <button class="mobile-tab-button" data-tab="complexity">
+          <span class="icon"><i class="fas fa-brain"></i></span>
+          <span>Komplexität</span>
+        </button>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tabs-content">
+        <!-- Default Ranking Tab -->
+        <div id="tab-default" class="tab-pane is-active">
+          <div class="box">
+            <!-- Info Button -->
+            {% set md_content = url_for('static', filename='document/ranking_default.md') %}
+            <button class="button is-info mb-3" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_default_bg')">
+              ℹ️ Info Standard-Ranking
+            </button>
+            <div id="markdown-content_default_bg" class="notification is-info mt-3 markdown-content"></div>
+
+            <!-- Ranking Table -->
+            <div class="table-container event-table-container">
+              <table class="table is-bordered is-hoverable is-fullwidth has-text-centered event-table">
+                <thead class="has-background-primary-dark has-text-white">
+                  <tr>
+                    <th class="event-table th">Position</th>
+                    <th class="event-table th player-name">Spieler</th>
+                    <th class="event-table th points">Gesamtpunkte</th>
+                    <th class="event-table th details">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for player, data in ranking_default %}
+                  <tr>
+                    <td><strong>{{ loop.index }}</strong></td>
+                    <td><strong>
+                      <a href="{{ url_for('main.show_player', player_name=player) }}" class="has-text-primary player-link">
+                        {{ player }}
+                      </a>
+                    </strong></td>
+                    <td><strong>{{ data.total|round(2) }}</strong></td>
+                    <td>
+                      <button class="button is-small is-primary"
+                          onclick="toggleElement('details-default-bg{{ loop.index }}')">Details</button>
+                      <div id="details-default-bg{{ loop.index }}" class="event-details">
+                        <ul class="event-details-list">
+                          {% for detail in data.details %}
+                          <li>{{ detail.datum }}: <span class="has-text-weight-bold"> {{ detail.game
+                                  }}:</span> Pos {{ detail.position }} (Pkte {{ detail.points|round(2) }})
+                          </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Playtime Ranking Tab -->
+        <div id="tab-playtime" class="tab-pane">
+          <div class="box">
+            <!-- Info Button -->
+            {% set md_content = url_for('static', filename='document/ranking_playtime.md') %}
+            <button class="button is-info mb-3" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_playtime_bg')">
+              ℹ️ Info Spielzeit-Ranking
+            </button>
+            <div id="markdown-content_playtime_bg" class="notification is-info mt-3 markdown-content"></div>
+
+            <!-- Ranking Table -->
+            <div class="table-container event-table-container">
+              <table class="table is-bordered is-hoverable is-fullwidth has-text-centered event-table">
+                <thead class="has-background-primary-dark has-text-white">
+                  <tr>
+                    <th class="event-table th">Position</th>
+                    <th class="event-table th player-name">Spieler</th>
+                    <th class="event-table th points">Gesamtpunkte</th>
+                    <th class="event-table th details">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for player, data in ranking_playtime %}
+                  <tr>
+                    <td><strong>{{ loop.index }}</strong></td>
+                    <td><strong>
+                      <a href="{{ url_for('main.show_player', player_name=player) }}" class="has-text-primary player-link">
+                        {{ player }}
+                      </a>
+                    </strong></td>
+                    <td><strong>{{ data.total|round(2) }}</strong></td>
+                    <td>
+                      <button class="button is-small is-primary"
+                          onclick="toggleElement('details-playtime-bg{{ loop.index }}')">Details</button>
+                      <div id="details-playtime-bg{{ loop.index }}" class="event-details">
+                        <ul class="event-details-list">
+                          {% for detail in data.details %}
+                          <li>{{ detail.datum }}: <span class="has-text-weight-bold"> {{ detail.game
+                                  }}:</span> Pos {{ detail.position }} (Pkte {{ detail.points|round(2) }})
+                          </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Complexity Ranking Tab -->
+        <div id="tab-complexity" class="tab-pane">
+          <div class="box">
+            <!-- Info Button -->
+            {% set md_content = url_for('static', filename='document/ranking_complexity.md') %}
+            <button class="button is-info mb-3" onclick="loadMarkdown('{{ md_content }}', 'markdown-content_complexity_bg')">
+              ℹ️ Info Komplexitäts-Ranking
+            </button>
+            <div id="markdown-content_complexity_bg" class="notification is-info mt-3 markdown-content"></div>
+
+            <!-- Ranking Table -->
+            <div class="table-container event-table-container">
+              <table class="table is-bordered is-hoverable is-fullwidth has-text-centered event-table">
+                <thead class="has-background-primary-dark has-text-white">
+                  <tr>
+                    <th class="event-table th">Position</th>
+                    <th class="event-table th player-name">Spieler</th>
+                    <th class="event-table th points">Gesamtpunkte</th>
+                    <th class="event-table th details">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for player, data in ranking_complexity %}
+                  <tr>
+                    <td><strong>{{ loop.index }}</strong></td>
+                    <td><strong>
+                      <a href="{{ url_for('main.show_player', player_name=player) }}" class="has-text-primary player-link">
+                        {{ player }}
+                      </a>
+                    </strong></td>
+                    <td><strong>{{ data.total|round(2) }}</strong></td>
+                    <td>
+                      <button class="button is-small is-primary"
+                          onclick="toggleElement('details-complexity-bg{{ loop.index }}')">Details</button>
+                      <div id="details-complexity-bg{{ loop.index }}" class="event-details">
+                        <ul class="event-details-list">
+                          {% for detail in data.details %}
+                          <li>{{ detail.datum }}: <span class="has-text-weight-bold"> {{ detail.game
+                                  }}:</span> Pos {{ detail.position }} (Pkte {{ detail.points|round(2) }})
+                          </li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
+{% endif %}
 
 <!-- Gespielte Partien -->
 <section class="section">
   <div class="container">
-    <h2 class="subtitle">Gespielte Partien</h2>
-    <div class="columns is-multiline">
+    <h2 class="title is-3 has-text-primary collapsible-header" data-target="game-history">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-history"></i>
+        </span>
+        <span>Gespielte Partien</span>
+        <span class="icon collapse-icon">
+          <i class="fas fa-chevron-up"></i>
+        </span>
+      </span>
+    </h2>
+    
+    <div id="game-history" class="collapsible-content">
+      <div class="columns is-multiline">
+        <!-- Alle gespielte Partien -->
+        {% for game in games %}
+        <div class="column is-half">
+          <article class="box">
+            <h3 class="title is-5">
+              <a href="{{ url_for('main.show_game', game_id=game.id) }}" class="has-text-primary game-link">
+                Partie vom {{ game.datum.strftime('%d.%b %Y') }}
+              </a>
+            </h3>
+            <!-- Sieger -->
+            <p class="has-text-info-50"><strong class="has-text-info-60">Sieger:</strong> 
+              <a href="{{ url_for('main.show_player', player_name=game.player_pos[0].player.name) }}" class="has-text-primary player-link">
+                {{ game.player_pos[0].player.name }}
+              </a>
+            </p>
+            <p> <br> </p>
+            <p><strong>Spieler (Punkte):</strong>
+              {% for player in game.player_pos %}
+            <p> Pos {{ loop.index}}: 
+              <strong>
+                <a href="{{ url_for('main.show_player', player_name=player.player.name) }}" class="has-text-primary player-link">
+                  {{ player.player.name }}
+                </a>
+              </strong> ({{ player.points }} Punkte) 
+            </p>
+            {% endfor %}
+            <p> <br> </p>
+            <p><strong>Spielzeit[min]</strong> {{ '-' if game.playtime < 15 else game.playtime }}</p>
+            <p><strong>Ort</strong> {{ game.location.name }}</p>
 
-
-      <!-- Alle gespielte Partien -->
-      {% for game in games %}
-      <div class="column is-half">
-        <article class="box">
-          <h3 class="title is-5">Partie vom {{ game.datum.strftime('%d.%b %Y') }}</h3>
-          <!-- Sieger -->
-          <p class="has-text-info-50"><strong class="has-text-info-60">Sieger:</strong> {{game.player_pos[0].player.name}} </p>
-          <p> <br> </p>
-          <p><strong>Spieler (Punkte):</strong>
-            {% for player in game.player_pos %}
-          <p> Pos {{ loop.index}}: <strong>{{ player.player.name }}</strong> ({{ player.points }} Punkte) </p>
-          {% endfor %}
-          <p> <br> </p>
-          <p><strong>Spielzeit[min]</strong> {{ '-' if game.playtime < 15 else game.playtime }}</p>
-          <p><strong>Ort</strong> {{ game.location.name }}</p>
-
-        </article>
+          </article>
+        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
-
     </div>
   </div>
 </section>
 
-<!-- Tabelle: Spielerstatistik / Ranking , muss noch angelegt werden!!!!-->
-<!-- <section class="section">
-  <div class="container">
-    <h2 class="subtitle">Aktuelle Spielerstatistik</h2>
-    <table class="table is-fullwidth is-hoverable">
-      <thead>
-        <tr>
-          <th>Rang</th>
-          <th>Spieler</th>
-          <th>Gesamtpunkte</th>
-          <th>Durchschnitt</th>
-          <th>Siegquote</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>Anna</td>
-          <td>203</td>
-          <td>101.5</td>
-          <td>50%</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Bernd</td>
-          <td>199</td>
-          <td>99.5</td>
-          <td>50%</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Claudius</td>
-          <td>72</td>
-          <td>72</td>
-          <td>0%</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section> -->
 
+{% endblock %}
 
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisiere Tabs
+    initializeTabs();
+    
+    // Mobile Tab-Styles durchsetzen
+    function enforceMobileTabStyles() {
+        const isMobile = window.innerWidth <= 768;
+        const tabs = document.querySelectorAll('#boardgame-tabs .tabs li a');
+        
+        tabs.forEach(function(tab) {
+            const isActive = tab.parentElement.classList.contains('is-active');
+            
+            if (isMobile) {
+                // Mobile Styles forcieren
+                if (isActive) {
+                    tab.style.cssText = `
+                        color: #ffffff !important;
+                        background-color: #3273dc !important;
+                        border: 3px solid #3273dc !important;
+                        font-weight: 900 !important;
+                        font-size: 1.1rem !important;
+                        min-height: 50px !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        padding: 1rem 0.75rem !important;
+                        border-radius: 8px !important;
+                        box-shadow: 0 6px 12px rgba(50, 115, 220, 0.4) !important;
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.5) !important;
+                    `;
+                } else {
+                    tab.style.cssText = `
+                        color: #000000 !important;
+                        background-color: #ffffff !important;
+                        border: 3px solid #3273dc !important;
+                        font-weight: 900 !important;
+                        font-size: 1.1rem !important;
+                        min-height: 50px !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        padding: 1rem 0.75rem !important;
+                        border-radius: 8px !important;
+                        box-shadow: 0 3px 6px rgba(0,0,0,0.15) !important;
+                    `;
+                }
+            }
+        });
+    }
+    
+    // Initial enforcement
+    enforceMobileTabStyles();
+    
+    // Re-enforce on resize
+    window.addEventListener('resize', enforceMobileTabStyles);
+    
+    // Re-enforce on tab changes
+    const tabElements = document.querySelectorAll('#boardgame-tabs .tabs li');
+    tabElements.forEach(function(tabEl) {
+        tabEl.addEventListener('click', function() {
+            setTimeout(enforceMobileTabStyles, 100);
+        });
+    });
+});
+</script>
 {% endblock %}

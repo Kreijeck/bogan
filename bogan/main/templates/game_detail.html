@@ -2,86 +2,205 @@
 
 {% block content %}
 
-  <section class="section">
-    <div class="container">
-      <h1 class="title has-text-centered">Spiele Übersicht</h1>
-
-      <!-- Beispielkarte für ein Spiel -->
-      <div class="card">
-        <!-- Kartenkopf mit Spielname und Datum -->
-        <header class="card-header">
-          <p class="card-header-title">
-            <!-- Spielname aus item/@name -->
-            Barrage
-          </p>
-          <p class="card-header-icon">
-            <!-- Icon + Datum (z.B. @date) -->
-            <span class="icon">
-              <i class="fas fa-calendar-alt"></i>
-            </span>
-            <span>22.06.2022</span>
-          </p>
-        </header>
-
-        <!-- Karteninhalt -->
-        <div class="card-content">
-          <div class="content">
-            <!-- Spielinfos -->
-            <p><strong>Ort:</strong> Mittwochsrunde</p>
-            <p><strong>Menge:</strong> 1</p>
-            <p><strong>Länge:</strong> 0</p>
-            <p><strong>Unvollständig:</strong> 0</p>
-            <p><strong>Now in Stats:</strong> 0</p>
-            <!-- Kommentare (Zeilenumbrüche werden in HTML mit <br> ersetzt) -->
-            <p>
-              <strong>Kommentare:</strong><br>
-              Played with expansions:<br>
-              - Wasserkraft: Das Leeghwater-Projekt
-            </p>
+<!-- Spiel Header -->
+<section class="section">
+  <div class="container">
+    <h1 class="title has-text-primary collapsible-header" data-target="game-overview">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-gamepad"></i>
+        </span>
+        <span>Partie #{{ game.id }} - {{ game.boardgame.name }}</span>
+        <span class="icon collapse-icon">
+          <i class="fas fa-chevron-up"></i>
+        </span>
+      </span>
+    </h1>
+    
+    <div id="game-overview" class="collapsible-content">
+      <!-- Partie-Informationen Übersicht -->
+      <div class="box game-stats-box">
+        <div class="columns is-mobile">
+          <div class="column has-text-centered">
+            <p class="heading">Datum</p>
+            <p class="title is-4 has-text-white">{{ game.datum_fmt }}</p>
+            <p class="subtitle is-6 has-text-grey-light">{{ game.wochentag_fmt }}</p>
           </div>
-
-          <!-- Tabelle der Spieler -->
-          <div class="table-container">
-            <table class="table is-fullwidth is-hoverable">
-              <thead>
-                <tr>
-                  <th>Spieler</th>
-                  <th>Punkte</th>
-                  <th>Gewonnen</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Simon D.</td>
-                  <td>130</td>
-                  <td>
-                    <!-- Falls win=1 -->
-                    <span class="tag is-success">Ja</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Strähli</td>
-                  <td>107</td>
-                  <td>
-                    <!-- Falls win=0 -->
-                    <span class="tag is-danger">Nein</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="column has-text-centered">
+            <p class="heading">Spieler</p>
+            <p class="title is-4 has-text-white">{{ game.player_count }}</p>
+          </div>
+          <div class="column has-text-centered">
+            <p class="heading">Spieldauer</p>
+            <p class="title is-4 has-text-white">{{ game.playtime_fmt }}</p>
+          </div>
+          <div class="column has-text-centered">
+            <p class="heading">Ort</p>
+            <p class="title is-4 has-text-white">{{ game.location.name }}</p>
           </div>
         </div>
-
-        <!-- Kartenfuß -->
-        <footer class="card-footer">
-          <p class="card-footer-item">
-            <span>ID: 64901091</span>
-          </p>
-          <p class="card-footer-item">
-            <span>Anzahl Spieler: 2</span>
-          </p>
-        </footer>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<!-- Brettspiel Details -->
+<section class="section">
+  <div class="container">
+    <h2 class="title is-3 has-text-primary collapsible-header" data-target="boardgame-info">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-dice"></i>
+        </span>
+        <span>{{ game.boardgame.name }}</span>
+        <span class="icon collapse-icon">
+          <i class="fas fa-chevron-up"></i>
+        </span>
+      </span>
+    </h2>
+    
+    <div id="boardgame-info" class="collapsible-content">
+      <div class="columns">
+        <!-- Spalte für das Bild -->
+        <div class="column is-one-third">
+          <figure class="image">
+            <img src="{{ game.boardgame.img }}" alt="{{ game.boardgame.name }}" />
+          </figure>
+          
+          <div class="has-text-centered mt-4">
+            <a href="{{ url_for('main.show_boardgame', boardgame_id=game.boardgame.id) }}" 
+               class="button is-primary">
+              <span class="icon">
+                <i class="fas fa-external-link-alt"></i>
+              </span>
+              <span>Zum Brettspiel</span>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Spalte für die Spiel-Informationen -->
+        <div class="column">
+          <p><strong>Reguläre Spieldauer:</strong> ca. {{ game.boardgame.playtime }} Minuten</p>
+          <p><strong>Komplexität:</strong> {{ game.boardgame.weight }} / 5</p>
+          <p><strong>Spieleranzahl:</strong> {{ game.boardgame.minplayers }} - {{ game.boardgame.maxplayers }} Spieler</p>
+          <p><strong>Erscheinungsjahr:</strong> {{ game.boardgame.yearpublished if game.boardgame.yearpublished else 'Unbekannt' }}</p>
+          <p><strong>BGG ID:</strong> {{ game.boardgame.id }}</p>
+          
+          <!-- Vergleich zur regulären Spielzeit -->
+          {% if game.playtime and game.playtime > 0 %}
+          <div class="notification {% if game.playtime > game.boardgame.playtime %}is-warning{% elif game.playtime < game.boardgame.playtime %}is-success{% else %}is-info{% endif %} mt-4">
+            <strong>Spielzeit-Vergleich:</strong>
+            {% set time_diff = game.playtime - game.boardgame.playtime %}
+            {% if time_diff > 15 %}
+              Diese Partie dauerte {{ time_diff }} Minuten länger als üblich.
+            {% elif time_diff < -15 %}
+              Diese Partie war {{ -time_diff }} Minuten schneller als üblich.
+            {% else %}
+              Diese Partie dauerte etwa so lange wie üblich.
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Spieler Ergebnisse -->
+<section class="section">
+  <div class="container">
+    <h2 class="title is-3 has-text-primary collapsible-header" data-target="player-results">
+      <span class="icon-text">
+        <span class="icon has-text-primary">
+          <i class="fas fa-trophy"></i>
+        </span>
+        <span>Spieler & Ergebnisse</span>
+        <span class="icon collapse-icon">
+          <i class="fas fa-chevron-up"></i>
+        </span>
+      </span>
+    </h2>
+    <p class="subtitle has-text-centered mb-6 has-text-grey-dark">
+      Endstand der Partie vom {{ game.datum_fmt }}
+    </p>
+
+    <div id="player-results" class="collapsible-content">
+      <div class="columns is-multiline">
+        {% for player in game.players %}
+        <div class="column is-half">
+          <article class="box {% if player.is_winner %}winner-box{% endif %}">
+            <div class="media">
+              <div class="media-left">
+                <div class="position-badge position-{{ player.position }}">
+                  {% if player.position == 1 %}
+                    <i class="fas fa-crown"></i>
+                  {% elif player.position == 2 %}
+                    <i class="fas fa-medal"></i>
+                  {% elif player.position == 3 %}
+                    <i class="fas fa-award"></i>
+                  {% else %}
+                    {{ player.position }}
+                  {% endif %}
+                </div>
+              </div>
+              <div class="media-content">
+                <h3 class="title is-5">
+                  <a href="{{ url_for('main.show_player', player_name=player.name) }}" 
+                     class="has-text-primary player-link">
+                    {{ player.name }}
+                  </a>
+                </h3>
+                <p class="has-text-info-50">
+                  <strong class="has-text-info-60">Position:</strong> {{ player.position }}. Platz
+                  {% if player.is_winner %}
+                    <span class="tag is-success ml-2">
+                      <span class="icon">
+                        <i class="fas fa-trophy"></i>
+                      </span>
+                      <span>Sieger!</span>
+                    </span>
+                  {% endif %}
+                </p>
+                <p><strong>Punkte:</strong> {{ player.points }}</p>
+              </div>
+            </div>
+          </article>
+        </div>
+        {% endfor %}
+      </div>
+      
+      <!-- Zusätzliche Statistiken -->
+      <div class="box game-stats-box mt-5">
+        <h3 class="title is-5 has-text-primary">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fas fa-chart-bar"></i>
+            </span>
+            <span>Partie-Statistiken</span>
+          </span>
+        </h3>
+        
+        <div class="columns is-mobile">
+          <div class="column has-text-centered">
+            <p class="heading">Höchste Punkte</p>
+            <p class="title is-4 has-text-white">{{ game.players | map(attribute='points') | max }}</p>
+          </div>
+          <div class="column has-text-centered">
+            <p class="heading">Niedrigste Punkte</p>
+            <p class="title is-4 has-text-white">{{ game.players | map(attribute='points') | min }}</p>
+          </div>
+          <div class="column has-text-centered">
+            <p class="heading">Durchschnitt</p>
+            <p class="title is-4 has-text-white">{{ (game.players | map(attribute='points') | sum / game.players | length) | round(1) }}</p>
+          </div>
+          <div class="column has-text-centered">
+            <p class="heading">Punktdifferenz</p>
+            <p class="title is-4 has-text-white">{{ (game.players | map(attribute='points') | max) - (game.players | map(attribute='points') | min) }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 {% endblock %}

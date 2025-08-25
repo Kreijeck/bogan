@@ -23,12 +23,9 @@ def env(env_var: str) -> str:
 
 # Read version from package metadata or pyproject.toml as fallback
 def get_version() -> str:
-    """Read version from package metadata or pyproject.toml as fallback"""
+    """Read version from pyproject.toml first, fallback to package metadata"""
     try:
-        # Try to get version from installed package metadata
-        return metadata.version("bogan")
-    except metadata.PackageNotFoundError:
-        # Fallback: read from pyproject.toml
+        # Priorisiere pyproject.toml für Entwicklung
         import re
 
         pyproject_path = Path(__file__).parent.parent / "pyproject.toml"
@@ -39,7 +36,14 @@ def get_version() -> str:
         if version_match:
             return version_match.group(1)
         else:
-            raise ValueError("Version not found")
+            # Fallback: Try package metadata
+            return metadata.version("bogan")
+    except (FileNotFoundError, ValueError):
+        # Final fallback: Try package metadata
+        try:
+            return metadata.version("bogan")
+        except metadata.PackageNotFoundError:
+            return "unknown"
 
 
 ### Generic ###
@@ -51,6 +55,10 @@ FLASK_APP = env("FLASK_APP")
 FLASK_DEBUG = env("FLASK_DEBUG")
 FLASK_RUN_PORT = env("FLASK_RUN_PORT")
 FLASK_SECRET_KEY = env("FLASK_SECRET_KEY")
+
+### Authentication ###
+# Sign-up Secret - wird als Umgebungsvariable gesetzt
+SIGNUP_SECRET = env("SIGNUP_SECRET") or "default_secret_change_me"
 
 ### Database ###
 INSTANCE_PATH = os.path.join(os.path.dirname(__file__), "instance")  # Needed for Flask on root
@@ -80,6 +88,16 @@ TAG2LIST_PLAY = "player"
 ### Pathinformation ###
 EVENT_YAML = "bogan/events.yaml"
 
+### Ignored Players ###
+IGNORED_PLAYERS = ["Bot",
+                   "Christian",
+                   "Felix",
+                   "Jörn",
+                   "Katka",
+                   "Louis",
+                   "Markus",
+                   "Quinn",
+                   ]
 
 ### LOGGING ###
 @dataclass

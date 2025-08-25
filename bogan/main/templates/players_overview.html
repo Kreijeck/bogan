@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<section class="section">
+  <div class="container">
+    <h1 class="title is-1 has-text-centered has-text-primary">
+      <span class="icon-text">
+        <span class="icon">
+          <i class="fas fa-users"></i>
+        </span>
+        <span>Alle Spieler</span>
+      </span>
+    </h1>
+    <p class="subtitle has-text-centered mb-6 has-text-grey-dark">
+      Übersicht aller Spieler in der Datenbank (<span id="totalCount">{{ players_stats|length }}</span> Spieler total)
+    </p>
+
+    <!-- Suchfeld -->
+    {% if players_stats %}
+    <div class="field mb-5">
+      <label class="label">Live-Suche</label>
+      <div class="control">
+        <input id="searchInput" class="input" type="text" 
+               placeholder="Nach Spieler-Namen suchen...">
+      </div>
+      <p class="help">Suche nach Spieler-Namen (z.B. "Max", "Anna")</p>
+    </div>
+    {% endif %}
+
+    {% if players_stats %}
+    <div id="playersGrid" class="columns is-multiline">
+      {% for player in players_stats %}
+      <div class="column is-half-tablet is-one-third-desktop is-one-quarter-widescreen player-item" data-searchable="{{ player.name|lower }}">
+        <div class="box player-overview-box has-text-centered">
+          <div class="player-avatar">
+            <span class="icon is-large has-text-primary">
+              <i class="fas fa-user-circle fa-3x"></i>
+            </span>
+          </div>
+          <h3 class="title is-5 has-text-primary mt-3 player-name">{{ player.name }}</h3>
+          
+          <!-- Spieler-Statistiken -->
+          <div class="player-stats mt-4">
+            <div class="columns is-mobile is-multiline has-text-centered">
+              <div class="column is-6">
+                <p class="heading">Spiele</p>
+                <p class="title is-6 has-text-info">{{ player.total_games }}</p>
+              </div>
+              <div class="column is-6">
+                <p class="heading">Siege</p>
+                <p class="title is-6 has-text-success">{{ player.wins }}</p>
+              </div>
+              <div class="column is-6">
+                <p class="heading">Siegrate</p>
+                <p class="title is-6 has-text-warning">{{ player.win_rate }}%</p>
+              </div>
+              <div class="column is-6">
+                <p class="heading">Ø Position</p>
+                <p class="title is-6 has-text-danger">
+                  {{ player.avg_position }}
+                  <small class="has-text-grey-light">/{{ player.avg_player_count }}</small>
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="buttons is-centered mt-4">
+            <a href="{{ url_for('main.show_player', player_name=player.name) }}" 
+               class="button is-primary">
+              <span class="icon">
+                <i class="fas fa-chart-line"></i>
+              </span>
+              <span>Details</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    
+    <!-- "Keine Ergebnisse" Nachricht (wird dynamisch angezeigt) -->
+    <div id="noResults" class="notification is-warning has-text-centered players-no-results">
+      <span class="icon">
+        <i class="fas fa-search"></i>
+      </span>
+      <strong>Keine Spieler gefunden</strong><br>
+      <span id="noResultsText">Es wurden keine Spieler für den Suchbegriff gefunden.</span>
+    </div>
+    {% else %}
+    <div class="notification is-info has-text-centered">
+      <span class="icon">
+        <i class="fas fa-users"></i>
+      </span>
+      <strong>Keine Spieler gefunden</strong><br>
+      Es sind noch keine Spieler in der Datenbank eingetragen.
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisiere Player Search mit Konfiguration
+    initializePlayerSearch({
+        searchInputId: 'searchInput',
+        containerSelector: '#playersGrid',
+        itemSelector: '.player-item',
+        noResultsSelector: '#noResults',
+        totalCountSelector: '#totalCount',
+        searchAttribute: 'data-searchable'
+    });
+});
+</script>
+{% endblock %}
