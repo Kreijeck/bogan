@@ -29,9 +29,13 @@ def calculate_player_ranking_with_modes(games: List, boardgame) -> Dict[str, Any
         
         if sorted_players:
             # Playtime für das Spiel berechnen
-            match_playtime = (
-                game.playtime / 60 if game.playtime and game.playtime > 10 else 0.5
-            )  # Standard 30min wenn keine Playtime gesetzt
+            # Wenn die tatsächliche Spielzeit unter 10min liegt oder nicht gesetzt ist,
+            # verwende die Standard-Spielzeit aus der Brettspiel-Datenbank
+            if game.playtime and game.playtime > 10:
+                match_playtime = game.playtime / 60  # Konvertiere Minuten zu Stunden
+            else:
+                # Verwende die Standard-Spielzeit vom Brettspiel (auch in Minuten)
+                match_playtime = (boardgame.playtime / 60) if boardgame.playtime else 0.5
             
             # WICHTIG: Kopien der Spieler-Liste erstellen, da create_ranking sie modifiziert!
             sorted_players_default = [player.copy() for player in sorted_players]
