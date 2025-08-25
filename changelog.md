@@ -2,6 +2,11 @@
 
 ## Current Version
 
+## 0.8.0
+
+- **Admin-Interface**: Vollständiges Verwaltungssystem mit Dashboard, Event-Management und Datenbank-Übersicht
+- **Produktionssetup**: Interaktives Admin-Erstellungs-Script für sichere Deployment-Vorbereitung
+
 ## 0.7.6
 
 - bugfixes auf "mobile devices"
