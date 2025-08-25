@@ -89,7 +89,7 @@
     </p>
 
     <div id="player-ranking" class="collapsible-content">
-      <!-- Tab Navigation -->
+      <!-- Standard Tab Navigation (Desktop) -->
       <div class="tabs is-boxed is-large">
         <ul>
           <li class="is-active" data-tab="default">
@@ -111,6 +111,22 @@
             </a>
           </li>
         </ul>
+      </div>
+
+      <!-- Custom Mobile Tab System -->
+      <div class="mobile-tab-system">
+        <button class="mobile-tab-button active" data-tab="default">
+          <span class="icon"><i class="fas fa-trophy"></i></span>
+          <span>Standard</span>
+        </button>
+        <button class="mobile-tab-button" data-tab="playtime">
+          <span class="icon"><i class="fas fa-clock"></i></span>
+          <span>Spielzeit</span>
+        </button>
+        <button class="mobile-tab-button" data-tab="complexity">
+          <span class="icon"><i class="fas fa-brain"></i></span>
+          <span>Komplexität</span>
+        </button>
       </div>
 
       <!-- Tab Content -->
@@ -339,6 +355,66 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialisiere Tabs
     initializeTabs();
+    
+    // Mobile Tab-Styles durchsetzen
+    function enforceMobileTabStyles() {
+        const isMobile = window.innerWidth <= 768;
+        const tabs = document.querySelectorAll('#boardgame-tabs .tabs li a');
+        
+        tabs.forEach(function(tab) {
+            const isActive = tab.parentElement.classList.contains('is-active');
+            
+            if (isMobile) {
+                // Mobile Styles forcieren
+                if (isActive) {
+                    tab.style.cssText = `
+                        color: #ffffff !important;
+                        background-color: #3273dc !important;
+                        border: 3px solid #3273dc !important;
+                        font-weight: 900 !important;
+                        font-size: 1.1rem !important;
+                        min-height: 50px !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        padding: 1rem 0.75rem !important;
+                        border-radius: 8px !important;
+                        box-shadow: 0 6px 12px rgba(50, 115, 220, 0.4) !important;
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.5) !important;
+                    `;
+                } else {
+                    tab.style.cssText = `
+                        color: #000000 !important;
+                        background-color: #ffffff !important;
+                        border: 3px solid #3273dc !important;
+                        font-weight: 900 !important;
+                        font-size: 1.1rem !important;
+                        min-height: 50px !important;
+                        display: flex !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        padding: 1rem 0.75rem !important;
+                        border-radius: 8px !important;
+                        box-shadow: 0 3px 6px rgba(0,0,0,0.15) !important;
+                    `;
+                }
+            }
+        });
+    }
+    
+    // Initial enforcement
+    enforceMobileTabStyles();
+    
+    // Re-enforce on resize
+    window.addEventListener('resize', enforceMobileTabStyles);
+    
+    // Re-enforce on tab changes
+    const tabElements = document.querySelectorAll('#boardgame-tabs .tabs li');
+    tabElements.forEach(function(tabEl) {
+        tabEl.addEventListener('click', function() {
+            setTimeout(enforceMobileTabStyles, 100);
+        });
+    });
 });
 </script>
 {% endblock %}

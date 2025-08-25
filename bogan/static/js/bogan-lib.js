@@ -96,27 +96,67 @@ async function loadMarkdown(file, targetId) {
  * Aktiviert automatisch alle Tabs mit .tabs Navigation
  */
 function initializeTabs() {
-    const tabs = document.querySelectorAll('.tabs li[data-tab]');
+    // Handle desktop tabs (Bulma)
+    const desktopTabs = document.querySelectorAll('.tabs li[data-tab]');
     const tabPanes = document.querySelectorAll('.tab-pane');
 
-    tabs.forEach(tab => {
+    desktopTabs.forEach(tab => {
         tab.addEventListener('click', function() {
             const targetTab = this.getAttribute('data-tab');
             
-            // Entferne active Klasse von allen Tabs
-            tabs.forEach(t => t.classList.remove('is-active'));
-            // Füge active Klasse zum geklickten Tab hinzu
+            // Remove active class from all desktop tabs
+            desktopTabs.forEach(t => t.classList.remove('is-active'));
+            // Add active class to clicked desktop tab
             this.classList.add('is-active');
             
-            // Verstecke alle Tab-Panes
-            tabPanes.forEach(pane => pane.classList.remove('is-active'));
-            // Zeige das gewählte Tab-Pane
-            const targetPane = document.getElementById('tab-' + targetTab);
-            if (targetPane) {
-                targetPane.classList.add('is-active');
-            }
+            // Update mobile tabs to match
+            const mobileTabs = document.querySelectorAll('.mobile-tab-button');
+            mobileTabs.forEach(mTab => {
+                mTab.classList.remove('active');
+                if (mTab.getAttribute('data-tab') === targetTab) {
+                    mTab.classList.add('active');
+                }
+            });
+            
+            // Show/hide content
+            showTabContent(targetTab, tabPanes);
         });
     });
+    
+    // Handle mobile tabs (Custom buttons)
+    const mobileTabs = document.querySelectorAll('.mobile-tab-button');
+    mobileTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const targetTab = this.getAttribute('data-tab');
+            
+            // Remove active class from all mobile tabs
+            mobileTabs.forEach(t => t.classList.remove('active'));
+            // Add active class to clicked mobile tab
+            this.classList.add('active');
+            
+            // Update desktop tabs to match
+            desktopTabs.forEach(dTab => {
+                dTab.classList.remove('is-active');
+                if (dTab.getAttribute('data-tab') === targetTab) {
+                    dTab.classList.add('is-active');
+                }
+            });
+            
+            // Show/hide content
+            showTabContent(targetTab, tabPanes);
+        });
+    });
+}
+
+function showTabContent(targetTab, tabPanes) {
+    // Hide all tab-panes
+    tabPanes.forEach(pane => pane.classList.remove('is-active'));
+    
+    // Show the selected tab-pane
+    const targetPane = document.getElementById('tab-' + targetTab);
+    if (targetPane) {
+        targetPane.classList.add('is-active');
+    }
 }
 
 /**
