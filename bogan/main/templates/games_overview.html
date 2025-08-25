@@ -96,54 +96,18 @@
     {% endif %}
 </div>
 
-<!-- Live-Suche JavaScript -->
+{% endblock %}
+
+{% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const tableBody = document.getElementById('gamesTableBody');
-    const gameRows = tableBody.querySelectorAll('.game-row');
-    const totalCountSpan = document.getElementById('totalCount');
-    const totalGames = gameRows.length;
-
-    if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase().trim();
-            let visibleCount = 0;
-            
-            gameRows.forEach(function(row) {
-                const searchableText = row.getAttribute('data-searchable');
-                
-                if (searchableText && searchableText.includes(searchTerm)) {
-                    row.style.display = '';
-                    visibleCount++;
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-            
-            // Update counter
-            totalCountSpan.textContent = visibleCount;
-            
-            // Show/hide "no results" message
-            let noResultsRow = document.getElementById('noResultsRow');
-            if (visibleCount === 0 && searchTerm !== '') {
-                if (!noResultsRow) {
-                    noResultsRow = document.createElement('tr');
-                    noResultsRow.id = 'noResultsRow';
-                    noResultsRow.innerHTML = '<td colspan="6" class="has-text-centered has-text-grey"><em>Keine Partien gefunden für "' + searchTerm + '"</em></td>';
-                    tableBody.appendChild(noResultsRow);
-                }
-                noResultsRow.style.display = '';
-            } else if (noResultsRow) {
-                noResultsRow.style.display = 'none';
-            }
-            
-            // Reset counter when search is cleared
-            if (searchTerm === '') {
-                totalCountSpan.textContent = totalGames;
-            }
-        });
-    }
+    // Initialisiere Games Table Search mit Konfiguration
+    initializeGamesTableSearch({
+        searchInputId: 'searchInput',
+        tableBodySelector: '#gamesTableBody',
+        rowSelector: '.game-row',
+        totalCountSelector: '#totalCount'
+    });
 });
 </script>
 {% endblock %}

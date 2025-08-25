@@ -99,54 +99,20 @@
   </div>
 </section>
 
-<!-- Live-Suche JavaScript -->
+{% endblock %}
+
+{% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const searchInput = document.getElementById('searchInput');
-    const playersGrid = document.getElementById('playersGrid');
-    const noResults = document.getElementById('noResults');
-    const noResultsText = document.getElementById('noResultsText');
-    const totalCountSpan = document.getElementById('totalCount');
-    
-    if (searchInput && playersGrid) {
-        const playerItems = playersGrid.querySelectorAll('.player-item');
-        const totalPlayers = playerItems.length;
-
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase().trim();
-            let visibleCount = 0;
-            
-            playerItems.forEach(function(item) {
-                const searchableText = item.getAttribute('data-searchable');
-                
-                if (searchableText && searchableText.includes(searchTerm)) {
-                    item.style.display = '';
-                    visibleCount++;
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-            
-            // Update counter
-            totalCountSpan.textContent = visibleCount;
-            
-            // Show/hide "no results" message
-            if (visibleCount === 0 && searchTerm !== '') {
-                noResultsText.textContent = `Es wurden keine Spieler für "${searchTerm}" gefunden.`;
-                noResults.style.display = '';
-                playersGrid.style.display = 'none';
-            } else {
-                noResults.style.display = 'none';
-                playersGrid.style.display = '';
-            }
-            
-            // Reset counter when search is cleared
-            if (searchTerm === '') {
-                totalCountSpan.textContent = totalPlayers;
-            }
-        });
-    }
+    // Initialisiere Player Search mit Konfiguration
+    initializePlayerSearch({
+        searchInputId: 'searchInput',
+        containerSelector: '#playersGrid',
+        itemSelector: '.player-item',
+        noResultsSelector: '#noResults',
+        totalCountSelector: '#totalCount',
+        searchAttribute: 'data-searchable'
+    });
 });
 </script>
-
 {% endblock %}

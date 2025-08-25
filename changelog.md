@@ -2,6 +2,12 @@
 
 ## Current Version
 
+## 0.7.5
+
+- Ranking table jetzt als Tabs zu sehen
+- Ranking auch in Brettspielen verfügbar
+- neue Berechnung Ranking/playtime ohne Zeitangabe: default Time aus Beschreibung des Brettspiels
+
 ## 0.7.0
 
 - Registrierung nur mit Passwort möglich
