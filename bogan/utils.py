@@ -69,6 +69,12 @@ def load_yaml(yaml_file: str) -> Any:
         return yaml.safe_load(stream)
 
 
+def save_yaml(yaml_file: str, data: Any) -> None:
+    """YAML-Datei speichern"""
+    with open(yaml_file, "w", encoding="utf-8") as stream:
+        yaml.safe_dump(data, stream, default_flow_style=False, allow_unicode=True, sort_keys=False)
+
+
 class DateFormat(Enum):
     DEFAULT = "%Y-%m-%d"
     YAML = "%d.%m.%Y"

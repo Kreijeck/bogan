@@ -1,0 +1,358 @@
+/* ========================================
+   ADMIN INTERFACE STYLES (Clean Version)
+   Optimiert für bessere Lesbarkeit mit spezifischen Selektoren
+   ======================================== */
+
+/* Admin Dashboard Cards */
+.admin-card-users {
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border: 2px solid #1976d2;
+    color: #0d47a1;
+}
+
+.admin-card-events {
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+    border: 2px solid #7b1fa2;
+    color: #4a148c;
+}
+
+.admin-card-games {
+    background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c9 100%);
+    border: 2px solid #388e3c;
+    color: #1b5e20;
+}
+
+.admin-card-boardgames {
+    background: linear-gradient(135deg, #fff3e0 0%, #ffcc02 100%);
+    border: 2px solid #f57c00;
+    color: #e65100;
+}
+
+/* Admin Statistik-Zahlen */
+.admin-stat-number {
+    color: #212529;
+    font-weight: 900;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 0.5rem;
+}
+
+.admin-card-users .admin-stat-number {
+    color: #0d47a1;
+    text-shadow: 2px 2px 4px rgba(13, 71, 161, 0.3);
+}
+
+.admin-card-events .admin-stat-number {
+    color: #4a148c;
+    text-shadow: 2px 2px 4px rgba(74, 20, 140, 0.3);
+}
+
+.admin-card-games .admin-stat-number {
+    color: #1b5e20;
+    text-shadow: 2px 2px 4px rgba(27, 94, 32, 0.3);
+}
+
+.admin-card-boardgames .admin-stat-number {
+    color: #e65100;
+    text-shadow: 2px 2px 4px rgba(230, 81, 0, 0.3);
+}
+
+/* Admin Navigation */
+.admin-breadcrumb.breadcrumb {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.admin-breadcrumb.breadcrumb a {
+    color: #495057;
+    font-weight: 500;
+}
+
+.admin-breadcrumb.breadcrumb a:hover {
+    color: #007bff;
+}
+
+.admin-breadcrumb.breadcrumb .is-active a {
+    color: #6c757d;
+    font-weight: 700;
+}
+
+/* Admin Tables */
+table.admin-table.table {
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table.admin-table.table thead th {
+    background-color: #343a40;
+    color: #ffffff;
+    font-weight: 700;
+    border-bottom: 3px solid #495057;
+}
+
+table.admin-table.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+table.admin-table.table tbody tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+table.admin-table.table tbody tr:hover {
+    background-color: #e9ecef;
+    transform: scale(1.01);
+    transition: all 0.2s ease;
+}
+
+table.admin-table.table td {
+    color: #212529;
+    border-color: #dee2e6;
+}
+
+/* Admin Buttons - Nur wo nötig überschreiben */
+.admin-btn-primary.button {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+}
+
+.admin-btn-primary.button:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.4);
+}
+
+.admin-btn-danger.button {
+    background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%);
+    border: none;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.admin-btn-danger.button:hover {
+    background: linear-gradient(135deg, #bd2130 0%, #a71e2a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.4);
+}
+
+.admin-btn-success.button {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    border: none;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+.admin-btn-success.button:hover {
+    background: linear-gradient(135deg, #1e7e34 0%, #155724 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
+}
+
+.admin-btn-warning.button {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    border: none;
+    color: #212529;
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+}
+
+.admin-btn-warning.button:hover {
+    background: linear-gradient(135deg, #e0a800 0%, #d39e00 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(255, 193, 7, 0.4);
+}
+
+/* Admin Status Tags */
+.admin-tag-admin.tag {
+    background: linear-gradient(135deg, #dc3545 0%, #bd2130 100%);
+    color: #ffffff;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+.admin-tag-user.tag {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: #ffffff;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+.admin-tag-active.tag {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    color: #ffffff;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+/* Admin Forms */
+.admin-form-container.box {
+    background-color: #ffffff;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.admin-form-label.label {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+/* Admin Form Inputs - Spezifisch für admin-form-input Klasse */
+.admin-form-input.input,
+.admin-form-input.button {
+    border: 2px solid #ced4da;
+    border-radius: 8px;
+    padding: 0.75rem;
+    color: #495057;
+    background-color: #f8f9fa;
+}
+
+.admin-form-input.input:focus,
+.admin-form-input.button:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    background-color: #ffffff;
+}
+
+/* Input-Felder mit Icons */
+.admin-form-container .control.has-icons-left .input.admin-form-input {
+    padding-left: 2.5rem;
+}
+
+/* Location Dropdown Button Styling */
+.admin-form-container .control.has-icons-left .dropdown .dropdown-trigger .button.admin-form-input {
+    padding-left: 2.5rem;
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.admin-form-container .control.has-icons-left .dropdown .dropdown-trigger .button.admin-form-input .icon.is-right {
+    display: none;
+}
+
+/* Nur bei Bedarf für hartnäckige Bulma Overrides */
+.admin-form-container .field .control .select.is-fullwidth select.admin-form-input {
+    background: #f8f9fa !important;
+    background-color: #f8f9fa !important;
+    border: 2px solid #ced4da !important;
+    border-radius: 8px !important;
+    color: #495057 !important;
+    padding: 0.75rem !important;
+    padding-left: 2.5rem !important;
+}
+
+.admin-form-container .field .control .select.is-fullwidth select.admin-form-input:focus {
+    border-color: #007bff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+    background-color: #ffffff !important;
+}
+
+/* Admin Notifications */
+.admin-notification-success.notification {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border: 2px solid #28a745;
+    color: #155724;
+    border-radius: 8px;
+}
+
+.admin-notification-error.notification {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    border: 2px solid #dc3545;
+    color: #721c24;
+    border-radius: 8px;
+}
+
+.admin-notification-warning.notification {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border: 2px solid #ffc107;
+    color: #856404;
+    border-radius: 8px;
+}
+
+.admin-notification-info.notification {
+    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+    border: 2px solid #17a2b8;
+    color: #0c5460;
+    border-radius: 8px;
+}
+
+/* Admin Icons */
+.admin-icon-large {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.admin-icon-primary { color: #007bff; }
+.admin-icon-danger { color: #dc3545; }
+.admin-icon-success { color: #28a745; }
+.admin-icon-warning { color: #ffc107; }
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .admin-form-container.box {
+        background-color: #2d3748;
+        border-color: #4a5568;
+        color: #e2e8f0;
+    }
+    
+    .admin-form-label.label {
+        color: #e2e8f0;
+    }
+    
+    .admin-form-input.input,
+    .admin-form-input.button {
+        background-color: #4a5568;
+        border-color: #718096;
+        color: #e2e8f0;
+    }
+    
+    .admin-form-input.input:focus,
+    .admin-form-input.button:focus {
+        background-color: #4a5568;
+        border-color: #63b3ed;
+    }
+    
+    table.admin-table.table tbody tr:nth-child(even) {
+        background-color: #2d3748;
+    }
+    
+    table.admin-table.table tbody tr:nth-child(odd) {
+        background-color: #1a202c;
+    }
+    
+    table.admin-table.table tbody tr:hover {
+        background-color: #4a5568;
+    }
+    
+    table.admin-table.table td {
+        color: #e2e8f0;
+        border-color: #4a5568;
+    }
+    
+    .admin-breadcrumb.breadcrumb {
+        background-color: #2d3748;
+        border-color: #4a5568;
+    }
+    
+    .admin-breadcrumb.breadcrumb a {
+        color: #e2e8f0;
+    }
+    
+    .admin-breadcrumb.breadcrumb .is-active a {
+        color: #a0aec0;
+    }
+}

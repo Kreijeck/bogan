@@ -60,6 +60,10 @@ def create_app():
 
     app.register_blueprint(auth_bp)
 
+    from .admin import admin as admin_bp
+
+    app.register_blueprint(admin_bp)
+
     from .tools import tools as tools_bp
 
     app.register_blueprint(tools_bp)
