@@ -7,7 +7,7 @@
     <nav class="breadcrumb admin-breadcrumb" aria-label="breadcrumbs">
         <ul>
             <li><a href="{{ url_for('main.index') }}">Home</a></li>
-            <li><a href="{{ url_for('admin.admin_dashboard') }}">Admin</a></li>
+            <li><a href="{{ url_for('auth.admin_dashboard') }}">Admin</a></li>
             <li class="is-active"><a href="#" aria-current="page">Events</a></li>
         </ul>
     </nav>
@@ -36,7 +36,7 @@
     <!-- Event hinzufügen -->
     <div class="box admin-form-container">
         <h2 class="title is-4">Neues Event hinzufügen</h2>
-        <form action="{{ url_for('admin.add_event') }}" method="POST">
+        <form action="{{ url_for('auth.add_event') }}" method="POST">
             <div class="columns">
                 <div class="column">
                     <div class="field">
