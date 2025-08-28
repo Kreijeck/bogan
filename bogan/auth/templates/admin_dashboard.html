@@ -47,7 +47,7 @@
                             </div>
                         </div>
                         <div class="buttons">
-                            <a href="{{ url_for('admin.manage_users') }}" class="button admin-btn-primary is-small">
+                            <a href="{{ url_for('auth.manage_users') }}" class="button admin-btn-primary is-small">
                                 <span class="icon">
                                     <i class="fas fa-edit"></i>
                                 </span>
@@ -78,7 +78,7 @@
                             </div>
                         </div>
                         <div class="buttons">
-                            <a href="{{ url_for('admin.manage_events') }}" class="button admin-btn-warning is-small">
+                            <a href="{{ url_for('auth.manage_events') }}" class="button admin-btn-warning is-small">
                                 <span class="icon">
                                     <i class="fas fa-edit"></i>
                                 </span>
@@ -139,19 +139,19 @@
             <div class="box admin-form-container">
                 <h2 class="title is-4">Schnellzugriff</h2>
                 <div class="buttons">
-                    <a href="{{ url_for('admin.manage_events') }}" class="button admin-btn-primary">
+                    <a href="{{ url_for('auth.manage_events') }}" class="button admin-btn-primary">
                         <span class="icon">
                             <i class="fas fa-calendar-plus"></i>
                         </span>
                         <span>Event hinzufügen</span>
                     </a>
-                    <a href="{{ url_for('admin.manage_database') }}" class="button admin-btn-success">
+                    <a href="{{ url_for('auth.manage_database') }}" class="button admin-btn-success">
                         <span class="icon">
                             <i class="fas fa-database"></i>
                         </span>
                         <span>Datenbank verwalten</span>
                     </a>
-                    <a href="{{ url_for('admin.manage_users') }}" class="button admin-btn-warning">
+                    <a href="{{ url_for('auth.manage_users') }}" class="button admin-btn-warning">
                         <span class="icon">
                             <i class="fas fa-user-cog"></i>
                         </span>
