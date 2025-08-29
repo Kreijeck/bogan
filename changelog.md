@@ -2,6 +2,8 @@
 
 ## Current Version
 
+- Spielerleiste bei einzelnem Spiel zu sehen
+
 ## 0.8.0
 
 - **Admin-Interface**: Vollständiges Verwaltungssystem mit Dashboard, Event-Management und Datenbank-Übersicht
