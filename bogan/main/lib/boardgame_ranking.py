@@ -243,6 +243,62 @@ def get_boardgame_stats(games: List) -> Dict[str, Any]:
     }
 
 
+def get_player_count_stats(games: List) -> Dict[int, Dict[str, Any]]:
+    """
+    Berechnet Statistiken gruppiert nach Spieleranzahl.
+    
+    Args:
+        games: Liste der Game-Objekte
+        
+    Returns:
+        Dictionary mit Statistiken pro Spieleranzahl
+    """
+    if not games:
+        return {}
+    
+    stats_by_player_count = {}
+    
+    for game in games:
+        sorted_players = game.get_sorted_players()
+        player_count = len(sorted_players)
+        
+        if player_count not in stats_by_player_count:
+            stats_by_player_count[player_count] = {
+                'games': [],
+                'all_scores': [],
+                'total_playtime': 0,
+                'valid_playtimes': 0
+            }
+        
+        stats = stats_by_player_count[player_count]
+        stats['games'].append(game)
+        
+        for player_data in sorted_players:
+            points = player_data.get('punkte', 0)
+            stats['all_scores'].append(points)
+        
+        if game.playtime and game.playtime > 0:
+            stats['total_playtime'] += game.playtime
+            stats['valid_playtimes'] += 1
+    
+    # Berechne finale Statistiken für jede Spieleranzahl
+    result = {}
+    for player_count, data in stats_by_player_count.items():
+        scores = data['all_scores']
+        avg_points = sum(scores) / len(scores) if scores else 0
+        avg_playtime = data['total_playtime'] / data['valid_playtimes'] if data['valid_playtimes'] > 0 else 0
+        
+        result[player_count] = {
+            'total_games': len(data['games']),
+            'avg_points': round(avg_points, 1),
+            'highest_score': max(scores) if scores else 0,
+            'lowest_score': min(scores) if scores else 0,
+            'avg_playtime': round(avg_playtime)
+        }
+    
+    return result
+
+
 def get_boardgame_insights(games: List) -> Dict[str, Any]:
     """
     Berechnet zusätzliche Insights für ein Brettspiel.
@@ -344,12 +400,10 @@ def calculate_player_statistics(games: List) -> List[Dict[str, Any]]:
         return []
     
     player_stats = {}
-    total_players_per_game = []
     
     # Sammle alle Daten
     for game in games:
         players_in_game = len(game.player_pos)
-        total_players_per_game.append(players_in_game)
         
         for game_player in game.player_pos:
             player_name = game_player.player.name
@@ -360,19 +414,18 @@ def calculate_player_statistics(games: List) -> List[Dict[str, Any]]:
                     'total_games': 0,
                     'positions': [],
                     'points': [],
-                    'wins': 0
+                    'wins': 0,
+                    'total_players_per_game': []  # Für individuelle Berechnung
                 }
             
             player_stats[player_name]['total_games'] += 1
             player_stats[player_name]['positions'].append(game_player.position)
             player_stats[player_name]['points'].append(game_player.points)
+            player_stats[player_name]['total_players_per_game'].append(players_in_game)
             
             # Sieg zählen
             if game_player.position == 1:
                 player_stats[player_name]['wins'] += 1
-    
-    # Berechne durchschnittliche Spieleranzahl
-    avg_total_players = sum(total_players_per_game) / len(total_players_per_game) if total_players_per_game else 0
     
     # Berechne finale Statistiken
     result = []
@@ -382,6 +435,8 @@ def calculate_player_statistics(games: List) -> List[Dict[str, Any]]:
             avg_points = sum(stats['points']) / len(stats['points'])
             min_points = min(stats['points'])
             max_points = max(stats['points'])
+            # Individuelle durchschnittliche Spieleranzahl für diesen Spieler
+            avg_total_players = sum(stats['total_players_per_game']) / len(stats['total_players_per_game'])
             
             result.append({
                 'player_name': player_name,
