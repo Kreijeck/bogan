@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+<div class="container">
+    <div class="columns">
+        <div class="column">
+            <nav class="breadcrumb admin-breadcrumb" aria-label="breadcrumbs">
+                <ul>
+                    <li><a href="{{ url_for('main.index') }}">Home</a></li>
+                    <li class="is-active"><a href="#" aria-current="page">Admin Dashboard</a></li>
+                </ul>
+            </nav>
+
+            <h1 class="title is-2 has-text-primary">
+                <span class="icon-text">
+                    <span class="icon admin-icon-large admin-icon-primary">
+                        <i class="fas fa-cogs"></i>
+                    </span>
+                    <span>Admin Dashboard</span>
+                </span>
+            </h1>
+
+            <p class="subtitle">Willkommen im Administrationsbereich</p>
+
+            <!-- Statistiken Cards -->
+            <div class="columns is-multiline">
+                <!-- Users -->
+                <div class="column is-half">
+                    <div class="box admin-card-users">
+                        <div class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div>
+                                        <p class="title is-4 admin-stat-number">{{ stats.users }}</p>
+                                        <p class="subtitle is-6">Benutzer</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <span class="icon is-large admin-icon-primary">
+                                        <i class="fas fa-users fa-2x"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <a href="{{ url_for('auth.manage_users') }}" class="button admin-btn-primary is-small">
+                                <span class="icon">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                                <span>Benutzer verwalten</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Events -->
+                <div class="column is-half">
+                    <div class="box admin-card-events">
+                        <div class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div>
+                                        <p class="title is-4 admin-stat-number">{{ stats.events }}</p>
+                                        <p class="subtitle is-6">Events</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <span class="icon is-large admin-icon-warning">
+                                        <i class="fas fa-calendar fa-2x"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="buttons">
+                            <a href="{{ url_for('auth.manage_events') }}" class="button admin-btn-warning is-small">
+                                <span class="icon">
+                                    <i class="fas fa-edit"></i>
+                                </span>
+                                <span>Events verwalten</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Games -->
+                <div class="column is-half">
+                    <div class="box admin-card-games">
+                        <div class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div>
+                                        <p class="title is-4 admin-stat-number">{{ stats.games }}</p>
+                                        <p class="subtitle is-6">Gespielte Partien</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <span class="icon is-large admin-icon-success">
+                                        <i class="fas fa-gamepad fa-2x"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Boardgames -->
+                <div class="column is-half">
+                    <div class="box admin-card-boardgames">
+                        <div class="level">
+                            <div class="level-left">
+                                <div class="level-item">
+                                    <div>
+                                        <p class="title is-4 admin-stat-number">{{ stats.boardgames }}</p>
+                                        <p class="subtitle is-6">Brettspiele</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="level-right">
+                                <div class="level-item">
+                                    <span class="icon is-large admin-icon-warning">
+                                        <i class="fas fa-chess fa-2x"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="box admin-form-container">
+                <h2 class="title is-4">Schnellzugriff</h2>
+                <div class="buttons">
+                    <a href="{{ url_for('auth.manage_events') }}" class="button admin-btn-primary">
+                        <span class="icon">
+                            <i class="fas fa-calendar-plus"></i>
+                        </span>
+                        <span>Event hinzufügen</span>
+                    </a>
+                    <a href="{{ url_for('auth.manage_database') }}" class="button admin-btn-success">
+                        <span class="icon">
+                            <i class="fas fa-database"></i>
+                        </span>
+                        <span>Datenbank verwalten</span>
+                    </a>
+                    <a href="{{ url_for('auth.manage_users') }}" class="button admin-btn-warning">
+                        <span class="icon">
+                            <i class="fas fa-user-cog"></i>
+                        </span>
+                        <span>Benutzer verwalten</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- System Info -->
+            <div class="box admin-form-container">
+                <h2 class="title is-4">System Information</h2>
+                <div class="content">
+                    <p><strong>Aktuelle Sitzung:</strong> {{ current_user.name }} 
+                        <span class="admin-tag-admin">{{ current_user.role }}</span>
+                    </p>
+                    <p><strong>Gesamtzahl Spieler:</strong> {{ stats.players }}</p>
+                    <p><strong>Gesamtzahl Locations:</strong> {{ stats.locations }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

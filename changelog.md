@@ -2,6 +2,12 @@
 
 ## Current Version
 
+## 0.9.0
+
+- Spielerleiste bei einzelnem Spiel zu sehen
+- zusätzliche Statistik bei einem Brettspiel
+- es werden mind. 2 Spiele für die besten Brettspiele eines Spielers benötigt
+
 ## 0.8.0
 
 - **Admin-Interface**: Vollständiges Verwaltungssystem mit Dashboard, Event-Management und Datenbank-Übersicht

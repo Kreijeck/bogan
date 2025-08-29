@@ -434,8 +434,39 @@ function initializeBoardgamesSearch(config) {
     });
 }
 
+// ========================================
+// Dynamic Style Applier
+// Konvertiert data-Attribute zu CSS-Styles für Jinja2-Templates
+// ========================================
+function applyDynamicStyles() {
+    // Performance Bars
+    document.querySelectorAll('[data-width]').forEach(element => {
+        const width = element.getAttribute('data-width');
+        if (width !== null) {
+            element.style.width = width + '%';
+        }
+    });
+    
+    // Position Elements (left positioning)
+    document.querySelectorAll('[data-left]').forEach(element => {
+        const left = element.getAttribute('data-left');
+        if (left !== null) {
+            element.style.left = left + '%';
+        }
+    });
+    
+    // Win Bar Fill Elements (special case for win bars)
+    document.querySelectorAll('.win-bar-compact-fill[data-width]').forEach(element => {
+        const width = element.getAttribute('data-width');
+        if (width !== null) {
+            element.style.width = width + '%';
+        }
+    });
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function() {
     initializeCollapsibleSections();
     initializeTabs();
+    applyDynamicStyles();  // Apply dynamic styles from data attributes
 });

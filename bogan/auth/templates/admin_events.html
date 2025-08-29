@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+
+<div class="container">
+    <nav class="breadcrumb admin-breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="{{ url_for('main.index') }}">Home</a></li>
+            <li><a href="{{ url_for('auth.admin_dashboard') }}">Admin</a></li>
+            <li class="is-active"><a href="#" aria-current="page">Events</a></li>
+        </ul>
+    </nav>
+
+    <h1 class="title is-2 has-text-primary">
+        <span class="icon-text">
+            <span class="icon admin-icon-large admin-icon-warning">
+                <i class="fas fa-calendar"></i>
+            </span>
+            <span>Event-Verwaltung</span>
+        </span>
+    </h1>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="notification admin-notification-{{ 'error' if category == 'error' else category }}">
+                    <button class="delete" onclick="this.parentElement.style.display='none'"></button>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Event hinzufügen -->
+    <div class="box admin-form-container">
+        <h2 class="title is-4">Neues Event hinzufügen</h2>
+        <form action="{{ url_for('auth.add_event') }}" method="POST">
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label admin-form-label">Event Name</label>
+                        <div class="control has-icons-left">
+                            <input class="input admin-form-input" type="text" name="name" placeholder="z.B. Spielewochenende 2025/2" required>
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-tag"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label admin-form-label">Location</label>
+                        <div class="control has-icons-left">
+                            <div class="dropdown is-fullwidth" id="location-dropdown">
+                                <div class="dropdown-trigger">
+                                    <button class="button admin-form-input is-fullwidth" type="button" aria-haspopup="true" aria-controls="dropdown-menu" id="location-button">
+                                        <span id="location-text">-- Location auswählen --</span>
+                                        <span class="icon is-small is-right">
+                                            <i class="fas fa-angle-down"></i>
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                    <div class="dropdown-content">
+                                        {% for location in locations %}
+                                        <a href="#" class="dropdown-item" data-value="{{ location.name }}">{{ location.name }}</a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="location" id="location-input" required>
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
+                        <label class="label admin-form-label">Start-Datum</label>
+                        <div class="control has-icons-left">
+                            <input class="input admin-form-input" type="date" name="start_date" required>
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label admin-form-label">End-Datum</label>
+                        <div class="control has-icons-left">
+                            <input class="input admin-form-input" type="date" name="end_date" required>
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button class="button admin-btn-primary" type="submit">
+                        <span class="icon">
+                            <i class="fas fa-plus"></i>
+                        </span>
+                        <span>Event hinzufügen</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Vorhandene Events -->
+    <div class="box admin-form-container">
+        <h2 class="title is-4">Vorhandene Events ({{ events|length }})</h2>
+        
+        {% if events %}
+            <div class="table-container">
+                <table class="table admin-table is-fullwidth">
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Location</th>
+                            <th>Start-Datum</th>
+                            <th>End-Datum</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event_name, event_data in events.items() %}
+                        <tr id="event-row-{{ loop.index }}">
+                            <td><strong>{{ event_name }}</strong></td>
+                            <td>{{ event_data.location }}</td>
+                            <td>{{ event_data.datum_start }}</td>
+                            <td>{{ event_data.datum_ende }}</td>
+                            <td>
+                                <div class="buttons are-small">
+                                    <button class="button admin-btn-primary" onclick="editEvent('{{ event_name }}', '{{ event_data.location }}', '{{ event_data.datum_start }}', '{{ event_data.datum_ende }}')">
+                                        <span class="icon">
+                                            <i class="fas fa-edit"></i>
+                                        </span>
+                                        <span>Bearbeiten</span>
+                                    </button>
+                                    <button class="button admin-btn-danger" onclick="deleteEvent('{{ event_name }}')">
+                                        <span class="icon">
+                                            <i class="fas fa-trash"></i>
+                                        </span>
+                                        <span>Löschen</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="notification admin-notification-info">
+                <span class="icon">
+                    <i class="fas fa-info-circle"></i>
+                </span>
+                <strong>Keine Events vorhanden</strong><br>
+                Fügen Sie Ihr erstes Event über das Formular oben hinzu.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal" id="edit-modal">
+    <div class="modal-background" onclick="closeEditModal()"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Event bearbeiten</p>
+            <button class="delete" aria-label="close" onclick="closeEditModal()"></button>
+        </header>
+        <form id="edit-form" method="POST">
+            <section class="modal-card-body">
+                <div class="field">
+                    <label class="label">Event Name</label>
+                    <div class="control">
+                        <input class="input" type="text" id="edit-event-name" readonly>
+                    </div>
+                    <p class="help">Der Event-Name kann nicht geändert werden.</p>
+                </div>
+                <div class="field">
+                    <label class="label">Location</label>
+                    <div class="control has-icons-left">
+                        <div class="dropdown is-fullwidth" id="edit-location-dropdown">
+                            <div class="dropdown-trigger">
+                                <button class="button admin-form-input is-fullwidth" type="button" aria-haspopup="true" aria-controls="edit-dropdown-menu" id="edit-location-button">
+                                    <span id="edit-location-text">-- Location auswählen --</span>
+                                    <span class="icon is-small is-right">
+                                        <i class="fas fa-angle-down"></i>
+                                    </span>
+                                </button>
+                            </div>
+                            <div class="dropdown-menu" id="edit-dropdown-menu" role="menu">
+                                <div class="dropdown-content">
+                                    {% for location in locations %}
+                                    <a href="#" class="dropdown-item" data-value="{{ location.name }}">{{ location.name }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" name="location" id="edit-location-input" required>
+                        <span class="icon is-small is-left">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Start-Datum</label>
+                            <div class="control has-icons-left">
+                                <input class="input" type="date" name="start_date" id="edit-start-date" required>
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">End-Datum</label>
+                            <div class="control has-icons-left">
+                                <input class="input" type="date" name="end_date" id="edit-end-date" required>
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button admin-btn-success" type="submit">
+                    <span class="icon">
+                        <i class="fas fa-save"></i>
+                    </span>
+                    <span>Speichern</span>
+                </button>
+                <button class="button admin-btn-primary" type="button" onclick="closeEditModal()">Abbrechen</button>
+            </footer>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal" id="delete-modal">
+    <div class="modal-background" onclick="closeDeleteModal()"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Event löschen</p>
+            <button class="delete" aria-label="close" onclick="closeDeleteModal()"></button>
+        </header>
+        <section class="modal-card-body">
+            <p>Sind Sie sicher, dass Sie das Event <strong id="delete-event-name"></strong> löschen möchten?</p>
+            <p class="has-text-danger">Diese Aktion kann nicht rückgängig gemacht werden!</p>
+        </section>
+        <footer class="modal-card-foot">
+            <form id="delete-form" method="POST">
+                <button class="button admin-btn-danger" type="submit">
+                    <span class="icon">
+                        <i class="fas fa-trash"></i>
+                    </span>
+                    <span>Ja, löschen</span>
+                </button>
+            </form>
+            <button class="button admin-btn-primary" onclick="closeDeleteModal()">Abbrechen</button>
+        </footer>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function editEvent(eventName, location, startDate, endDate) {
+    // Convert DD.MM.YYYY to YYYY-MM-DD
+    function convertDate(dateStr) {
+        const parts = dateStr.split('.');
+        if (parts.length === 3) {
+            return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+        }
+        return dateStr;
+    }
+    
+    document.getElementById('edit-event-name').value = eventName;
+    
+    // Location im Dropdown setzen
+    document.getElementById('edit-location-text').textContent = location;
+    document.getElementById('edit-location-input').value = location;
+    
+    document.getElementById('edit-start-date').value = convertDate(startDate);
+    document.getElementById('edit-end-date').value = convertDate(endDate);
+    
+    document.getElementById('edit-form').action = `/admin/events/edit/${encodeURIComponent(eventName)}`;
+    document.getElementById('edit-modal').classList.add('is-active');
+}
+
+function closeEditModal() {
+    document.getElementById('edit-modal').classList.remove('is-active');
+}
+
+function deleteEvent(eventName) {
+    document.getElementById('delete-event-name').textContent = eventName;
+    document.getElementById('delete-form').action = `/admin/events/delete/${encodeURIComponent(eventName)}`;
+    document.getElementById('delete-modal').classList.add('is-active');
+}
+
+function closeDeleteModal() {
+    document.getElementById('delete-modal').classList.remove('is-active');
+}
+
+// Location Dropdown Funktionalität
+document.addEventListener('DOMContentLoaded', function() {
+    // Main form dropdown
+    const dropdown = document.getElementById('location-dropdown');
+    const button = document.getElementById('location-button');
+    const text = document.getElementById('location-text');
+    const input = document.getElementById('location-input');
+    const items = dropdown.querySelectorAll('.dropdown-item');
+
+    // Dropdown toggle
+    button.addEventListener('click', function() {
+        dropdown.classList.toggle('is-active');
+    });
+
+    // Item selection
+    items.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const value = this.getAttribute('data-value');
+            text.textContent = value;
+            input.value = value;
+            dropdown.classList.remove('is-active');
+        });
+    });
+
+    // Close on outside click
+    document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target)) {
+            dropdown.classList.remove('is-active');
+        }
+    });
+
+    // Edit modal dropdown
+    const editDropdown = document.getElementById('edit-location-dropdown');
+    const editButton = document.getElementById('edit-location-button');
+    const editText = document.getElementById('edit-location-text');
+    const editInput = document.getElementById('edit-location-input');
+    const editItems = editDropdown.querySelectorAll('.dropdown-item');
+
+    // Edit dropdown toggle
+    editButton.addEventListener('click', function() {
+        editDropdown.classList.toggle('is-active');
+    });
+
+    // Edit item selection
+    editItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            const value = this.getAttribute('data-value');
+            editText.textContent = value;
+            editInput.value = value;
+            editDropdown.classList.remove('is-active');
+        });
+    });
+
+    // Close edit dropdown on outside click
+    document.addEventListener('click', function(e) {
+        if (!editDropdown.contains(e.target)) {
+            editDropdown.classList.remove('is-active');
+        }
+    });
+});
+</script>
+{% endblock %}

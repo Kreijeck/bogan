@@ -243,6 +243,62 @@ def get_boardgame_stats(games: List) -> Dict[str, Any]:
     }
 
 
+def get_player_count_stats(games: List) -> Dict[int, Dict[str, Any]]:
+    """
+    Berechnet Statistiken gruppiert nach Spieleranzahl.
+    
+    Args:
+        games: Liste der Game-Objekte
+        
+    Returns:
+        Dictionary mit Statistiken pro Spieleranzahl
+    """
+    if not games:
+        return {}
+    
+    stats_by_player_count = {}
+    
+    for game in games:
+        sorted_players = game.get_sorted_players()
+        player_count = len(sorted_players)
+        
+        if player_count not in stats_by_player_count:
+            stats_by_player_count[player_count] = {
+                'games': [],
+                'all_scores': [],
+                'total_playtime': 0,
+                'valid_playtimes': 0
+            }
+        
+        stats = stats_by_player_count[player_count]
+        stats['games'].append(game)
+        
+        for player_data in sorted_players:
+            points = player_data.get('punkte', 0)
+            stats['all_scores'].append(points)
+        
+        if game.playtime and game.playtime > 0:
+            stats['total_playtime'] += game.playtime
+            stats['valid_playtimes'] += 1
+    
+    # Berechne finale Statistiken für jede Spieleranzahl
+    result = {}
+    for player_count, data in stats_by_player_count.items():
+        scores = data['all_scores']
+        avg_points = sum(scores) / len(scores) if scores else 0
+        avg_playtime = data['total_playtime'] / data['valid_playtimes'] if data['valid_playtimes'] > 0 else 0
+        
+        result[player_count] = {
+            'total_games': len(data['games']),
+            'avg_points': round(avg_points, 1),
+            'highest_score': max(scores) if scores else 0,
+            'lowest_score': min(scores) if scores else 0,
+            'avg_playtime': round(avg_playtime)
+        }
+    
+    return result
+
+
 def get_boardgame_insights(games: List) -> Dict[str, Any]:
     """
     Berechnet zusätzliche Insights für ein Brettspiel.
@@ -279,3 +335,121 @@ def get_boardgame_insights(games: List) -> Dict[str, Any]:
         'total_players': total_player_instances,
         'unique_players': len(unique_players)
     }
+
+
+def calculate_win_statistics(games: List) -> List[Dict[str, Any]]:
+    """
+    Berechnet Siege-Statistiken für alle Spieler eines Brettspiels.
+    
+    Args:
+        games: Liste der Game-Objekte für ein Brettspiel
+        
+    Returns:
+        Liste mit Siege-Statistiken pro Spieler, sortiert nach Anzahl Siege
+    """
+    if not games:
+        return []
+    
+    # Dictionary für Spieler-Statistiken
+    player_stats = {}
+    
+    for game in games:
+        sorted_players = game.get_sorted_players()
+        
+        if sorted_players:
+            # Der erste Spieler in der sortierten Liste ist der Gewinner
+            winner = sorted_players[0]
+            winner_name = winner['name']
+            
+            # Alle Spieler des Spiels durchgehen
+            for player in sorted_players:
+                player_name = player['name']
+                
+                if player_name not in player_stats:
+                    player_stats[player_name] = {
+                        'player_name': player_name,
+                        'wins': 0,
+                        'total_games': 0
+                    }
+                
+                # Spiel zählen
+                player_stats[player_name]['total_games'] += 1
+                
+                # Sieg zählen falls Gewinner
+                if player_name == winner_name:
+                    player_stats[player_name]['wins'] += 1
+    
+    # Sortiere nach Anzahl Siege (absteigend)
+    win_stats = list(player_stats.values())
+    win_stats.sort(key=lambda x: (-x['wins'], -x['total_games']))
+    
+    return win_stats
+
+
+def calculate_player_statistics(games: List) -> List[Dict[str, Any]]:
+    """
+    Berechnet detaillierte Statistiken für jeden Spieler eines Brettspiels.
+    
+    Args:
+        games: Liste der Game-Objekte für ein Brettspiel
+        
+    Returns:
+        Liste von Dictionaries mit detaillierten Spieler-Statistiken
+    """
+    if not games:
+        return []
+    
+    player_stats = {}
+    
+    # Sammle alle Daten
+    for game in games:
+        players_in_game = len(game.player_pos)
+        
+        for game_player in game.player_pos:
+            player_name = game_player.player.name
+            
+            if player_name not in player_stats:
+                player_stats[player_name] = {
+                    'player_name': player_name,
+                    'total_games': 0,
+                    'positions': [],
+                    'points': [],
+                    'wins': 0,
+                    'total_players_per_game': []  # Für individuelle Berechnung
+                }
+            
+            player_stats[player_name]['total_games'] += 1
+            player_stats[player_name]['positions'].append(game_player.position)
+            player_stats[player_name]['points'].append(game_player.points)
+            player_stats[player_name]['total_players_per_game'].append(players_in_game)
+            
+            # Sieg zählen
+            if game_player.position == 1:
+                player_stats[player_name]['wins'] += 1
+    
+    # Berechne finale Statistiken
+    result = []
+    for player_name, stats in player_stats.items():
+        if stats['total_games'] > 0:
+            avg_position = sum(stats['positions']) / len(stats['positions'])
+            avg_points = sum(stats['points']) / len(stats['points'])
+            min_points = min(stats['points'])
+            max_points = max(stats['points'])
+            # Individuelle durchschnittliche Spieleranzahl für diesen Spieler
+            avg_total_players = sum(stats['total_players_per_game']) / len(stats['total_players_per_game'])
+            
+            result.append({
+                'player_name': player_name,
+                'total_games': stats['total_games'],
+                'avg_position': round(avg_position, 1),
+                'avg_points': round(avg_points, 1),
+                'min_points': min_points,
+                'max_points': max_points,
+                'wins': stats['wins'],
+                'avg_total_players': round(avg_total_players, 1)
+            })
+    
+    # Sortiere nach durchschnittlicher Platzierung (beste zuerst)
+    result.sort(key=lambda x: x['avg_position'])
+    
+    return result
