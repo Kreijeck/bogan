@@ -3,6 +3,7 @@
 ## Current Version
 
 - Spielerleiste bei einzelnem Spiel zu sehen
+- zusätzliche Statistik bei einem Brettspiel
 
 ## 0.8.0
 

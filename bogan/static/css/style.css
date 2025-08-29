@@ -2387,16 +2387,17 @@
 /* ===== DETAILLIERTE SPIELER-STATISTIKEN ===== */
 
 .player-stat-box {
-    background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
-    border: 2px solid transparent;
+    background: var(--bulma-scheme-main, #ffffff);
+    border: 2px solid var(--bulma-border, #dbdbdb);
     border-radius: 15px;
     transition: all 0.3s ease;
     height: 100%;
+    color: var(--bulma-text, #363636);
 }
 
 .player-stat-box:hover {
     transform: translateY(-5px);
-    box-shadow: 0 12px 30px rgba(72, 95, 199, 0.15);
+    box-shadow: 0 12px 30px rgba(50, 115, 220, 0.15);
     border-color: #3273dc;
 }
 
@@ -2406,11 +2407,12 @@
     align-items: center;
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(50, 115, 220, 0.1);
+    border-bottom: 2px solid var(--bulma-border-weak, #ededed);
 }
 
 .player-stat-header .title {
     margin-bottom: 0;
+    color: var(--bulma-text-strong, #363636) !important;
 }
 
 .player-stat-grid {
@@ -2424,13 +2426,15 @@
     display: flex;
     align-items: center;
     padding: 0.75rem;
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--bulma-scheme-main-bis, #fafafa);
+    border: 1px solid var(--bulma-border-weak, #ededed);
     border-radius: 10px;
     transition: all 0.2s ease;
 }
 
 .stat-item:hover {
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--bulma-scheme-main-ter, #f5f5f5);
+    border-color: #3273dc;
     transform: translateY(-2px);
 }
 
@@ -2448,7 +2452,7 @@
 .stat-label {
     font-size: 0.7rem;
     font-weight: 600;
-    color: #7a7a7a;
+    color: var(--bulma-text-weak, #7a7a7a);
     margin-bottom: 0.2rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -2457,29 +2461,78 @@
 .stat-value {
     font-size: 1.1rem;
     font-weight: 700;
-    color: #363636;
+    color: var(--bulma-text-strong, #363636);
     margin-bottom: 0.1rem;
 }
 
 .stat-detail {
     font-size: 0.7rem;
-    color: #999;
+    color: var(--bulma-text-weak, #7a7a7a);
     margin-bottom: 0;
 }
 
 .performance-indicator {
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(50, 115, 220, 0.1);
+    border-top: 1px solid var(--bulma-border-weak, #ededed);
 }
 
 .performance-bar-container {
-    background: rgba(255, 255, 255, 0.5);
+    background: var(--bulma-scheme-main-bis, #fafafa);
+    border: 1px solid var(--bulma-border-weak, #ededed);
     border-radius: 20px;
     height: 30px;
     position: relative;
     overflow: hidden;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Mode spezifische Anpassungen */
+@media (prefers-color-scheme: dark) {
+    .player-stat-box {
+        background: #000000;
+        border-color: #363636;
+        color: #ffffff;
+    }
+    
+    .player-stat-header {
+        border-bottom-color: #363636;
+    }
+    
+    .player-stat-header .title {
+        color: #ffffff !important;
+    }
+    
+    .stat-item {
+        background: #1a1a1a;
+        border-color: #363636;
+    }
+    
+    .stat-item:hover {
+        background: #2a2a2a;
+    }
+    
+    .stat-label {
+        color: #b5b5b5;
+    }
+    
+    .stat-value {
+        color: #ffffff;
+    }
+    
+    .stat-detail {
+        color: #8a8a8a;
+    }
+    
+    .performance-indicator {
+        border-top-color: #363636;
+    }
+    
+    .performance-bar-container {
+        background: #1a1a1a;
+        border-color: #363636;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
 }
 
 .performance-bar {
@@ -2504,6 +2557,27 @@
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;
+}
+
+.performance-text-overlay {
+    color: #333;
+    font-size: 0.7rem;
+    font-weight: 700;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    z-index: 10;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+/* Dark Mode für overlay text */
+@media (prefers-color-scheme: dark) {
+    .performance-text-overlay {
+        color: #ffffff;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
 }
 
 @keyframes performanceSlide {
@@ -2715,5 +2789,145 @@
     
     .win-bar-container {
         height: 30px;
+    }
+}
+
+/* ===== KOMPAKTE SIEGE-STATISTIKEN (Sidebar) ===== */
+
+.win-bar-compact {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+
+.win-bar-compact:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.win-player-compact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 120px;
+    margin-right: 0.75rem;
+}
+
+.win-player-name-compact {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+    flex: 1;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.win-player-name-compact:hover {
+    color: #ffd700 !important;
+    text-decoration: underline;
+}
+
+.win-count-compact {
+    padding: 0.2rem 0.4rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    min-width: 24px;
+    text-align: center;
+    color: #2c3e50;
+}
+
+/* Verschiedene Badge-Farben je nach Platzierung */
+.win-bar-compact:nth-child(1) .win-count-compact {
+    background: rgba(255, 215, 0, 0.9); /* Gold für 1. Platz */
+}
+
+.win-bar-compact:nth-child(2) .win-count-compact {
+    background: rgba(192, 192, 192, 0.9); /* Silber für 2. Platz */
+}
+
+.win-bar-compact:nth-child(3) .win-count-compact {
+    background: rgba(205, 127, 50, 0.9); /* Bronze für 3. Platz */
+}
+
+.win-bar-compact:nth-child(n+4) .win-count-compact {
+    background: rgba(46, 204, 113, 0.9); /* Grün für weitere Plätze */
+}
+
+.win-games-info {
+    margin-left: 0.5rem;
+    font-size: 0.6rem;
+    min-width: 30px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    flex-shrink: 0;
+}
+
+.win-bar-container-compact {
+    flex: 1;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.win-bar-compact-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1s ease-out;
+    animation: compactBarSlide 1.2s ease-out;
+}
+
+/* Verschiedene Farben je nach Platzierung */
+.win-bar-compact:nth-child(1) .win-bar-compact-fill {
+    background: linear-gradient(90deg, #ffd700 0%, #ffed4e 100%); /* Gold für 1. Platz */
+}
+
+.win-bar-compact:nth-child(2) .win-bar-compact-fill {
+    background: linear-gradient(90deg, #c0c0c0 0%, #e8e8e8 100%); /* Silber für 2. Platz */
+}
+
+.win-bar-compact:nth-child(3) .win-bar-compact-fill {
+    background: linear-gradient(90deg, #cd7f32 0%, #deb887 100%); /* Bronze für 3. Platz */
+}
+
+.win-bar-compact:nth-child(n+4) .win-bar-compact-fill {
+    background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%); /* Grün für weitere Plätze */
+}
+
+@keyframes compactBarSlide {
+    0% {
+        width: 0% !important;
+    }
+    100% {
+        /* Width wird durch Inline-Style gesetzt */
+    }
+}
+
+/* Mobile Anpassungen für kompakte Siege-Statistiken */
+@media (max-width: 768px) {
+    .win-player-compact {
+        min-width: 100px;
+        margin-right: 0.5rem;
+    }
+    
+    .win-player-name-compact {
+        font-size: 0.7rem;
+    }
+    
+    .win-count-compact {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.3rem;
+    }
+    
+    .win-bar-container-compact {
+        height: 10px;
     }
 }
