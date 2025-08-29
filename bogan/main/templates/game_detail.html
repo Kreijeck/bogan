@@ -169,6 +169,87 @@
         {% endfor %}
       </div>
       
+      <!-- Animierte Punkte-Leiste -->
+      <div class="box points-visualization-box mt-5">
+        <h3 class="title is-5 has-text-primary">
+          <span class="icon-text">
+            <span class="icon">
+              <i class="fas fa-chart-line"></i>
+            </span>
+            <span>Punkteverteilung</span>
+          </span>
+        </h3>
+        
+        <div class="points-track-container">
+          <div class="points-track">
+            <!-- Detaillierte Punkte-Skala wie im Brettspiel -->
+            <div class="points-scale">
+              {% set min_points = game.players | map(attribute='points') | min %}
+              {% set max_points = game.players | map(attribute='points') | max %}
+              {% set point_range = max_points - min_points %}
+              
+              <!-- Brettspiel-ähnliche Skala-Ticks -->
+              {% if point_range > 0 %}
+                {% for i in range(11) %}
+                  {% set tick_value = min_points + (point_range * i / 10) %}
+                  {% set tick_percent = i * 10 %}
+                  <!-- VSCode CSS Linter: Ignore Jinja2 template syntax -->
+                  <div class="scale-tick" style="left: {{ tick_percent }}%;">
+                    <div class="tick-mark {% if i % 5 == 0 %}major{% else %}minor{% endif %}"></div>
+                    {% if i % 2 == 0 %}
+                      <div class="tick-label">{{ tick_value | round(0) | int }}</div>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              {% else %}
+                <div class="scale-tick" style="left: 50%;">
+                  <div class="tick-mark major"></div>
+                  <div class="tick-label">{{ min_points }}</div>
+                </div>
+              {% endif %}
+            </div>
+            
+            <!-- Spieler-Marker mit Namen direkt sichtbar -->
+            <div class="player-markers">
+              {% for player in game.players %}
+                {% if point_range > 0 %}
+                  {% set position_percent = ((player.points - min_points) / point_range * 100) %}
+                {% else %}
+                  {% set position_percent = 50 %}
+                {% endif %}
+                
+                <div class="player-marker position-{{ player.position }}" 
+                     style="left: {{ position_percent }}%"
+                     data-position="{{ position_percent }}"
+                     data-points="{{ player.points }}"
+                     data-player="{{ player.name }}">
+                  <div class="marker-content">
+                    <div class="marker-rank">
+                      {% if player.position == 1 %}
+                        <i class="fas fa-crown"></i>
+                      {% elif player.position == 2 %}
+                        <i class="fas fa-medal"></i>
+                      {% elif player.position == 3 %}
+                        <i class="fas fa-award"></i>
+                      {% else %}
+                        {{ player.position }}
+                      {% endif %}
+                    </div>
+                    <div class="marker-name">{{ player.name[:8] }}{% if player.name|length > 8 %}...{% endif %}</div>
+                    <div class="marker-points">{{ player.points }}p</div>
+                  </div>
+                  <div class="marker-tooltip">
+                    <strong>{{ player.name }}</strong><br>
+                    {{ player.points }} Punkte<br>
+                    Platz {{ player.position }}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <!-- Zusätzliche Statistiken -->
       <div class="box game-stats-box mt-5">
         <h3 class="title is-5 has-text-primary">

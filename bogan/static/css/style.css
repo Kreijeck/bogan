@@ -2133,3 +2133,253 @@
 }
 
 /* Desktop bleibt komplett unverändert - normale Bulma Hover-Funktionalität */
+
+/* ===== ANIMIERTE PUNKTE-LEISTE ===== */
+
+.points-visualization-box {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+}
+
+.points-track-container {
+    margin: 2rem 0;
+}
+
+.points-track {
+    position: relative;
+    width: 100%;
+    height: 120px;
+    background: linear-gradient(90deg, 
+        #e74c3c 0%, 
+        #f39c12 25%, 
+        #f1c40f 50%, 
+        #2ecc71 75%, 
+        #27ae60 100%);
+    border-radius: 60px;
+    box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.3), 
+                0 4px 15px rgba(0, 0, 0, 0.2);
+    margin: 2rem 0;
+    border: 3px solid #34495e;
+}
+
+/* Brettspiel-ähnliche Skala */
+.points-scale {
+    position: absolute;
+    top: -40px;
+    width: 100%;
+    height: 30px;
+}
+
+.scale-tick {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateX(-50%);
+}
+
+.tick-mark {
+    width: 2px;
+    background: #34495e;
+    margin-bottom: 2px;
+}
+
+.tick-mark.major {
+    height: 20px;
+    width: 3px;
+    background: #2c3e50;
+}
+
+.tick-mark.minor {
+    height: 12px;
+    width: 2px;
+    background: #7f8c8d;
+}
+
+.tick-label {
+    background: rgba(255, 255, 255, 0.95);
+    color: #2c3e50;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: 1px solid #bdc3c7;
+}
+
+.player-markers {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+}
+
+.player-marker {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: slideIn 1.5s ease-out;
+    z-index: 10;
+    border: 4px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.player-marker.position-1 {
+    background: radial-gradient(circle, #ffd700 0%, #f39c12 100%);
+    border-color: #e67e22;
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+}
+
+.player-marker.position-2 {
+    background: radial-gradient(circle, #ecf0f1 0%, #95a5a6 100%);
+    border-color: #7f8c8d;
+    box-shadow: 0 6px 20px rgba(192, 192, 192, 0.6);
+}
+
+.player-marker.position-3 {
+    background: radial-gradient(circle, #deb887 0%, #d68910 100%);
+    border-color: #b7950b;
+    box-shadow: 0 6px 20px rgba(205, 127, 50, 0.6);
+}
+
+.player-marker:not(.position-1):not(.position-2):not(.position-3) {
+    background: radial-gradient(circle, #74b9ff 0%, #0984e3 100%);
+    border-color: #2980b9;
+    box-shadow: 0 6px 20px rgba(116, 185, 255, 0.6);
+}
+
+.marker-content {
+    text-align: center;
+    color: #2c3e50;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 2px;
+}
+
+.marker-rank {
+    font-size: 1.2rem;
+    margin-bottom: 2px;
+}
+
+.marker-name {
+    font-size: 0.65rem;
+    line-height: 1;
+    margin-bottom: 1px;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+    max-width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.marker-points {
+    font-size: 0.7rem;
+    font-weight: 900;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.player-marker:hover {
+    transform: translate(-50%, -50%) scale(1.15);
+    z-index: 20;
+}
+
+.marker-tooltip {
+    position: absolute;
+    bottom: 110px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(44, 62, 80, 0.95);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    text-align: center;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.marker-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(44, 62, 80, 0.95);
+}
+
+.player-marker:hover .marker-tooltip {
+    opacity: 1;
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        left: 0% !important;
+        transform: translate(-50%, -50%) scale(0.3);
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Responsive Design für Punkte-Leiste */
+@media (max-width: 768px) {
+    .points-track {
+        height: 80px;
+        border-radius: 40px;
+    }
+    
+    .player-marker {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .marker-rank {
+        font-size: 0.9rem;
+    }
+    
+    .marker-name {
+        font-size: 0.5rem;
+        max-width: 50px;
+    }
+    
+    .marker-points {
+        font-size: 0.6rem;
+    }
+    
+    .tick-label {
+        font-size: 0.6rem;
+        padding: 1px 4px;
+    }
+    
+    .marker-tooltip {
+        font-size: 0.7rem;
+        bottom: 80px;
+    }
+    
+    .points-scale {
+        top: -35px;
+    }
+}
