@@ -136,15 +136,23 @@ def get_player_stats(player_name: str, session: Session) -> Dict[str, Any]:
     avg_player_count = sum(player_counts) / len(player_counts) if player_counts else 0
     win_rate = (wins / total_games) * 100 if total_games > 0 else 0
     
-    # Beste Brettspiele ermitteln
+    # Beste Brettspiele ermitteln (nur Spiele mit mindestens 2 Partien)
     best_games = []
     for boardgame_name, games_data in boardgame_performance.items():
         game_count = len(games_data)
+        
+        # Filtere nur Spiele mit mindestens 2 Partien
+        if game_count < 2:
+            continue
+            
         avg_pos = sum(g['position'] for g in games_data) / game_count
         avg_players = sum(g['total_players'] for g in games_data) / game_count
         wins_in_game = sum(1 for g in games_data if g['position'] == 1)
         win_rate_game = (wins_in_game / game_count) * 100
         avg_points = sum(g['points'] for g in games_data) / game_count
+        
+        # Berechne Performance wie in boardgame_detail.html
+        performance = ((avg_players - avg_pos) / (avg_players - 1) * 100) if avg_players > 1 else 0
         
         best_games.append({
             'name': boardgame_name,
@@ -153,7 +161,8 @@ def get_player_stats(player_name: str, session: Session) -> Dict[str, Any]:
             'avg_player_count': round(avg_players, 1),
             'wins': wins_in_game,
             'win_rate': round(win_rate_game, 1),
-            'avg_points': round(avg_points, 1)
+            'avg_points': round(avg_points, 1),
+            'performance': round(performance, 1)
         })
     
     # Sortiere nach Siegquote und dann nach durchschnittlicher Position

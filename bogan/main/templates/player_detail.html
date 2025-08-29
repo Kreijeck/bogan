@@ -72,8 +72,8 @@
         </span>
       </span>
     </h2>
-    <p class="subtitle has-text-centered mb-6 has-text-grey-dark">
-      Die Spiele, in denen {{ player_name }} am erfolgreichsten ist
+    <p class="subtitle has-text-centered mb-6 has-text-grey">
+      Die Spiele, in denen {{ player_name }} am erfolgreichsten ist und mindestens 2x gespielt wurden
     </p>
 
     <div id="best-games-section" class="collapsible-content">
@@ -127,6 +127,15 @@
                     <p class="heading">Ø Punkte</p>
                     <p class="title is-6 has-text-primary">{{ game.avg_points }}</p>
                   </div>
+                </div>
+              </div>
+              
+              <!-- Performance Indikator -->
+              <div class="performance-indicator mt-3">
+                <div class="performance-bar-container" 
+                     title="Performance basiert auf der durchschnittlichen Platzierung: Je besser die Platzierung im Verhältnis zur Anzahl der Mitspieler, desto höher die Performance. 100% = immer 1. Platz, 0% = immer letzter Platz">
+                  <div class="performance-bar" style="width: {{ game.performance }}%;"></div>
+                  <span class="performance-text-overlay">{{ "%.0f"|format(game.performance) }}% Performance</span>
                 </div>
               </div>
             </div>
