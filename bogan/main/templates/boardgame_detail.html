@@ -68,7 +68,7 @@
                     <div class="win-bar-container-compact">
                       <div class="win-bar-compact-fill" 
                            data-wins="{{ player_win.wins }}"
-                           style="width: {{ win_percentage }}%;">
+                           data-width="{{ win_percentage }}">
                       </div>
                     </div>
                     
@@ -278,7 +278,7 @@
                 {% set performance = ((player_stat.avg_total_players - player_stat.avg_position) / (player_stat.avg_total_players - 1) * 100) if player_stat.avg_total_players > 1 else 0 %}
                 <div class="performance-bar-container" 
                      title="Performance basiert auf der durchschnittlichen Platzierung: Je besser die Platzierung im Verhältnis zur Anzahl der Mitspieler, desto höher die Performance. 100% = immer 1. Platz, 0% = immer letzter Platz">
-                  <div class="performance-bar" style="width: {{ performance }}%;"></div>
+                  <div class="performance-bar" data-width="{{ performance }}"></div>
                   <span class="performance-text-overlay">{{ "%.0f"|format(performance) }}% Performance</span>
                 </div>
               </div>

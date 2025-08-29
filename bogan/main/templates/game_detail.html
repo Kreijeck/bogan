@@ -193,8 +193,7 @@
                 {% for i in range(11) %}
                   {% set tick_value = min_points + (point_range * i / 10) %}
                   {% set tick_percent = i * 10 %}
-                  <!-- VSCode CSS Linter: Ignore Jinja2 template syntax -->
-                  <div class="scale-tick" style="left: {{ tick_percent }}%;">
+                  <div class="scale-tick" data-left="{{ tick_percent }}">
                     <div class="tick-mark {% if i % 5 == 0 %}major{% else %}minor{% endif %}"></div>
                     {% if i % 2 == 0 %}
                       <div class="tick-label">{{ tick_value | round(0) | int }}</div>
@@ -219,7 +218,7 @@
                 {% endif %}
                 
                 <div class="player-marker position-{{ player.position }}" 
-                     style="left: {{ position_percent }}%"
+                     data-left="{{ position_percent }}"
                      data-position="{{ position_percent }}"
                      data-points="{{ player.points }}"
                      data-player="{{ player.name }}">
