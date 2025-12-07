@@ -143,7 +143,7 @@ def prepare_ranking_table(game_list, event_name):
     :param ignored_players: Liste der zu ignorierenden Spieler
     :return: Sortiertes Ranking-Dictionary
     """
-    ignored_players = events[event_name]["ignored_player"]
+    ignored_players = events[event_name]["ignored_player"] or []
     ranking = {}
     for game in game_list:
         for player in game.get("players", []):
