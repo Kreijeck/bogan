@@ -3,7 +3,7 @@ import requests
 from requests.exceptions import ChunkedEncodingError, RequestException
 from typing import Union
 import time
-from bogan.config import BGG_BASE_URL, ENCODING, TAG2LIST_BOARDGAME, TAG2LIST_PLAY
+from bogan.config import BGG_BASE_URL, ENCODING, TAG2LIST_BOARDGAME, TAG2LIST_PLAY, DB_BGG_BEARER_TOKEN
 from bogan.db.models import Boardgame
 from bogan.utils import nested_get, Logger
 
@@ -17,9 +17,13 @@ def bgg_api_call_get(
     """Create specific api call on bgg and convert xml to dictionary"""
 
     raw_json = {}
+    
+    headers = {
+        'Authorization': f'Bearer {DB_BGG_BEARER_TOKEN}'
+    }
 
     for i in range(repeat):
-        resp = requests.get("/".join((BGG_BASE_URL, endpoint)), parameter, timeout=10)
+        resp = requests.get("/".join((BGG_BASE_URL, endpoint)), params=parameter, headers=headers, timeout=10)
         # Fehlerbehandlung bei nicht vollständig übertragener Daten
         try:
             if resp.ok:

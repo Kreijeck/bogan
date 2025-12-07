@@ -68,6 +68,7 @@ DB_URL = env("DB_URL")
 DB_PORT = env("DB_PORT")
 DB_NAME = env("DB_NAME")
 DB_MIGRATE_DIR = env("DB_MIGRATE_DIR")
+DB_BGG_BEARER_TOKEN= env("DB_BGG_BEARER_TOKEN")
 # Local Database
 DB_LOKAL = f"sqlite:///{os.path.join(INSTANCE_PATH, f'{DB_NAME}.db')}"
 # TODO Make this cleaner, maybe with a method
@@ -79,7 +80,7 @@ else:
 DB2USE = DB_LOKAL if env("DB2USE") == "local" else DB_SERVER
 
 # BGG API INFORMATION
-BGG_BASE_URL = "https://www.boardgamegeek.com/xmlapi2"
+BGG_BASE_URL = "https://boardgamegeek.com/xmlapi2"
 GAME_USER = "Kreijeck"
 # additional xmltodict information
 TAG2LIST_BOARDGAME = ("name", "item")
