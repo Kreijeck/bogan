@@ -2,6 +2,12 @@
 
 ## Current Version
 
+## 0.10.0
+
+- fix: verwende BGG Bearer Token für datenbankupdate
+- !: neue .env Variable benötigt
+- fix: kleine Anpassung an events.yaml generierung
+  
 ## 0.9.0
 
 - Spielerleiste bei einzelnem Spiel zu sehen
