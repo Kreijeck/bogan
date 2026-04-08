@@ -1,3 +1,8 @@
+Spielewochenende 2026/1:
+  location: Spielewochenende
+  datum_start: 11.06.2026
+  datum_ende: 14.06.2026
+  ignored_player: None
 Spielewochenende 2025/1:
   location: Spielewochenende
   datum_start: 31.01.2025
@@ -22,6 +27,11 @@ Spielewochenende 2022/2:
   location: Spielewochenende
   datum_start: 25.11.2022
   datum_ende: 27.11.2022
+  ignored_player: None
+Mittwochsrunde 2026:
+  location: Mittwochsrunde
+  datum_start: 01.01.2026
+  datum_ende: 31.12.2026
   ignored_player: None
 Mittwochsrunde 2025:
   location: Mittwochsrunde
@@ -60,4 +70,9 @@ Schweiz 2025:
   location: Sonstige
   datum_start: 30.08.2025
   datum_ende: 06.09.2025
+  ignored_player: None
+Baiersbronn 2026:
+  location: Sonstige
+  datum_start: 16.05.2026
+  datum_ende: 23.05.2026
   ignored_player: None
