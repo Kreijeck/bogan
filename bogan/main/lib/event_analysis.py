@@ -144,18 +144,28 @@ def prepare_ranking_table(game_list, event_name):
     :return: Sortiertes Ranking-Dictionary
     """
     ignored_players = events[event_name]["ignored_player"] or []
+    included_players = events[event_name].get("included_players")
     ranking = {}
+    
     for game in game_list:
         for player in game.get("players", []):
             name = player["name"]
+            
+            # Filter 1: Ignorierte Spieler ausschließen
             if name in ignored_players:
-                continue  # Ignoriere diesen Spieler
+                continue
+            
+            # Filter 2: Nur eingeschlossene Spieler, falls Whitelist definiert
+            if included_players is not None and name not in included_players:
+                continue
+            
             if name not in ranking:
                 ranking[name] = {
                     "total": 0,  # Gesamtpunkte
                     "points": [0] * len(game_list),  # Punkte pro Spiel
                     "details": [],  # Details zu jedem Spiel
                 }
+            
             # Addiere Ranking-Punkte zur Gesamtpunktzahl
             ranking[name]["total"] += player["ranking_point"]
             # Füge die Punkte des aktuellen Spiels hinzu

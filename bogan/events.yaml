@@ -58,6 +58,16 @@ Online Runde (BGA):
   datum_start: 01.01.2022
   datum_ende: 31.12.2099
   ignored_player: None
+Online Runde (BGA - Island):
+  location: BoardGameArena
+  datum_start: 01.01.2022
+  datum_ende: 31.12.2099
+  ignored_player: None
+  included_players:
+    - Strähli
+    - Nils
+    - Thomas E.
+    - Alex
 Island 2024:
   location: Sonstige
   datum_start: 01.11.2024

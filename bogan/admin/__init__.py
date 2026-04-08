@@ -101,7 +101,8 @@ def add_event():
             "location": location,
             "datum_start": start_formatted,
             "datum_ende": end_formatted,
-            "ignored_player": None
+            "ignored_player": None,
+            "included_players": None
         }
         
         # Speichern
