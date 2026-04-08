@@ -2,6 +2,10 @@
 
 ## Current Version
 
+## 0.11.1
+
+- bugfix: included player
+
 ## 0.11.0
 
 - add Spielewochenende Baiersbronn, Mittwochsrunde 2026
