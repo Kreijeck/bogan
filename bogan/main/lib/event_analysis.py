@@ -1,13 +1,33 @@
 from bogan.utils import load_yaml, get_date, get_db_engine, DateFormat
 import bogan.config as cfg
 
-# To Remove?
 from sqlalchemy.orm import Session
-from bogan.db.models import Game, PlayerPos, Location
+from bogan.db.models import Game, Location
 
 engine = get_db_engine()
 
 events = load_yaml(cfg.EVENT_YAML)
+
+
+def _normalize_player_filter(filter_value) -> list[str]:
+    """Normalisiert Player-Filter aus YAML auf eine saubere Liste von Namen."""
+    if filter_value is None or filter_value == "None":
+        return []
+
+    if isinstance(filter_value, str):
+        return [] if filter_value.strip() == "None" else [filter_value.strip()]
+
+    if isinstance(filter_value, list):
+        normalized = []
+        for player_name in filter_value:
+            if player_name is None:
+                continue
+            player_name = str(player_name).strip()
+            if player_name and player_name != "None":
+                normalized.append(player_name)
+        return normalized
+
+    return []
 
 
 def get_game_list(event_name: str, mode: str) -> list[dict]:
@@ -17,11 +37,13 @@ def get_game_list(event_name: str, mode: str) -> list[dict]:
     location = event_dict.get("location")
     datum_start = get_date(event_dict.get("datum_start"), DateFormat.YAML)
     datum_ende = get_date(event_dict.get("datum_ende"), DateFormat.YAML)
+    ignored_players = _normalize_player_filter(event_dict.get("ignored_player"))
+    included_players = _normalize_player_filter(event_dict.get("included_players"))
+    included_players_set = set(included_players)
 
     with Session(engine) as session:
         match_games = (
             session.query(Game)
-            .join(PlayerPos)
             .join(Location)
             .filter(Game.datum >= datum_start, Game.datum <= datum_ende, Location.name == location)
             .all()
@@ -40,6 +62,17 @@ def get_game_list(event_name: str, mode: str) -> list[dict]:
             
             # Verwende die neue get_sorted_players Methode
             players_data = match.get_sorted_players()
+
+            # Wenn included_players gesetzt ist, sind nur Spiele erlaubt,
+            # deren komplette Spielerliste in der Whitelist enthalten ist.
+            # In diesem Modus wird ignored_player bewusst nicht kombiniert.
+            if included_players:
+                game_player_names = {player["name"] for player in players_data}
+                if not game_player_names.issubset(included_players_set):
+                    continue
+            elif ignored_players:
+                # Standardmodus: optional Spieler ausblenden, wenn nur ignored_player gesetzt ist.
+                players_data = [p for p in players_data if p["name"] not in ignored_players]
             
             # Filtere Spieler ohne Punkte heraus (falls gewünscht)
             players_with_points = [player for player in players_data if player["punkte"] is not None]
@@ -143,19 +176,28 @@ def prepare_ranking_table(game_list, event_name):
     :param ignored_players: Liste der zu ignorierenden Spieler
     :return: Sortiertes Ranking-Dictionary
     """
-    ignored_players = events[event_name]["ignored_player"] or []
+    ignored_players = _normalize_player_filter(events[event_name].get("ignored_player"))
+    included_players = _normalize_player_filter(events[event_name].get("included_players"))
     ranking = {}
+    
     for game in game_list:
         for player in game.get("players", []):
             name = player["name"]
-            if name in ignored_players:
-                continue  # Ignoriere diesen Spieler
+            
+            # included_players ist exklusiv zu ignored_players
+            if included_players:
+                if name not in included_players:
+                    continue
+            elif name in ignored_players:
+                continue
+            
             if name not in ranking:
                 ranking[name] = {
                     "total": 0,  # Gesamtpunkte
                     "points": [0] * len(game_list),  # Punkte pro Spiel
                     "details": [],  # Details zu jedem Spiel
                 }
+            
             # Addiere Ranking-Punkte zur Gesamtpunktzahl
             ranking[name]["total"] += player["ranking_point"]
             # Füge die Punkte des aktuellen Spiels hinzu

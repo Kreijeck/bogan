@@ -2,6 +2,14 @@
 
 ## Current Version
 
+## 0.11.1
+
+- bugfix: included players are handled correctly
+
+## 0.11.0
+
+- add Spielewochenende Baiersbronn, Mittwochsrunde 2026
+
 ## 0.10.0
 
 - fix: verwende BGG Bearer Token für datenbankupdate

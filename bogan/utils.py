@@ -65,7 +65,7 @@ def get_db_engine():
 
 
 def load_yaml(yaml_file: str) -> Any:
-    with open(yaml_file, "r") as stream:
+    with open(yaml_file, "r", encoding="utf-8") as stream:
         return yaml.safe_load(stream)
 
 
