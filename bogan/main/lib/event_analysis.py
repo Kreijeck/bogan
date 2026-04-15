@@ -1,9 +1,8 @@
 from bogan.utils import load_yaml, get_date, get_db_engine, DateFormat
 import bogan.config as cfg
 
-# To Remove?
 from sqlalchemy.orm import Session
-from bogan.db.models import Game, PlayerPos, Location
+from bogan.db.models import Game, Location
 
 engine = get_db_engine()
 
@@ -45,7 +44,6 @@ def get_game_list(event_name: str, mode: str) -> list[dict]:
     with Session(engine) as session:
         match_games = (
             session.query(Game)
-            .join(PlayerPos)
             .join(Location)
             .filter(Game.datum >= datum_start, Game.datum <= datum_ende, Location.name == location)
             .all()
