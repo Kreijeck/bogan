@@ -4,7 +4,7 @@
 
 ## 0.11.1
 
-- bugfix: included player
+- bugfix: included players are handled correctly
 
 ## 0.11.0
 
