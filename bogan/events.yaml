@@ -86,3 +86,8 @@ Baiersbronn 2026:
   datum_start: 16.05.2026
   datum_ende: 23.05.2026
   ignored_player: None
+Wolfschlugen 2026:
+  location: Sonstige
+  datum_start: 20.02.2026
+  datum_ende: 23.02.2026
+  ignored_player: None
